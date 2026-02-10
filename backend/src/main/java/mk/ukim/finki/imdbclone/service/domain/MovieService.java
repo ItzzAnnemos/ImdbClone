@@ -34,7 +34,7 @@ public class MovieService {
         movie.setDescription(movieDetails.getDescription());
         movie.setReleaseYear(movieDetails.getReleaseYear());
         movie.setDirector(movieDetails.getDirector());
-        movie.setRating(movieDetails.getRating());
+        movie.setAverageRating(movieDetails.getAverageRating());
         movie.setPosterUrl(movieDetails.getPosterUrl());
 
         return movieRepository.save(movie);
