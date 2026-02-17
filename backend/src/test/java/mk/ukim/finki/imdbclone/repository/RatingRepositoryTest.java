@@ -75,19 +75,19 @@ class RatingRepositoryTest {
         // Create test ratings
         rating1 = new Rating();
         rating1.setUser(user1);
-        rating1.setMovie(movie1);
+        rating1.setMedia(movie1);
         rating1.setRating(9);
         rating1 = ratingRepository.save(rating1);
 
         rating2 = new Rating();
         rating2.setUser(user2);
-        rating2.setMovie(movie1);
+        rating2.setMedia(movie1);
         rating2.setRating(8);
         rating2 = ratingRepository.save(rating2);
 
         rating3 = new Rating();
         rating3.setUser(user1);
-        rating3.setMovie(movie2);
+        rating3.setMedia(movie2);
         rating3.setRating(7);
         rating3 = ratingRepository.save(rating3);
     }
@@ -164,7 +164,7 @@ class RatingRepositoryTest {
         // Arrange - Try to create duplicate rating for same user and movie
         Rating duplicateRating = new Rating();
         duplicateRating.setUser(user1);
-        duplicateRating.setMovie(movie1);
+        duplicateRating.setMedia(movie1);
         duplicateRating.setRating(10);
 
         // Act & Assert
@@ -179,7 +179,7 @@ class RatingRepositoryTest {
         // Arrange
         Rating newRating = new Rating();
         newRating.setUser(user2);
-        newRating.setMovie(movie2);
+        newRating.setMedia(movie2);
         newRating.setRating(10);
 
         // Act
@@ -206,7 +206,7 @@ class RatingRepositoryTest {
         // but we verify the constraint is defined
         Rating invalidRating = new Rating();
         invalidRating.setUser(user2);
-        invalidRating.setMovie(movie2);
+        invalidRating.setMedia(movie2);
         invalidRating.setRating(0); // Below minimum
 
         // The actual validation happens at different layers

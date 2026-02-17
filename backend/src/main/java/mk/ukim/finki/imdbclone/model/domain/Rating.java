@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ratings", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "user_id", "movie_id" })
+        @UniqueConstraint(columnNames = { "user_id", "media_id" })
 })
 @Data
 @NoArgsConstructor
@@ -31,10 +31,10 @@ public class Rating {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @NotNull(message = "Movie is required")
+    @NotNull(message = "Media is required")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_id", nullable = false)
-    private Movie movie;
+    @JoinColumn(name = "media_id", nullable = false)
+    private Media media;
 
     @NotNull(message = "Rating value is required")
     @Min(value = 1, message = "Rating must be at least 1")

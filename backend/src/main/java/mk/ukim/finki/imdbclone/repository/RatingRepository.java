@@ -19,7 +19,7 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
      * @param movieId the movie ID
      * @return Optional containing the rating if found
      */
-    @Query("SELECT r FROM Rating r WHERE r.user.id = :userId AND r.movie.id = :movieId")
+    @Query("SELECT r FROM Rating r WHERE r.user.id = :userId AND r.media.id = :movieId")
     Optional<Rating> findByUserIdAndMovieId(@Param("userId") Long userId, @Param("movieId") Long movieId);
 
     /**
@@ -37,7 +37,7 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
      * @param movieId the movie ID
      * @return List of ratings for the movie
      */
-    @Query("SELECT r FROM Rating r WHERE r.movie.id = :movieId")
+    @Query("SELECT r FROM Rating r WHERE r.media.id = :movieId")
     List<Rating> findByMovieId(@Param("movieId") Long movieId);
 
     /**
@@ -46,7 +46,7 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
      * @param movieId the movie ID
      * @return The average rating, or null if no ratings exist
      */
-    @Query("SELECT AVG(r.rating) FROM Rating r WHERE r.movie.id = :movieId")
+    @Query("SELECT AVG(r.rating) FROM Rating r WHERE r.media.id = :movieId")
     Double findAverageRatingByMovieId(@Param("movieId") Long movieId);
 
     /**
@@ -55,6 +55,6 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
      * @param movieId the movie ID
      * @return The count of ratings
      */
-    @Query("SELECT COUNT(r) FROM Rating r WHERE r.movie.id = :movieId")
+    @Query("SELECT COUNT(r) FROM Rating r WHERE r.media.id = :movieId")
     Long countByMovieId(@Param("movieId") Long movieId);
 }

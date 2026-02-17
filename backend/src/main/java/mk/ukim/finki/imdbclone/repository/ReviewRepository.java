@@ -18,7 +18,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @param movieId the movie ID
      * @return List of reviews for the movie
      */
-    @Query("SELECT r FROM Review r WHERE r.movie.id = :movieId")
+    @Query("SELECT r FROM Review r WHERE r.media.id = :movieId")
     List<Review> findByMovieId(@Param("movieId") Long movieId);
 
     /**
@@ -37,6 +37,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @param movieId the movie ID
      * @return Optional containing the review if found
      */
-    @Query("SELECT r FROM Review r WHERE r.user.id = :userId AND r.movie.id = :movieId")
+    @Query("SELECT r FROM Review r WHERE r.user.id = :userId AND r.media.id = :movieId")
     Optional<Review> findByUserIdAndMovieId(@Param("userId") Long userId, @Param("movieId") Long movieId);
 }

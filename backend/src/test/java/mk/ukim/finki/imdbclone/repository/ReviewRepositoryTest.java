@@ -73,19 +73,19 @@ class ReviewRepositoryTest {
         // Create test reviews
         review1 = new Review();
         review1.setUser(user1);
-        review1.setMovie(movie1);
+        review1.setMedia(movie1);
         review1.setReviewText("Excellent movie! Highly recommend it. The plot was engaging and the acting was superb.");
         review1 = reviewRepository.save(review1);
 
         review2 = new Review();
         review2.setUser(user2);
-        review2.setMovie(movie1);
+        review2.setMedia(movie1);
         review2.setReviewText("Good movie, but could have been better. The pacing was a bit slow in the middle.");
         review2 = reviewRepository.save(review2);
 
         review3 = new Review();
         review3.setUser(user1);
-        review3.setMovie(movie2);
+        review3.setMedia(movie2);
         review3.setReviewText("Amazing cinematography and soundtrack. A must-watch for any movie enthusiast.");
         review3 = reviewRepository.save(review3);
     }
@@ -134,7 +134,7 @@ class ReviewRepositoryTest {
         // Arrange
         Review newReview = new Review();
         newReview.setUser(user2);
-        newReview.setMovie(movie2);
+        newReview.setMedia(movie2);
         newReview.setReviewText("This is a new review for movie 2. It was fantastic and exceeded my expectations.");
 
         // Act

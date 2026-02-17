@@ -8,14 +8,16 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@DiscriminatorValue("MOVIE")
+@DiscriminatorValue("TV_SERIES")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Movie extends Media {
+public class TVSeries extends Media {
 
-    private String director;
+    private String creators; // Comma separated list of creators
 
-    private Integer duration; // in minutes
+    private Integer numberOfSeasons;
+
+    private String status; // e.g., "Ended", "Returning Series", "Canceled"
 }
