@@ -3,6 +3,8 @@ package mk.ukim.finki.imdbclone.repository;
 import mk.ukim.finki.imdbclone.model.domain.Movie;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -41,7 +43,11 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
      * @param director the director name search term
      * @return List of movies by the director
      */
-    List<Movie> findByDirectorContainingIgnoreCase(String director);
+    @Query("SELECT m FROM Movie m JOIN m.castAndCrew mp JOIN mp.person p " +
+            "WHERE mp.role = 'DIRECTOR' AND " +
+            "(LOWER(p.firstName) LIKE LOWER(CONCAT('%', :directorName, '%')) OR " +
+            "LOWER(p.lastName) LIKE LOWER(CONCAT('%', :directorName, '%')))")
+    List<Movie> findByDirectorName(@Param("directorName") String directorName);
 
     /**
      * Find movies by a specific genre name

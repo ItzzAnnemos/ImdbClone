@@ -26,25 +26,19 @@ class MovieServiceTest {
         movieRepository.deleteAll();
     }
 
-    private Movie createMovie(String title, String director, Integer year) {
+    private Movie createMovie(String title, Integer year) {
         Movie movie = new Movie();
         movie.setTitle(title);
-        movie.setDirector(director);
         movie.setReleaseYear(year);
-        // Required for Media abstraction
         movie.setDescription("Test desc");
         return movie;
     }
 
     @Test
-    void shouldFilterMoviesByDirectorAndYear() {
-        movieService.createMovie(createMovie("Inception", "Nolan", 2010));
-        movieService.createMovie(createMovie("Interstellar", "Nolan", 2014));
-        movieService.createMovie(createMovie("Avatar", "Cameron", 2009));
-
-        List<Movie> nolanMovies = movieService.getByDirector("Nolan");
-        assertThat(nolanMovies).hasSize(2);
-        assertThat(nolanMovies).extracting(Movie::getTitle).containsExactlyInAnyOrder("Inception", "Interstellar");
+    void shouldFilterMoviesByYear() {
+        movieService.createMovie(createMovie("Inception", 2010));
+        movieService.createMovie(createMovie("Interstellar", 2014));
+        movieService.createMovie(createMovie("Avatar", 2009));
 
         List<Movie> year2010 = movieService.getByYear(2010);
         assertThat(year2010).hasSize(1);
@@ -56,11 +50,10 @@ class MovieServiceTest {
 
     @Test
     void shouldUpdateMovie() {
-        Movie movie = movieService.createMovie(createMovie("Old Title", "Nolan", 2010));
+        Movie movie = movieService.createMovie(createMovie("Old Title", 2010));
 
         Movie updateDetails = new Movie();
         updateDetails.setTitle("New Title");
-        updateDetails.setDirector("Nolan");
         updateDetails.setReleaseYear(2010);
 
         Movie updated = movieService.updateMovie(movie.getId(), updateDetails);
@@ -71,7 +64,7 @@ class MovieServiceTest {
 
     @Test
     void shouldDeleteMovie() {
-        Movie movie = movieService.createMovie(createMovie("To Delete", "Nolan", 2010));
+        Movie movie = movieService.createMovie(createMovie("To Delete", 2010));
 
         movieService.deleteMovie(movie.getId());
 

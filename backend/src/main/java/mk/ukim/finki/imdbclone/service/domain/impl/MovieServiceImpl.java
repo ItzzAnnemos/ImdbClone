@@ -47,7 +47,6 @@ public class MovieServiceImpl extends MediaServiceImpl<Movie> implements MovieSe
         movie.setDescription(movieDetails.getDescription());
         movie.setReleaseYear(movieDetails.getReleaseYear());
         movie.setPosterUrl(movieDetails.getPosterUrl());
-        movie.setDirector(movieDetails.getDirector());
         movie.setDuration(movieDetails.getDuration());
         return movieRepository.save(movie);
     }
@@ -55,7 +54,7 @@ public class MovieServiceImpl extends MediaServiceImpl<Movie> implements MovieSe
     @Override
     @Transactional(readOnly = true)
     public List<Movie> getByDirector(String director) {
-        return movieRepository.findByDirectorContainingIgnoreCase(director);
+        return movieRepository.findByDirectorName(director);
     }
 
     @Override

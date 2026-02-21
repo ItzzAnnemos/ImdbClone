@@ -47,7 +47,6 @@ public class TVSeriesServiceImpl extends MediaServiceImpl<TVSeries> implements T
         tvSeries.setDescription(tvSeriesDetails.getDescription());
         tvSeries.setReleaseYear(tvSeriesDetails.getReleaseYear());
         tvSeries.setPosterUrl(tvSeriesDetails.getPosterUrl());
-        tvSeries.setCreators(tvSeriesDetails.getCreators());
         tvSeries.setNumberOfSeasons(tvSeriesDetails.getNumberOfSeasons());
         tvSeries.setStatus(tvSeriesDetails.getStatus());
         return tvSeriesRepository.save(tvSeries);

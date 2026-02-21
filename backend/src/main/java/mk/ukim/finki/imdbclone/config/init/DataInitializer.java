@@ -2,9 +2,11 @@ package mk.ukim.finki.imdbclone.config.init;
 
 import jakarta.annotation.PostConstruct;
 import mk.ukim.finki.imdbclone.model.domain.*;
+import mk.ukim.finki.imdbclone.model.enumerations.Role;
 import mk.ukim.finki.imdbclone.repository.*;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +19,8 @@ public class DataInitializer {
     public static List<TVSeries> tvSeries;
     public static List<Rating> ratings;
     public static List<Review> reviews;
+    public static List<Person> people;
+    public static List<MediaPerson> mediaPersons;
 
     private final UserRepository userRepository;
     private final GenreRepository genreRepository;
@@ -24,19 +28,25 @@ public class DataInitializer {
     private final TVSeriesRepository tvSeriesRepository;
     private final RatingRepository ratingRepository;
     private final ReviewRepository reviewRepository;
+    private final PersonRepository personRepository;
+    private final MediaPersonRepository mediaPersonRepository;
 
     public DataInitializer(UserRepository userRepository,
             GenreRepository genreRepository,
             MovieRepository movieRepository,
             TVSeriesRepository tvSeriesRepository,
             RatingRepository ratingRepository,
-            ReviewRepository reviewRepository) {
+            ReviewRepository reviewRepository,
+            PersonRepository personRepository,
+            MediaPersonRepository mediaPersonRepository) {
         this.userRepository = userRepository;
         this.genreRepository = genreRepository;
         this.movieRepository = movieRepository;
         this.tvSeriesRepository = tvSeriesRepository;
         this.ratingRepository = ratingRepository;
         this.reviewRepository = reviewRepository;
+        this.personRepository = personRepository;
+        this.mediaPersonRepository = mediaPersonRepository;
     }
 
     @PostConstruct
@@ -89,13 +99,36 @@ public class DataInitializer {
             genres = genreRepository.findAll();
         }
 
+        people = new ArrayList<>();
+        if (this.personRepository.count() == 0) {
+            Person p1 = new Person();
+            p1.setFirstName("Christopher");
+            p1.setLastName("Nolan");
+            p1.setBirthDate(LocalDate.of(1970, 7, 30));
+            Person p2 = new Person();
+            p2.setFirstName("Francis");
+            p2.setLastName("Ford Coppola");
+            p2.setBirthDate(LocalDate.of(1939, 4, 7));
+            Person p3 = new Person();
+            p3.setFirstName("Vince");
+            p3.setLastName("Gilligan");
+            p3.setBirthDate(LocalDate.of(1967, 2, 10));
+            Person p4 = new Person();
+            p4.setFirstName("Dan");
+            p4.setLastName("Erickson");
+
+            this.personRepository.saveAll(List.of(p1, p2, p3, p4));
+            people = this.personRepository.findAll();
+        } else {
+            people = personRepository.findAll();
+        }
+
         movies = new ArrayList<>();
         if (this.movieRepository.count() == 0) {
             Movie movie1 = new Movie();
             movie1.setTitle("Inception");
             movie1.setDescription("A thief who steals corporate secrets through the use of dream-sharing technology.");
             movie1.setReleaseYear(2010);
-            movie1.setDirector("Christopher Nolan");
             movie1.setDuration(148);
             movie1.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(1)))); // Action, Sci-Fi
 
@@ -104,7 +137,6 @@ public class DataInitializer {
             movie2.setDescription(
                     "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.");
             movie2.setReleaseYear(1972);
-            movie2.setDirector("Francis Ford Coppola");
             movie2.setDuration(175);
             movie2.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
 
@@ -121,7 +153,6 @@ public class DataInitializer {
             show1.setDescription(
                     "A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine.");
             show1.setReleaseYear(2008);
-            show1.setCreators("Vince Gilligan");
             show1.setNumberOfSeasons(5);
             show1.setStatus("Ended");
             show1.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
@@ -131,7 +162,6 @@ public class DataInitializer {
             show2.setDescription(
                     "Mark leads a team of office workers whose memories have been surgically divided between their work and personal lives.");
             show2.setReleaseYear(2022);
-            show2.setCreators("Dan Erickson");
             show2.setNumberOfSeasons(2);
             show2.setStatus("Returning Series");
             show2.setGenres(new HashSet<>(List.of(genres.get(1), genres.get(2)))); // Sci-Fi, Drama
@@ -140,6 +170,31 @@ public class DataInitializer {
             tvSeries = this.tvSeriesRepository.findAll();
         } else {
             tvSeries = tvSeriesRepository.findAll();
+        }
+
+        mediaPersons = new ArrayList<>();
+        if (this.mediaPersonRepository.count() == 0) {
+            MediaPerson mp1 = new MediaPerson();
+            mp1.setMedia(movies.get(0));
+            mp1.setPerson(people.get(0));
+            mp1.setRole(Role.DIRECTOR); // Nolan -> Inception
+            MediaPerson mp2 = new MediaPerson();
+            mp2.setMedia(movies.get(1));
+            mp2.setPerson(people.get(1));
+            mp2.setRole(Role.DIRECTOR); // Coppola -> Godfather
+            MediaPerson mp3 = new MediaPerson();
+            mp3.setMedia(tvSeries.get(0));
+            mp3.setPerson(people.get(2));
+            mp3.setRole(Role.CREATOR); // Gilligan -> Breaking Bad
+            MediaPerson mp4 = new MediaPerson();
+            mp4.setMedia(tvSeries.get(1));
+            mp4.setPerson(people.get(3));
+            mp4.setRole(Role.CREATOR); // Erickson -> Severance
+
+            this.mediaPersonRepository.saveAll(List.of(mp1, mp2, mp3, mp4));
+            mediaPersons = mediaPersonRepository.findAll();
+        } else {
+            mediaPersons = mediaPersonRepository.findAll();
         }
 
         ratings = new ArrayList<>();

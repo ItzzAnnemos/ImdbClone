@@ -15,7 +15,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Movie extends Media {
 
-    private String director;
-
     private Integer duration; // in minutes
 }

@@ -15,8 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TVSeries extends Media {
 
-    private String creators; // Comma separated list of creators
-
     private Integer numberOfSeasons;
 
     private String status; // e.g., "Ended", "Returning Series", "Canceled"
