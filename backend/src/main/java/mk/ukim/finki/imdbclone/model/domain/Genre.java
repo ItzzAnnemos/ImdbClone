@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,5 +30,6 @@ public class Genre {
     private String name;
 
     @ManyToMany(mappedBy = "genres")
+    @ToString.Exclude
     private Set<Media> media = new HashSet<>();
 }

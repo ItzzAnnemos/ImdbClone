@@ -2,8 +2,6 @@ package mk.ukim.finki.imdbclone.repository;
 
 import mk.ukim.finki.imdbclone.model.domain.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,30 +11,27 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     /**
-     * Find all reviews for a specific movie
-     * 
-     * @param movieId the movie ID
-     * @return List of reviews for the movie
+     * Find all reviews for a specific media item
+     *
+     * @param mediaId the media ID
+     * @return List of reviews for the media item
      */
-    @Query("SELECT r FROM Review r WHERE r.media.id = :movieId")
-    List<Review> findByMovieId(@Param("movieId") Long movieId);
+    List<Review> findByMedia_Id(Long mediaId);
 
     /**
      * Find all reviews by a specific user
-     * 
+     *
      * @param userId the user ID
      * @return List of reviews by the user
      */
-    @Query("SELECT r FROM Review r WHERE r.user.id = :userId")
-    List<Review> findByUserId(@Param("userId") Long userId);
+    List<Review> findByUser_Id(Long userId);
 
     /**
-     * Find a review by user ID and movie ID
-     * 
+     * Find a review by user ID and media ID
+     *
      * @param userId  the user ID
-     * @param movieId the movie ID
+     * @param mediaId the media ID
      * @return Optional containing the review if found
      */
-    @Query("SELECT r FROM Review r WHERE r.user.id = :userId AND r.media.id = :movieId")
-    Optional<Review> findByUserIdAndMovieId(@Param("userId") Long userId, @Param("movieId") Long movieId);
+    Optional<Review> findByUser_IdAndMedia_Id(Long userId, Long mediaId);
 }

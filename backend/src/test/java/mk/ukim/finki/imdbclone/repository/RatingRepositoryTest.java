@@ -93,9 +93,9 @@ class RatingRepositoryTest {
     }
 
     @Test
-    void testFindByUserIdAndMovieId() {
+    void testFindByUserIdAndMediaId() {
         // Act
-        Optional<Rating> found = ratingRepository.findByUserIdAndMovieId(user1.getId(), movie1.getId());
+        Optional<Rating> found = ratingRepository.findByUser_IdAndMedia_Id(user1.getId(), movie1.getId());
 
         // Assert
         assertThat(found).isPresent();
@@ -105,7 +105,7 @@ class RatingRepositoryTest {
     @Test
     void testFindByUserId() {
         // Act
-        List<Rating> results = ratingRepository.findByUserId(user1.getId());
+        List<Rating> results = ratingRepository.findByUser_Id(user1.getId());
 
         // Assert
         assertThat(results).hasSize(2);
@@ -114,9 +114,9 @@ class RatingRepositoryTest {
     }
 
     @Test
-    void testFindByMovieId() {
+    void testFindByMediaId() {
         // Act
-        List<Rating> results = ratingRepository.findByMovieId(movie1.getId());
+        List<Rating> results = ratingRepository.findByMedia_Id(movie1.getId());
 
         // Assert
         assertThat(results).hasSize(2);
@@ -125,9 +125,9 @@ class RatingRepositoryTest {
     }
 
     @Test
-    void testFindAverageRatingByMovieId() {
+    void testFindAverageRatingByMediaId() {
         // Act
-        Double average = ratingRepository.findAverageRatingByMovieId(movie1.getId());
+        Double average = ratingRepository.findAverageRatingByMediaId(movie1.getId());
 
         // Assert
         assertThat(average).isNotNull();
@@ -135,7 +135,7 @@ class RatingRepositoryTest {
     }
 
     @Test
-    void testFindAverageRatingByMovieId_NoRatings() {
+    void testFindAverageRatingByMediaId_NoRatings() {
         // Arrange
         Movie movieWithoutRatings = new Movie();
         movieWithoutRatings.setTitle("Unrated Movie");
@@ -144,16 +144,16 @@ class RatingRepositoryTest {
         movieWithoutRatings = movieRepository.save(movieWithoutRatings);
 
         // Act
-        Double average = ratingRepository.findAverageRatingByMovieId(movieWithoutRatings.getId());
+        Double average = ratingRepository.findAverageRatingByMediaId(movieWithoutRatings.getId());
 
         // Assert
         assertThat(average).isNull();
     }
 
     @Test
-    void testCountByMovieId() {
+    void testCountByMediaId() {
         // Act
-        Long count = ratingRepository.countByMovieId(movie1.getId());
+        Long count = ratingRepository.countByMedia_Id(movie1.getId());
 
         // Assert
         assertThat(count).isEqualTo(2);

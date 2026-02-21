@@ -147,9 +147,9 @@ class MovieRepositoryTest {
     }
 
     @Test
-    void testFindAllByOrderByAverageRatingDesc() {
+    void testFindTop10ByOrderByAverageRatingDesc() {
         // Act
-        List<Movie> results = movieRepository.findAllByOrderByAverageRatingDesc();
+        List<Movie> results = movieRepository.findTop10ByOrderByAverageRatingDesc();
 
         // Assert
         assertThat(results).hasSize(3);

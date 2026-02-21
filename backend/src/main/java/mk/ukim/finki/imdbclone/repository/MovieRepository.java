@@ -60,11 +60,11 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findByGenres_NameIn(List<String> genreNames);
 
     /**
-     * Find all movies ordered by average rating in descending order
-     * 
-     * @return List of movies sorted by rating (highest first)
+     * Find the top 10 movies ordered by average rating in descending order
+     *
+     * @return List of the top 10 highest-rated movies
      */
-    List<Movie> findAllByOrderByAverageRatingDesc();
+    List<Movie> findTop10ByOrderByAverageRatingDesc();
 
     /**
      * Find the top 10 most recently created movies

@@ -91,9 +91,9 @@ class ReviewRepositoryTest {
     }
 
     @Test
-    void testFindByMovieId() {
+    void testFindByMediaId() {
         // Act
-        List<Review> results = reviewRepository.findByMovieId(movie1.getId());
+        List<Review> results = reviewRepository.findByMedia_Id(movie1.getId());
 
         // Assert
         assertThat(results).hasSize(2);
@@ -104,16 +104,16 @@ class ReviewRepositoryTest {
     @Test
     void testFindByUserId() {
         // Act
-        List<Review> results = reviewRepository.findByUserId(user1.getId());
+        List<Review> results = reviewRepository.findByUser_Id(user1.getId());
 
         // Assert
         assertThat(results).hasSize(2);
     }
 
     @Test
-    void testFindByUserIdAndMovieId() {
+    void testFindByUserIdAndMediaId() {
         // Act
-        Optional<Review> found = reviewRepository.findByUserIdAndMovieId(user1.getId(), movie1.getId());
+        Optional<Review> found = reviewRepository.findByUser_IdAndMedia_Id(user1.getId(), movie1.getId());
 
         // Assert
         assertThat(found).isPresent();
@@ -121,9 +121,9 @@ class ReviewRepositoryTest {
     }
 
     @Test
-    void testFindByUserIdAndMovieId_NotFound() {
+    void testFindByUserIdAndMediaId_NotFound() {
         // Act
-        Optional<Review> found = reviewRepository.findByUserIdAndMovieId(user2.getId(), movie2.getId());
+        Optional<Review> found = reviewRepository.findByUser_IdAndMedia_Id(user2.getId(), movie2.getId());
 
         // Assert
         assertThat(found).isEmpty();
