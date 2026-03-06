@@ -8,10 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @DataJpaTest
 class UserServiceTest {
@@ -19,12 +24,18 @@ class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @MockitoBean
+    private PasswordEncoder passwordEncoder;
+
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository, passwordEncoder);
         userRepository.deleteAll();
+
+        // Default behavior for password encoder
+        when(passwordEncoder.encode(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     private User createTestUser(String username, String email) {
@@ -96,5 +107,45 @@ class UserServiceTest {
         userService.deleteUser(saved.getId());
 
         assertThat(userService.getUserById(saved.getId())).isEmpty();
+    }
+
+    @Test
+    void shouldRegisterUser() {
+        User registered = userService.register("newuser", "pass123", "pass123", "New", "User", "new@example.com");
+
+        assertThat(registered).isNotNull();
+        assertThat(registered.getUsername()).isEqualTo("newuser");
+        assertThat(registered.getEmail()).isEqualTo("new@example.com");
+        assertThat(registered.getPassword()).isEqualTo("pass123"); // Mocked encoder returns same string
+    }
+
+    @Test
+    void shouldLoginUser() {
+        userService.register("loginuser", "pass123", "pass123", "Login", "User", "login@example.com");
+
+        // Mock matches behavior
+        when(passwordEncoder.matches("pass123", "pass123")).thenReturn(true);
+
+        User loggedIn = userService.login("loginuser", "pass123");
+
+        assertThat(loggedIn).isNotNull();
+        assertThat(loggedIn.getUsername()).isEqualTo("loginuser");
+    }
+
+    @Test
+    void shouldThrowWhenPasswordsDoNotMatchDuringRegistration() {
+        assertThatThrownBy(
+                () -> userService.register("baduser", "pass123", "pass456", "Bad", "User", "bad@example.com"))
+                .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    void shouldThrowWhenLoginWithWrongCredentials() {
+        userService.register("loginuser", "pass123", "pass123", "Login", "User", "login@example.com");
+
+        when(passwordEncoder.matches("wrong", "pass123")).thenReturn(false);
+
+        assertThatThrownBy(() -> userService.login("loginuser", "wrong"))
+                .isInstanceOf(RuntimeException.class);
     }
 }

@@ -1,13 +1,14 @@
 package mk.ukim.finki.imdbclone.service.domain;
 
 import mk.ukim.finki.imdbclone.model.domain.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 
 /**
  * Service interface for User management operations.
  */
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     /**
      * Find a user by their ID
@@ -72,4 +73,11 @@ public interface UserService {
      * @return true if the email exists
      */
     boolean emailExists(String email);
+
+    User register(String username, String password, String repeatPassword, String firstName, String lastName,
+            String email);
+
+    User login(String username, String password);
+
+    User findByUsername(String username);
 }
