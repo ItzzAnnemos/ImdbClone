@@ -34,7 +34,7 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
+!.vscode/settings.json
 
 ### Maven ###
 pom.xml.tag
@@ -142,7 +142,6 @@ Thumbs.db
 *.swo
 *.swn
 .idea/
-.vscode/
 *.sublime-project
 *.sublime-workspace
 ```

@@ -11,7 +11,7 @@ export function MovieCard({ id, title, rating, image, year, className, ...props 
                 whileTap={{ scale: 0.95 }}
                 className={cn(
                     "group relative overflow-hidden rounded-lg bg-card shadow-lg transition-all hover:shadow-xl cursor-pointer",
-                    className
+                    className,
                 )}
                 {...props}
             >

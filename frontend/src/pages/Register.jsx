@@ -55,7 +55,12 @@ export const Register = () => {
 
             {/* Top Actions */}
             <div className="absolute top-2 flex justify-end items-center w-full px-4">
-                <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="text-muted-foreground hover:text-foreground flex-wrap">
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate(-1)}
+                    className="text-muted-foreground hover:text-foreground flex-wrap"
+                >
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Go Back
                 </Button>
@@ -91,7 +96,9 @@ export const Register = () => {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-1 gap-4">
                             <div className="space-y-1.5">
-                                <label className="text-sm font-medium text-foreground">First Name</label>
+                                <label className="text-sm font-medium text-foreground">
+                                    First Name
+                                </label>
                                 <div className="relative">
                                     <input
                                         type="text"
@@ -107,7 +114,9 @@ export const Register = () => {
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-sm font-medium text-foreground">Last Name</label>
+                                <label className="text-sm font-medium text-foreground">
+                                    Last Name
+                                </label>
                                 <div className="relative">
                                     <input
                                         type="text"
@@ -125,7 +134,9 @@ export const Register = () => {
 
                         <div className="grid grid-cols-1 gap-4">
                             <div className="space-y-1.5">
-                                <label className="text-sm font-medium text-foreground">Username</label>
+                                <label className="text-sm font-medium text-foreground">
+                                    Username
+                                </label>
                                 <div className="relative">
                                     <input
                                         type="text"
@@ -159,7 +170,9 @@ export const Register = () => {
 
                         <div className="grid grid-cols-1 gap-4">
                             <div className="space-y-1.5">
-                                <label className="text-sm font-medium text-foreground">Password</label>
+                                <label className="text-sm font-medium text-foreground">
+                                    Password
+                                </label>
                                 <div className="relative">
                                     <input
                                         type={showPassword ? "text" : "password"}
@@ -178,13 +191,19 @@ export const Register = () => {
                                         onClick={() => setShowPassword(!showPassword)}
                                         className="absolute right-1 top-1 h-8 w-8 text-muted-foreground hover:text-foreground transition-colors"
                                     >
-                                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                        {showPassword ? (
+                                            <EyeOff className="h-4 w-4" />
+                                        ) : (
+                                            <Eye className="h-4 w-4" />
+                                        )}
                                     </Button>
                                 </div>
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-sm font-medium text-foreground">Confirm Password</label>
+                                <label className="text-sm font-medium text-foreground">
+                                    Confirm Password
+                                </label>
                                 <div className="relative">
                                     <input
                                         type={showPassword ? "text" : "password"}
@@ -201,11 +220,7 @@ export const Register = () => {
                         </div>
 
                         <div className="pt-2">
-                            <Button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full"
-                            >
+                            <Button type="submit" disabled={loading} className="w-full">
                                 {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Sign Up"}
                             </Button>
                         </div>

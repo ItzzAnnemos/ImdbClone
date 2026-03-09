@@ -23,14 +23,25 @@ export function Navbar() {
         <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-16 items-center justify-between px-4 md:px-8">
                 <div className="flex items-center gap-6">
-                    <Link to="/" className="flex items-center gap-2 font-bold text-lg md:text-xl text-primary hover:opacity-90 transition-opacity">
-                        <span className="bg-yellow-500 text-black px-2 py-0.5 rounded-md">IMDb</span>
+                    <Link
+                        to="/"
+                        className="flex items-center gap-2 font-bold text-lg md:text-xl text-primary hover:opacity-90 transition-opacity"
+                    >
+                        <span className="bg-yellow-500 text-black px-2 py-0.5 rounded-md">
+                            IMDb
+                        </span>
                         <span className="hidden sm:inline-block">Clone</span>
                     </Link>
                     <div className="hidden md:flex items-center text-sm font-medium text-muted-foreground gap-6">
-                        <Link to="#" className="hover:text-foreground transition-colors">Movies</Link>
-                        <Link to="#" className="hover:text-foreground transition-colors">TV Shows</Link>
-                        <Link to="#" className="hover:text-foreground transition-colors">Celebs</Link>
+                        <Link to="#" className="hover:text-foreground transition-colors">
+                            Movies
+                        </Link>
+                        <Link to="#" className="hover:text-foreground transition-colors">
+                            TV Shows
+                        </Link>
+                        <Link to="#" className="hover:text-foreground transition-colors">
+                            Celebs
+                        </Link>
                     </div>
                 </div>
 
@@ -97,7 +108,10 @@ export function Navbar() {
                                     </Button>
                                 </Link>
                                 <Link to="/register">
-                                    <Button size="sm" className="hidden sm:flex bg-foreground text-background">
+                                    <Button
+                                        size="sm"
+                                        className="hidden sm:flex bg-foreground text-background"
+                                    >
                                         Sign Up
                                     </Button>
                                 </Link>
