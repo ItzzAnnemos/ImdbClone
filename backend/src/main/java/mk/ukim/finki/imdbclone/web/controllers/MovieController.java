@@ -1,13 +1,15 @@
 package mk.ukim.finki.imdbclone.web.controllers;
 
 import lombok.RequiredArgsConstructor;
-import mk.ukim.finki.imdbclone.model.domain.Movie;
-import mk.ukim.finki.imdbclone.service.domain.MovieService;
+import mk.ukim.finki.imdbclone.model.dto.CreateMovieDto;
+import mk.ukim.finki.imdbclone.model.dto.DisplayMovieDto;
+import mk.ukim.finki.imdbclone.service.application.MovieApplicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -15,39 +17,80 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 public class MovieController {
 
-    private final MovieService movieService;
+    private final MovieApplicationService movieApplicationService;
 
     @GetMapping
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        return ResponseEntity.ok(movieService.getAllMovies());
+    public ResponseEntity<List<DisplayMovieDto>> getAllMovies() {
+        return ResponseEntity.ok(movieApplicationService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
-        return movieService.getMovieById(id)
+    public ResponseEntity<DisplayMovieDto> getMovieById(@PathVariable Long id) {
+        Optional<DisplayMovieDto> movie = movieApplicationService.findById(id);
+        return movie.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<DisplayMovieDto> createMovie(@RequestBody CreateMovieDto movieDto) {
+        return movieApplicationService.save(movieDto)
+                .map(movie -> ResponseEntity.status(HttpStatus.CREATED).body(movie))
+                .orElse(ResponseEntity.badRequest().build());
+    }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<DisplayMovieDto> updateMovie(
+            @PathVariable Long id,
+            @RequestBody CreateMovieDto movieDto) {
+
+        return movieApplicationService.update(id, movieDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(movieService.createMovie(movie));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie movie) {
-        return ResponseEntity.ok(movieService.updateMovie(id, movie));
-    }
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
-        movieService.deleteMovie(id);
+        movieApplicationService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Movie>> searchMovies(@RequestParam String title) {
-        return ResponseEntity.ok(movieService.searchMovies(title));
+    public ResponseEntity<List<DisplayMovieDto>> searchMovies(@RequestParam String title) {
+        return ResponseEntity.ok(movieApplicationService.search(title));
+    }
+
+    @GetMapping("/top-rated")
+    public ResponseEntity<List<DisplayMovieDto>> getTopRatedMovies() {
+        return ResponseEntity.ok(movieApplicationService.findTopRated());
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<DisplayMovieDto>> getRecentMovies() {
+        return ResponseEntity.ok(movieApplicationService.findRecent());
+    }
+
+    @GetMapping("/director")
+    public ResponseEntity<List<DisplayMovieDto>> getMoviesByDirector(@RequestParam String director) {
+        return ResponseEntity.ok(movieApplicationService.findByDirector(director));
+    }
+
+    @GetMapping("/year/{year}")
+    public ResponseEntity<List<DisplayMovieDto>> getMoviesByYear(@PathVariable Integer year) {
+        return ResponseEntity.ok(movieApplicationService.findByYear(year));
+    }
+
+    @GetMapping("/year-range")
+    public ResponseEntity<List<DisplayMovieDto>> getMoviesByYearRange(
+            @RequestParam Integer startYear,
+            @RequestParam Integer endYear) {
+
+        return ResponseEntity.ok(
+                movieApplicationService.findByYearRange(startYear, endYear)
+        );
+    }
+
+    @GetMapping("/genre/{genreName}")
+    public ResponseEntity<List<DisplayMovieDto>> getMoviesByGenre(@PathVariable String genreName) {
+        return ResponseEntity.ok(movieApplicationService.findByGenre(genreName));
     }
 }

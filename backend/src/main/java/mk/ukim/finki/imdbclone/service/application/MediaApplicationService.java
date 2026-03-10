@@ -1,0 +1,23 @@
+package mk.ukim.finki.imdbclone.service.application;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface MediaApplicationService<C, D> {
+
+    List<D> findAll();
+
+    Optional<D> findById(Long id);
+
+    Optional<D> save(C createDto);
+
+    Optional<D> update(Long id, C createDto);
+
+    void delete(Long id);
+
+    List<D> search(String title);
+
+    List<D> findTopRated();
+
+    List<D> findRecent();
+}

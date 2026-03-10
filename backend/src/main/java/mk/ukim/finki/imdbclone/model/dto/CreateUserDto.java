@@ -8,12 +8,22 @@ public record CreateUserDto(
         String repeatPassword,
         String firstName,
         String lastName,
-        String email) {
+        String email
+) {
 
-    /*
-     * todo: add repeat password logic
-     */
     public User toUser() {
-        return new User(username, password, firstName, lastName);
+
+        if (password == null || repeatPassword == null) {
+            throw new IllegalArgumentException("Password fields cannot be null.");
+        }
+
+        if (!password.equals(repeatPassword)) {
+            throw new IllegalArgumentException("Passwords do not match.");
+        }
+
+        User user = new User(username, password, firstName, lastName);
+        user.setEmail(email);
+
+        return user;
     }
 }
