@@ -1,15 +1,14 @@
 package mk.ukim.finki.imdbclone.service.application.impl;
 
 import mk.ukim.finki.imdbclone.helpers.JwtHelper;
+import mk.ukim.finki.imdbclone.model.domain.Media;
 import mk.ukim.finki.imdbclone.model.domain.User;
-import mk.ukim.finki.imdbclone.model.dto.CreateUserDto;
-import mk.ukim.finki.imdbclone.model.dto.DisplayUserDto;
-import mk.ukim.finki.imdbclone.model.dto.LoginResponseDto;
-import mk.ukim.finki.imdbclone.model.dto.LoginUserDto;
+import mk.ukim.finki.imdbclone.model.dto.*;
 import mk.ukim.finki.imdbclone.service.application.UserApplicationService;
 import mk.ukim.finki.imdbclone.service.domain.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,7 +17,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     private final JwtHelper jwtHelper;
 
     public UserApplicationServiceImpl(UserService userService,
-            JwtHelper jwtHelper) {
+                                      JwtHelper jwtHelper) {
         this.userService = userService;
         this.jwtHelper = jwtHelper;
     }
@@ -31,7 +30,8 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                 createUserDto.repeatPassword(),
                 createUserDto.firstName(),
                 createUserDto.lastName(),
-                createUserDto.email());
+                createUserDto.email()
+        );
         return Optional.of(DisplayUserDto.from(user));
     }
 
@@ -39,7 +39,8 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     public Optional<LoginResponseDto> login(LoginUserDto loginUserDto) {
         User user = userService.login(
                 loginUserDto.username(),
-                loginUserDto.password());
+                loginUserDto.password()
+        );
 
         String token = jwtHelper.generateToken(user);
 
@@ -48,6 +49,31 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     @Override
     public Optional<DisplayUserDto> findByUsername(String username) {
-        return userService.getUserByUsername(username).map(DisplayUserDto::from);
+        return userService.getUserByUsername(username)
+                .map(DisplayUserDto::from);
+    }
+
+    @Override
+    public Optional<DisplayUserDto> addMediaToWatchlist(String username, Long mediaId) {
+        User user = userService.addMediaToWatchlist(username, mediaId);
+        return Optional.of(DisplayUserDto.from(user));
+    }
+
+    @Override
+    public Optional<DisplayUserDto> removeMediaFromWatchlist(String username, Long mediaId) {
+        User user = userService.removeMediaFromWatchlist(username, mediaId);
+        return Optional.of(DisplayUserDto.from(user));
+    }
+
+    @Override
+    public List<MediaDisplayDto> getWatchlist(String username) {
+        return userService.getWatchlist(username).stream()
+                .map(MediaDisplayDto::from)
+                .toList();
+    }
+
+    @Override
+    public boolean isMediaInWatchlist(String username, Long mediaId) {
+        return userService.isMediaInWatchlist(username, mediaId);
     }
 }

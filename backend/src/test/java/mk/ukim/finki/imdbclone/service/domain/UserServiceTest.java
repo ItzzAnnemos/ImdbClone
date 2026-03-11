@@ -1,15 +1,15 @@
 package mk.ukim.finki.imdbclone.service.domain;
 
 import mk.ukim.finki.imdbclone.model.domain.User;
+import mk.ukim.finki.imdbclone.repository.MediaRepository;
 import mk.ukim.finki.imdbclone.repository.UserRepository;
 import mk.ukim.finki.imdbclone.service.domain.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Optional;
 
@@ -25,16 +25,18 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @MockitoBean
+    private MediaRepository mediaRepository;
+
+    @MockitoBean
     private PasswordEncoder passwordEncoder;
 
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl(userRepository, passwordEncoder);
+        userService = new UserServiceImpl(userRepository, mediaRepository, passwordEncoder);
         userRepository.deleteAll();
 
-        // Default behavior for password encoder
         when(passwordEncoder.encode(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
@@ -116,14 +118,13 @@ class UserServiceTest {
         assertThat(registered).isNotNull();
         assertThat(registered.getUsername()).isEqualTo("newuser");
         assertThat(registered.getEmail()).isEqualTo("new@example.com");
-        assertThat(registered.getPassword()).isEqualTo("pass123"); // Mocked encoder returns same string
+        assertThat(registered.getPassword()).isEqualTo("pass123");
     }
 
     @Test
     void shouldLoginUser() {
         userService.register("loginuser", "pass123", "pass123", "Login", "User", "login@example.com");
 
-        // Mock matches behavior
         when(passwordEncoder.matches("pass123", "pass123")).thenReturn(true);
 
         User loggedIn = userService.login("loginuser", "pass123");

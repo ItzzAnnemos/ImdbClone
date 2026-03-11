@@ -1,8 +1,10 @@
 package mk.ukim.finki.imdbclone.service.domain;
 
+import mk.ukim.finki.imdbclone.model.domain.Media;
 import mk.ukim.finki.imdbclone.model.domain.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -45,7 +47,7 @@ public interface UserService extends UserDetailsService {
     /**
      * Update an existing user's profile fields
      *
-     * @param id          the ID of the user to update
+     * @param id the ID of the user to update
      * @param userDetails the updated field values
      * @return the updated user
      */
@@ -75,9 +77,44 @@ public interface UserService extends UserDetailsService {
     boolean emailExists(String email);
 
     User register(String username, String password, String repeatPassword, String firstName, String lastName,
-            String email);
+                  String email);
 
     User login(String username, String password);
 
     User findByUsername(String username);
+
+    /**
+     * Add a media item to the user's watchlist
+     *
+     * @param username the username of the user
+     * @param mediaId the ID of the media item
+     * @return the updated user
+     */
+    User addMediaToWatchlist(String username, Long mediaId);
+
+    /**
+     * Remove a media item from the user's watchlist
+     *
+     * @param username the username of the user
+     * @param mediaId the ID of the media item
+     * @return the updated user
+     */
+    User removeMediaFromWatchlist(String username, Long mediaId);
+
+    /**
+     * Get all media items in a user's watchlist
+     *
+     * @param username the username of the user
+     * @return list of media items in the watchlist
+     */
+    List<Media> getWatchlist(String username);
+
+    /**
+     * Check whether a media item is already in the user's watchlist
+     *
+     * @param username the username of the user
+     * @param mediaId the ID of the media item
+     * @return true if the media item is in the watchlist
+     */
+    boolean isMediaInWatchlist(String username, Long mediaId);
 }
