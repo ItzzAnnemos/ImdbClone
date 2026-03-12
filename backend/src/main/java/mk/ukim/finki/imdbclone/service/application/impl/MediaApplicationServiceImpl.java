@@ -1,7 +1,7 @@
 package mk.ukim.finki.imdbclone.service.application.impl;
 
 import mk.ukim.finki.imdbclone.model.domain.Media;
-import mk.ukim.finki.imdbclone.model.dto.DisplayMediaDto;
+import mk.ukim.finki.imdbclone.model.dto.DisplayCardMediaDto;
 import mk.ukim.finki.imdbclone.service.application.MediaApplicationService;
 import mk.ukim.finki.imdbclone.service.domain.MediaService;
 
@@ -84,10 +84,10 @@ public abstract class MediaApplicationServiceImpl<T extends Media, C, D>
     }
 
     @Override
-    public List<D> findSimilar(Long id) {
+    public List<DisplayCardMediaDto> findSimilar(Long id) {
         return mediaService.findSimilar(id)
                 .stream()
-                .map(toDisplayDto)
+                .map(DisplayCardMediaDto::from)
                 .toList();
     }
 }

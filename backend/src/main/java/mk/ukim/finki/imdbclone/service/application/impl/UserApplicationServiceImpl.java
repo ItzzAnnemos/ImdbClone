@@ -65,9 +65,9 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
-    public List<DisplayMediaDto> getWatchlist(String username) {
+    public List<DisplayCardMediaDto> getWatchlist(String username) {
         return userService.getWatchlist(username).stream()
-                .map(DisplayMediaDto::from)
+                .map(DisplayCardMediaDto::from)
                 .toList();
     }
 

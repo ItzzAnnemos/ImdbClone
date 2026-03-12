@@ -2,6 +2,7 @@ package mk.ukim.finki.imdbclone.web.controllers;
 
 import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.imdbclone.model.dto.CreateTVSeriesDto;
+import mk.ukim.finki.imdbclone.model.dto.DisplayCardMediaDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayTVSeriesDto;
 import mk.ukim.finki.imdbclone.service.application.TVSeriesApplicationService;
 import org.springframework.http.HttpStatus;
@@ -74,7 +75,7 @@ public class TVSeriesController {
     }
 
     @GetMapping("/{id}/similar")
-    public ResponseEntity<List<DisplayTVSeriesDto>> findSimilar(@PathVariable Long id) {
+    public ResponseEntity<List<DisplayCardMediaDto>> findSimilar(@PathVariable Long id) {
         return ResponseEntity.ok(tvSeriesApplicationService.findSimilar(id));
     }
 }

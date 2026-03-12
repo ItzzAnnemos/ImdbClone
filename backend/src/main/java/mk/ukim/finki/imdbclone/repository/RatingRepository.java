@@ -1,5 +1,6 @@
 package mk.ukim.finki.imdbclone.repository;
 
+import mk.ukim.finki.imdbclone.model.domain.Media;
 import mk.ukim.finki.imdbclone.model.domain.Rating;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -47,6 +48,20 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
      */
     @Query("SELECT AVG(r.rating) FROM Rating r WHERE r.media.id = :mediaId")
     Double findAverageRatingByMediaId(@Param("mediaId") Long mediaId);
+
+    @Query("""
+           SELECT r.media
+           FROM Rating r
+           WHERE r.user.id = :userId AND r.rating >= 8
+           """)
+    List<Media> findHighlyRatedMediaByUserId(@Param("userId") Long userId);
+
+    @Query("""
+           SELECT DISTINCT r.user.id
+           FROM Rating r
+           WHERE r.media.id = :mediaId AND r.rating >= 8
+           """)
+    List<Long> findUserIdsWhoHighlyRatedMedia(@Param("mediaId") Long mediaId);
 
     /**
      * Count the number of ratings for a specific media item

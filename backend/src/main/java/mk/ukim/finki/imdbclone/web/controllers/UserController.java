@@ -7,6 +7,7 @@ import mk.ukim.finki.imdbclone.model.dto.*;
 import mk.ukim.finki.imdbclone.model.exceptions.InvalidArgumentsException;
 import mk.ukim.finki.imdbclone.model.exceptions.InvalidUserCredentialsException;
 import mk.ukim.finki.imdbclone.model.exceptions.PasswordsDoNotMatchException;
+import mk.ukim.finki.imdbclone.service.application.RecommendationApplicationService;
 import mk.ukim.finki.imdbclone.service.application.UserApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,11 @@ import java.util.List;
 @Tag(name = "User API", description = "Endpoints for user authentication and registration")
 public class UserController {
     private final UserApplicationService userApplicationService;
+    private final RecommendationApplicationService recommendationApplicationService;
 
-    public UserController(UserApplicationService userApplicationService) {
+    public UserController(UserApplicationService userApplicationService,  RecommendationApplicationService recommendationApplicationService) {
         this.userApplicationService = userApplicationService;
+        this.recommendationApplicationService = recommendationApplicationService;
     }
 
     @Operation(summary = "Register a new user", description = "Creates a new user account")
@@ -76,7 +79,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}/watchlist")
-    public ResponseEntity<List<DisplayMediaDto>> getWatchlist(@PathVariable String username) {
+    public ResponseEntity<List<DisplayCardMediaDto>> getWatchlist(@PathVariable String username) {
         return ResponseEntity.ok(userApplicationService.getWatchlist(username));
     }
 
@@ -87,5 +90,10 @@ public class UserController {
             @PathVariable Long mediaId) {
 
         return ResponseEntity.ok(userApplicationService.isMediaInWatchlist(username, mediaId));
+    }
+
+    @GetMapping("/{userId}/recommendations")
+    public ResponseEntity<List<DisplayCardMediaDto>> getRecommendations(@PathVariable Long userId) {
+        return ResponseEntity.ok(recommendationApplicationService.getRecommendationsForUser(userId));
     }
 }

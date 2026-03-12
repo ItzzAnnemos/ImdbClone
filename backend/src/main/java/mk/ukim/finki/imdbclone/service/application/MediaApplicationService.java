@@ -1,5 +1,7 @@
 package mk.ukim.finki.imdbclone.service.application;
 
+import mk.ukim.finki.imdbclone.model.dto.DisplayCardMediaDto;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -21,5 +23,5 @@ public interface MediaApplicationService<C, D> {
 
     List<D> findRecent();
 
-    List<D> findSimilar(Long id);
+    List<DisplayCardMediaDto> findSimilar(Long id);
 }
