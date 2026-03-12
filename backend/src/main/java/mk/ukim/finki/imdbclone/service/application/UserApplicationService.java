@@ -17,7 +17,7 @@ public interface UserApplicationService {
 
     Optional<DisplayUserDto> removeMediaFromWatchlist(String username, Long mediaId);
 
-    List<MediaDisplayDto> getWatchlist(String username);
+    List<DisplayMediaDto> getWatchlist(String username);
 
     boolean isMediaInWatchlist(String username, Long mediaId);
 }

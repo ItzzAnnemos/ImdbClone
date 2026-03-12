@@ -20,4 +20,6 @@ public interface MediaApplicationService<C, D> {
     List<D> findTopRated();
 
     List<D> findRecent();
+
+    List<D> findSimilar(Long id);
 }

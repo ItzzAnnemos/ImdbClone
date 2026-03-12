@@ -8,17 +8,14 @@ import java.util.List;
 public record DisplayUserDto(
         String username,
         String firstName,
-        String lastName,
-        List<Long> watchlist
+        String lastName
+
 ) {
     public static DisplayUserDto from(User user) {
         return new DisplayUserDto(
                 user.getUsername(),
                 user.getFirstName(),
-                user.getLastName(),
-                user.getWatchlist().stream()
-                        .map(Media::getId)
-                        .toList()
+                user.getLastName()
         );
     }
 }

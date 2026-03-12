@@ -75,4 +75,5 @@ public interface MediaService<T extends Media> {
      * @return List of the newest entities
      */
     List<T> getRecent();
+    List<T> findSimilar(Long mediaId);
 }

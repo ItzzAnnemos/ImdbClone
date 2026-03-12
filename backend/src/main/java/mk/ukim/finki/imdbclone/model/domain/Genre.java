@@ -3,10 +3,7 @@ package mk.ukim.finki.imdbclone.model.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +12,8 @@ import java.util.Set;
 @Table(name = "genres", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name")
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Genre {

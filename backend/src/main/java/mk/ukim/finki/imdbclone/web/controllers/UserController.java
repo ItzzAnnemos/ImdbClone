@@ -76,7 +76,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}/watchlist")
-    public ResponseEntity<List<MediaDisplayDto>> getWatchlist(@PathVariable String username) {
+    public ResponseEntity<List<DisplayMediaDto>> getWatchlist(@PathVariable String username) {
         return ResponseEntity.ok(userApplicationService.getWatchlist(username));
     }
 

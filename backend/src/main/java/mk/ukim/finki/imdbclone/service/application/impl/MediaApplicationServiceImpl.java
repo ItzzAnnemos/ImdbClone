@@ -1,6 +1,7 @@
 package mk.ukim.finki.imdbclone.service.application.impl;
 
 import mk.ukim.finki.imdbclone.model.domain.Media;
+import mk.ukim.finki.imdbclone.model.dto.DisplayMediaDto;
 import mk.ukim.finki.imdbclone.service.application.MediaApplicationService;
 import mk.ukim.finki.imdbclone.service.domain.MediaService;
 
@@ -77,6 +78,14 @@ public abstract class MediaApplicationServiceImpl<T extends Media, C, D>
     @Override
     public List<D> findRecent() {
         return mediaService.getRecent()
+                .stream()
+                .map(toDisplayDto)
+                .toList();
+    }
+
+    @Override
+    public List<D> findSimilar(Long id) {
+        return mediaService.findSimilar(id)
                 .stream()
                 .map(toDisplayDto)
                 .toList();

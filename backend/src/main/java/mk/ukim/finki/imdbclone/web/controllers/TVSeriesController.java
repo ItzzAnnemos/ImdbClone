@@ -72,4 +72,9 @@ public class TVSeriesController {
     public ResponseEntity<List<DisplayTVSeriesDto>> getTVSeriesByStatus(@RequestParam String status) {
         return ResponseEntity.ok(tvSeriesApplicationService.findByStatus(status));
     }
+
+    @GetMapping("/{id}/similar")
+    public ResponseEntity<List<DisplayTVSeriesDto>> findSimilar(@PathVariable Long id) {
+        return ResponseEntity.ok(tvSeriesApplicationService.findSimilar(id));
+    }
 }

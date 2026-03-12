@@ -1,7 +1,6 @@
 package mk.ukim.finki.imdbclone.service.application.impl;
 
 import mk.ukim.finki.imdbclone.helpers.JwtHelper;
-import mk.ukim.finki.imdbclone.model.domain.Media;
 import mk.ukim.finki.imdbclone.model.domain.User;
 import mk.ukim.finki.imdbclone.model.dto.*;
 import mk.ukim.finki.imdbclone.service.application.UserApplicationService;
@@ -66,9 +65,9 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
-    public List<MediaDisplayDto> getWatchlist(String username) {
+    public List<DisplayMediaDto> getWatchlist(String username) {
         return userService.getWatchlist(username).stream()
-                .map(MediaDisplayDto::from)
+                .map(DisplayMediaDto::from)
                 .toList();
     }
 

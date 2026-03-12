@@ -32,13 +32,13 @@ public class DataInitializer {
     private final MediaPersonRepository mediaPersonRepository;
 
     public DataInitializer(UserRepository userRepository,
-            GenreRepository genreRepository,
-            MovieRepository movieRepository,
-            TVSeriesRepository tvSeriesRepository,
-            RatingRepository ratingRepository,
-            ReviewRepository reviewRepository,
-            PersonRepository personRepository,
-            MediaPersonRepository mediaPersonRepository) {
+                           GenreRepository genreRepository,
+                           MovieRepository movieRepository,
+                           TVSeriesRepository tvSeriesRepository,
+                           RatingRepository ratingRepository,
+                           ReviewRepository reviewRepository,
+                           PersonRepository personRepository,
+                           MediaPersonRepository mediaPersonRepository) {
         this.userRepository = userRepository;
         this.genreRepository = genreRepository;
         this.movieRepository = movieRepository;
@@ -127,20 +127,115 @@ public class DataInitializer {
         if (this.movieRepository.count() == 0) {
             Movie movie1 = new Movie();
             movie1.setTitle("Inception");
-            movie1.setDescription("A thief who steals corporate secrets through the use of dream-sharing technology.");
+            movie1.setDescription("A thief who steals corporate secrets through dream-sharing technology.");
             movie1.setReleaseYear(2010);
             movie1.setDuration(148);
             movie1.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(1)))); // Action, Sci-Fi
 
             Movie movie2 = new Movie();
             movie2.setTitle("The Godfather");
-            movie2.setDescription(
-                    "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.");
+            movie2.setDescription("The aging patriarch of an organized crime dynasty transfers control to his son.");
             movie2.setReleaseYear(1972);
             movie2.setDuration(175);
             movie2.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
 
-            this.movieRepository.saveAll(List.of(movie1, movie2));
+            // SCI-FI / ACTION (similar to Inception)
+            Movie movie3 = new Movie();
+            movie3.setTitle("Interstellar");
+            movie3.setDescription("Explorers travel through a wormhole to save humanity.");
+            movie3.setReleaseYear(2014);
+            movie3.setDuration(169);
+            movie3.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(1)))); // Action, Sci-Fi
+
+            Movie movie4 = new Movie();
+            movie4.setTitle("Tenet");
+            movie4.setDescription("A secret agent manipulates time to prevent World War III.");
+            movie4.setReleaseYear(2020);
+            movie4.setDuration(150);
+            movie4.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(1)))); // Action, Sci-Fi
+
+            Movie movie5 = new Movie();
+            movie5.setTitle("The Matrix");
+            movie5.setDescription("A hacker discovers the true nature of reality.");
+            movie5.setReleaseYear(1999);
+            movie5.setDuration(136);
+            movie5.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(1)))); // Action, Sci-Fi
+
+            // CRIME / DRAMA (similar to Godfather)
+            Movie movie6 = new Movie();
+            movie6.setTitle("Goodfellas");
+            movie6.setDescription("The story of Henry Hill and his life in the mob.");
+            movie6.setReleaseYear(1990);
+            movie6.setDuration(146);
+            movie6.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
+
+            Movie movie7 = new Movie();
+            movie7.setTitle("Scarface");
+            movie7.setDescription("A Cuban immigrant rises to power in Miami's drug trade.");
+            movie7.setReleaseYear(1983);
+            movie7.setDuration(170);
+            movie7.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
+
+            Movie movie8 = new Movie();
+            movie8.setTitle("Casino");
+            movie8.setDescription("Greed and deception in Las Vegas casinos.");
+            movie8.setReleaseYear(1995);
+            movie8.setDuration(178);
+            movie8.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
+
+            // ROMANCE
+            Movie movie9 = new Movie();
+            movie9.setTitle("Titanic");
+            movie9.setDescription("A romance blossoms aboard the ill-fated Titanic.");
+            movie9.setReleaseYear(1997);
+            movie9.setDuration(195);
+            movie9.setGenres(new HashSet<>(List.of(genres.get(2)))); // Drama
+
+            Movie movie10 = new Movie();
+            movie10.setTitle("The Notebook");
+            movie10.setDescription("A young couple falls in love in the 1940s.");
+            movie10.setReleaseYear(2004);
+            movie10.setDuration(123);
+            movie10.setGenres(new HashSet<>(List.of(genres.get(2)))); // Drama
+
+            // COMEDY
+            Movie movie11 = new Movie();
+            movie11.setTitle("The Hangover");
+            movie11.setDescription("Three friends wake up after a bachelor party with no memory.");
+            movie11.setReleaseYear(2009);
+            movie11.setDuration(100);
+            movie11.setGenres(new HashSet<>(List.of(genres.get(3)))); // Comedy
+
+            Movie movie12 = new Movie();
+            movie12.setTitle("Superbad");
+            movie12.setDescription("Two high school friends try to enjoy their last days before college.");
+            movie12.setReleaseYear(2007);
+            movie12.setDuration(113);
+            movie12.setGenres(new HashSet<>(List.of(genres.get(3)))); // Comedy
+
+            // SCI-FI DRAMA
+            Movie movie13 = new Movie();
+            movie13.setTitle("Blade Runner 2049");
+            movie13.setDescription("A blade runner uncovers a secret that could change society.");
+            movie13.setReleaseYear(2017);
+            movie13.setDuration(164);
+            movie13.setGenres(new HashSet<>(List.of(genres.get(1), genres.get(2)))); // Sci-Fi, Drama
+
+            Movie movie14 = new Movie();
+            movie14.setTitle("Arrival");
+            movie14.setDescription("A linguist tries to communicate with alien visitors.");
+            movie14.setReleaseYear(2016);
+            movie14.setDuration(116);
+            movie14.setGenres(new HashSet<>(List.of(genres.get(1), genres.get(2)))); // Sci-Fi, Drama
+
+            this.movieRepository.saveAll(List.of(
+                    movie1, movie2, movie3, movie4, movie5,
+                    movie6, movie7, movie8,
+                    movie9, movie10,
+                    movie11, movie12,
+                    movie13, movie14
+            ));
+
             movies = this.movieRepository.findAll();
         } else {
             movies = movieRepository.findAll();

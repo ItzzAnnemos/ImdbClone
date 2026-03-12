@@ -93,4 +93,9 @@ public class MovieController {
     public ResponseEntity<List<DisplayMovieDto>> getMoviesByGenre(@PathVariable String genreName) {
         return ResponseEntity.ok(movieApplicationService.findByGenre(genreName));
     }
+
+    @GetMapping("/{id}/similar")
+    public ResponseEntity<List<DisplayMovieDto>> findSimilar(@PathVariable Long id) {
+        return ResponseEntity.ok(movieApplicationService.findSimilar(id));
+    }
 }
