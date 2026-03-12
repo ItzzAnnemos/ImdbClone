@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import mk.ukim.finki.imdbclone.repository.GenreRepository;
+import mk.ukim.finki.imdbclone.service.domain.helper.MediaSimilarityHelper;
 
 import java.util.List;
 
@@ -20,9 +22,13 @@ class MovieServiceTest {
 
     private MovieService movieService;
 
+    @Autowired
+    private GenreRepository genreRepository;
+
     @BeforeEach
     void setUp() {
-        movieService = new MovieServiceImpl(movieRepository);
+        MediaSimilarityHelper mediaSimilarityHelper = new MediaSimilarityHelper(genreRepository);
+        movieService = new MovieServiceImpl(movieRepository, mediaSimilarityHelper);
         movieRepository.deleteAll();
     }
 

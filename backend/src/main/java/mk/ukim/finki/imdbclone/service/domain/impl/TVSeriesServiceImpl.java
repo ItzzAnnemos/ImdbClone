@@ -6,6 +6,7 @@ import mk.ukim.finki.imdbclone.repository.TVSeriesRepository;
 import mk.ukim.finki.imdbclone.service.domain.TVSeriesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import mk.ukim.finki.imdbclone.service.domain.helper.MediaSimilarityHelper;
 
 import java.util.List;
 
@@ -16,8 +17,9 @@ public class TVSeriesServiceImpl extends MediaServiceImpl<TVSeries> implements T
 
     private final TVSeriesRepository tvSeriesRepository;
 
-    public TVSeriesServiceImpl(TVSeriesRepository tvSeriesRepository) {
-        super(tvSeriesRepository);
+    public TVSeriesServiceImpl(TVSeriesRepository tvSeriesRepository,
+                               MediaSimilarityHelper mediaSimilarityHelper) {
+        super(tvSeriesRepository, mediaSimilarityHelper);
         this.tvSeriesRepository = tvSeriesRepository;
     }
 

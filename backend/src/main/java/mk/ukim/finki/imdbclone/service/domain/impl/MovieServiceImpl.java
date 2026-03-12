@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import mk.ukim.finki.imdbclone.model.domain.Movie;
 import mk.ukim.finki.imdbclone.repository.MovieRepository;
 import mk.ukim.finki.imdbclone.service.domain.MovieService;
+import mk.ukim.finki.imdbclone.service.domain.helper.MediaSimilarityHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +17,9 @@ public class MovieServiceImpl extends MediaServiceImpl<Movie> implements MovieSe
 
     private final MovieRepository movieRepository;
 
-    public MovieServiceImpl(MovieRepository movieRepository) {
-        super(movieRepository);
+    public MovieServiceImpl(MovieRepository movieRepository,
+                            MediaSimilarityHelper mediaSimilarityHelper) {
+        super(movieRepository, mediaSimilarityHelper);
         this.movieRepository = movieRepository;
     }
 

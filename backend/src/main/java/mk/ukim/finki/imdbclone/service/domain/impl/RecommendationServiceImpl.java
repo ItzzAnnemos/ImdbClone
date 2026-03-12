@@ -8,6 +8,7 @@ import mk.ukim.finki.imdbclone.repository.MediaRepository;
 import mk.ukim.finki.imdbclone.repository.RatingRepository;
 import mk.ukim.finki.imdbclone.service.domain.RecommendationService;
 import mk.ukim.finki.imdbclone.service.domain.UserService;
+import mk.ukim.finki.imdbclone.service.domain.helper.MediaSimilarityHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,6 +21,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final MediaRepository mediaRepository;
     private final RatingRepository ratingRepository;
     private final UserService userService;
+    private final MediaSimilarityHelper mediaSimilarityHelper;
 
     @Override
     public List<Media> getPopularRecommendations() {
@@ -28,7 +30,8 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public List<Media> getContentBasedRecommendations(Long userId) {
-        User user = userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userService.getUserById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<Media> likedMedia = ratingRepository.findHighlyRatedMediaByUserId(userId);
         List<Media> watchlistMedia = user.getWatchlist();
@@ -43,7 +46,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         Set<Long> excludedIds = getExcludedMediaIds(user);
 
-        Map<Media, Integer> scores = new HashMap<>();
+        Map<Media, Double> scores = new HashMap<>();
         List<Media> allMedia = mediaRepository.findAll();
 
         for (Media candidate : allMedia) {
@@ -51,20 +54,20 @@ public class RecommendationServiceImpl implements RecommendationService {
                 continue;
             }
 
-            int score = 0;
+            double score = 0.0;
 
             for (Media source : baseMedia) {
-                score += calculateSimilarityScore(source, candidate);
+                score += mediaSimilarityHelper.similarityScore(source, candidate);
             }
 
-            if (score > 0) {
+            if (score > 0.0) {
                 scores.put(candidate, score);
             }
         }
 
         return scores.entrySet()
                 .stream()
-                .sorted(Map.Entry.<Media, Integer>comparingByValue().reversed())
+                .sorted(Map.Entry.<Media, Double>comparingByValue().reversed())
                 .map(Map.Entry::getKey)
                 .limit(10)
                 .toList();
@@ -78,7 +81,8 @@ public class RecommendationServiceImpl implements RecommendationService {
             return Collections.emptyList();
         }
 
-        User user = userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userService.getUserById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         Set<Long> excludedIds = getExcludedMediaIds(user);
 
         Map<Long, Integer> similarUserScores = new HashMap<>();
@@ -128,7 +132,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public List<Media> getRecommendationsForUser(Long userId) {
-        Map<Media, Integer> combinedScores = new HashMap<>();
+        Map<Media, Double> combinedScores = new HashMap<>();
 
         List<Media> contentBased = getContentBasedRecommendations(userId);
         List<Media> collaborative = getCollaborativeRecommendations(userId);
@@ -136,14 +140,14 @@ public class RecommendationServiceImpl implements RecommendationService {
         for (int i = 0; i < contentBased.size(); i++) {
             combinedScores.put(
                     contentBased.get(i),
-                    combinedScores.getOrDefault(contentBased.get(i), 0) + (10 - i)
+                    combinedScores.getOrDefault(contentBased.get(i), 0.0) + (10.0 - i)
             );
         }
 
         for (int i = 0; i < collaborative.size(); i++) {
             combinedScores.put(
                     collaborative.get(i),
-                    combinedScores.getOrDefault(collaborative.get(i), 0) + (10 - i)
+                    combinedScores.getOrDefault(collaborative.get(i), 0.0) + (10.0 - i)
             );
         }
 
@@ -153,7 +157,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         return combinedScores.entrySet()
                 .stream()
-                .sorted(Map.Entry.<Media, Integer>comparingByValue().reversed())
+                .sorted(Map.Entry.<Media, Double>comparingByValue().reversed())
                 .map(Map.Entry::getKey)
                 .limit(10)
                 .toList();
@@ -179,50 +183,5 @@ public class RecommendationServiceImpl implements RecommendationService {
         );
 
         return excludedIds;
-    }
-
-    private int calculateSimilarityScore(Media source, Media candidate) {
-        int score = 0;
-
-        if (source.getId().equals(candidate.getId())) {
-            return 0;
-        }
-
-        if (source.getGenres() != null && candidate.getGenres() != null) {
-            long commonGenres = source.getGenres()
-                    .stream()
-                    .filter(candidate.getGenres()::contains)
-                    .count();
-
-            score += (int) commonGenres * 5;
-        }
-
-        if (source.getReleaseYear() != null && candidate.getReleaseYear() != null) {
-            int yearDiff = Math.abs(source.getReleaseYear() - candidate.getReleaseYear());
-
-            if (yearDiff <= 2) {
-                score += 3;
-            } else if (yearDiff <= 5) {
-                score += 2;
-            } else if (yearDiff <= 10) {
-                score += 1;
-            }
-        }
-
-        if (candidate.getAverageRating() != null) {
-            if (candidate.getAverageRating() >= 8.0) {
-                score += 3;
-            } else if (candidate.getAverageRating() >= 7.0) {
-                score += 2;
-            } else if (candidate.getAverageRating() >= 6.0) {
-                score += 1;
-            }
-        }
-
-        if (source.getClass().equals(candidate.getClass())) {
-            score += 2;
-        }
-
-        return score;
     }
 }
