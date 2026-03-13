@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException(username));
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new InvalidUserCredentialsException();

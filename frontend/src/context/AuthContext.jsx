@@ -13,10 +13,23 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true); // Optional: If you want to fetch user details on load
 
     useEffect(() => {
-        // If we have a token but no user details, we might want to fetch the user profile here.
-        // For now, we'll just set loading to false.
+        if (token && !user) {
+            try {
+                // Decode the JWT payload (the middle part of the token)
+                const payload = JSON.parse(atob(token.split(".")[1]));
+                // The backend JwtHelper puts the username in the 'sub' (subject) claim
+                if (payload.sub) {
+                    setUser({ username: payload.sub });
+                }
+            } catch (err) {
+                console.error("Failed to decode token", err);
+                // Token is malformed; clean up
+                setToken(null);
+                localStorage.removeItem("token");
+            }
+        }
         setLoading(false);
-    }, [token]);
+    }, [token, user]);
 
     const login = async (username, password) => {
         const response = await api.post("/api/user/login", { username, password });
