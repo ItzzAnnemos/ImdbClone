@@ -67,16 +67,6 @@ public interface MovieService extends MediaService<Movie> {
         delete(id);
     }
 
-    /**
-     * Search for movies by title (case-insensitive partial match).
-     * Delegates to {@link MediaService#search(String)}.
-     *
-     * @param title the search term
-     * @return List of matching movies
-     */
-    default List<Movie> searchMovies(String title) {
-        return search(title);
-    }
 
     // ── Movie-specific queries ──
 

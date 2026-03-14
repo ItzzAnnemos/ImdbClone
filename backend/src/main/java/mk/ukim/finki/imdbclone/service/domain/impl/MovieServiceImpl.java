@@ -25,12 +25,6 @@ public class MovieServiceImpl extends MediaServiceImpl<Movie> implements MovieSe
 
     @Override
     @Transactional(readOnly = true)
-    public List<Movie> search(String title) {
-        return movieRepository.findByTitleContainingIgnoreCase(title);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<Movie> getTopRated() {
         return movieRepository.findTop10ByOrderByAverageRatingDesc();
     }

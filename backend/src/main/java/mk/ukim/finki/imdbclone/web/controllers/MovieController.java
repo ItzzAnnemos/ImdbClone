@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.imdbclone.model.dto.CreateMovieDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayCardMediaDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayMovieDto;
+import mk.ukim.finki.imdbclone.model.dto.SearchResultDto;
 import mk.ukim.finki.imdbclone.service.application.MovieApplicationService;
+import mk.ukim.finki.imdbclone.service.application.SearchApplicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class MovieController {
 
     private final MovieApplicationService movieApplicationService;
+    private final SearchApplicationService searchApplicationService;
 
     @GetMapping
     public ResponseEntity<List<DisplayMovieDto>> getAllMovies() {
@@ -55,10 +58,10 @@ public class MovieController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<DisplayMovieDto>> searchMovies(@RequestParam String title) {
-        return ResponseEntity.ok(movieApplicationService.search(title));
-    }
+//    @GetMapping("/search")
+//    public ResponseEntity<SearchResultDto> searchMovies(@RequestParam String title) {
+//        return ResponseEntity.ok(searchApplicationService.search(title));
+//    }
 
     @GetMapping("/top-rated")
     public ResponseEntity<List<DisplayMovieDto>> getTopRatedMovies() {

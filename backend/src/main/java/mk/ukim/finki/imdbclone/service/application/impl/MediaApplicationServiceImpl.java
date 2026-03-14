@@ -60,14 +60,6 @@ public abstract class MediaApplicationServiceImpl<T extends Media, C, D>
     }
 
     @Override
-    public List<D> search(String title) {
-        return mediaService.search(title)
-                .stream()
-                .map(toDisplayDto)
-                .toList();
-    }
-
-    @Override
     public List<D> findTopRated() {
         return mediaService.getTopRated()
                 .stream()

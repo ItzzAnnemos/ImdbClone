@@ -25,12 +25,6 @@ public class TVSeriesServiceImpl extends MediaServiceImpl<TVSeries> implements T
 
     @Override
     @Transactional(readOnly = true)
-    public List<TVSeries> search(String title) {
-        return tvSeriesRepository.findAllByTitleContainingIgnoreCase(title);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<TVSeries> getTopRated() {
         return tvSeriesRepository.findTop10ByOrderByAverageRatingDesc();
     }

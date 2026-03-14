@@ -55,14 +55,6 @@ public interface MediaService<T extends Media> {
     void delete(Long id);
 
     /**
-     * Search for media by title (case-insensitive partial match)
-     *
-     * @param title the search term
-     * @return List of matching media items
-     */
-    List<T> search(String title);
-
-    /**
      * Retrieve the top 10 highest-rated media items of type T
      *
      * @return List of top-rated entities

@@ -17,8 +17,6 @@ public interface MediaApplicationService<C, D> {
 
     void delete(Long id);
 
-    List<D> search(String title);
-
     List<D> findTopRated();
 
     List<D> findRecent();

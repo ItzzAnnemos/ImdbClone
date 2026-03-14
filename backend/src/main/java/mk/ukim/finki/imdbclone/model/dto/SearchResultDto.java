@@ -1,4 +1,9 @@
 package mk.ukim.finki.imdbclone.model.dto;
 
-public class SearchResultDto {
+import java.util.List;
+
+public record SearchResultDto(
+        List<SearchItemDto> results,
+        String interpretedAs
+) {
 }

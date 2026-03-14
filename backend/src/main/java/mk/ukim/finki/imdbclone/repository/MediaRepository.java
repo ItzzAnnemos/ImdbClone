@@ -1,7 +1,10 @@
 package mk.ukim.finki.imdbclone.repository;
 
 import mk.ukim.finki.imdbclone.model.domain.Media;
+import mk.ukim.finki.imdbclone.model.enumerations.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,4 +33,6 @@ public interface MediaRepository extends JpaRepository<Media, Long> {
      * @return List of the 10 newest media items across all types
      */
     List<Media> findTop10ByOrderByCreatedAtDesc();
+
+    List<Media> findByReleaseYear(Integer releaseYear);
 }

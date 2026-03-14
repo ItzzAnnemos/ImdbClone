@@ -6,6 +6,7 @@ import mk.ukim.finki.imdbclone.model.domain.User;
 import mk.ukim.finki.imdbclone.model.exceptions.*;
 import mk.ukim.finki.imdbclone.repository.MediaRepository;
 import mk.ukim.finki.imdbclone.repository.UserRepository;
+import mk.ukim.finki.imdbclone.service.domain.UserPreferenceService;
 import mk.ukim.finki.imdbclone.service.domain.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,12 +26,16 @@ public class UserServiceImpl implements UserService {
     private final MediaRepository mediaRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final UserPreferenceService userPreferenceService;
+
     public UserServiceImpl(UserRepository userRepository,
                            MediaRepository mediaRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           UserPreferenceService userPreferenceService) {
         this.userRepository = userRepository;
         this.mediaRepository = mediaRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userPreferenceService = userPreferenceService;
     }
 
     @Override
@@ -150,6 +155,7 @@ public class UserServiceImpl implements UserService {
         if (!alreadyExists) {
             user.getWatchlist().add(media);
             userRepository.save(user);
+            userPreferenceService.processWatchlistPreference(user, media);
         }
 
         return user;

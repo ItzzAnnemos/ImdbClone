@@ -6,8 +6,10 @@ import mk.ukim.finki.imdbclone.model.domain.Rating;
 import mk.ukim.finki.imdbclone.model.domain.User;
 import mk.ukim.finki.imdbclone.repository.MediaRepository;
 import mk.ukim.finki.imdbclone.repository.RatingRepository;
+import mk.ukim.finki.imdbclone.repository.UserPreferenceRepository;
 import mk.ukim.finki.imdbclone.repository.UserRepository;
 import mk.ukim.finki.imdbclone.service.domain.RatingService;
+import mk.ukim.finki.imdbclone.service.domain.UserPreferenceService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +25,16 @@ public class RatingServiceImpl implements RatingService {
     private final MediaRepository mediaRepository;
     private final UserRepository userRepository;
 
+    private final UserPreferenceService userPreferenceService;
+
     public RatingServiceImpl(RatingRepository ratingRepository,
             MediaRepository mediaRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+                             UserPreferenceService userPreferenceService) {
         this.ratingRepository = ratingRepository;
         this.mediaRepository = mediaRepository;
         this.userRepository = userRepository;
+        this.userPreferenceService = userPreferenceService;
     }
 
     @Override
@@ -51,6 +57,7 @@ public class RatingServiceImpl implements RatingService {
         Rating saved = ratingRepository.save(existingRating);
 
         syncAverageRating(media);
+        userPreferenceService.processRatingPreference(user, media, rating);
 
         return saved;
     }

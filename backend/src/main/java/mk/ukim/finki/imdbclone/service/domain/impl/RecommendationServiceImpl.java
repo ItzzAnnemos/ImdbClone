@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.imdbclone.model.domain.Media;
 import mk.ukim.finki.imdbclone.model.domain.Rating;
 import mk.ukim.finki.imdbclone.model.domain.User;
+import mk.ukim.finki.imdbclone.model.domain.UserPreference;
 import mk.ukim.finki.imdbclone.repository.MediaRepository;
 import mk.ukim.finki.imdbclone.repository.RatingRepository;
 import mk.ukim.finki.imdbclone.service.domain.RecommendationService;
+import mk.ukim.finki.imdbclone.service.domain.UserPreferenceService;
 import mk.ukim.finki.imdbclone.service.domain.UserService;
 import mk.ukim.finki.imdbclone.service.domain.helper.MediaSimilarityHelper;
+import mk.ukim.finki.imdbclone.service.domain.helper.PreferenceMatchingHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,6 +25,8 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final RatingRepository ratingRepository;
     private final UserService userService;
     private final MediaSimilarityHelper mediaSimilarityHelper;
+    private final UserPreferenceService userPreferenceService;
+    private final PreferenceMatchingHelper preferenceMatchingHelper;
 
     @Override
     public List<Media> getPopularRecommendations() {
@@ -40,16 +45,16 @@ public class RecommendationServiceImpl implements RecommendationService {
         baseMedia.addAll(likedMedia);
         baseMedia.addAll(watchlistMedia);
 
-        if (baseMedia.isEmpty()) {
+        Set<Long> excludedIds = getExcludedMediaIds(user);
+        List<UserPreference> preferences = userPreferenceService.getUserPreferences(user);
+
+        if (baseMedia.isEmpty() && preferences.isEmpty()) {
             return getPopularRecommendations();
         }
 
-        Set<Long> excludedIds = getExcludedMediaIds(user);
-
         Map<Media, Double> scores = new HashMap<>();
-        List<Media> allMedia = mediaRepository.findAll();
 
-        for (Media candidate : allMedia) {
+        for (Media candidate : mediaRepository.findAll()) {
             if (excludedIds.contains(candidate.getId())) {
                 continue;
             }
@@ -58,6 +63,10 @@ public class RecommendationServiceImpl implements RecommendationService {
 
             for (Media source : baseMedia) {
                 score += mediaSimilarityHelper.similarityScore(source, candidate);
+            }
+
+            for (UserPreference preference : preferences) {
+                score += preferenceMatchingHelper.calculatePreferenceMatchScore(candidate, preference);
             }
 
             if (score > 0.0) {
@@ -147,7 +156,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         for (int i = 0; i < collaborative.size(); i++) {
             combinedScores.put(
                     collaborative.get(i),
-                    combinedScores.getOrDefault(collaborative.get(i), 0.0) + (10.0 - i)
+                    combinedScores.getOrDefault(collaborative.get(i), 0.0) + (8.0 - i)
             );
         }
 

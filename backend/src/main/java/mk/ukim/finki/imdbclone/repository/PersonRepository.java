@@ -28,4 +28,5 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
      * @return List of matching persons
      */
     List<Person> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(String firstName, String lastName);
+
 }

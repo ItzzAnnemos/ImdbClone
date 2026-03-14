@@ -64,9 +64,6 @@ public abstract class MediaServiceImpl<T extends Media> implements MediaService<
     public abstract T update(Long id, T entityDetails);
 
     @Override
-    public abstract List<T> search(String title);
-
-    @Override
     public abstract List<T> getTopRated();
 
     @Override

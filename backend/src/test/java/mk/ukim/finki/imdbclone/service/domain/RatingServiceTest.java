@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ class RatingServiceTest {
     private UserRepository userRepository;
     @Autowired
     private MovieRepository movieRepository;
+    @MockitoBean
+    private UserPreferenceService userPreferenceService;
 
     private RatingService ratingService;
 
@@ -37,7 +40,12 @@ class RatingServiceTest {
 
     @BeforeEach
     void setUp() {
-        ratingService = new RatingServiceImpl(ratingRepository, mediaRepository, userRepository);
+        ratingService = new RatingServiceImpl(
+                ratingRepository,
+                mediaRepository,
+                userRepository,
+                userPreferenceService
+        );
 
         ratingRepository.deleteAll();
         movieRepository.deleteAll();

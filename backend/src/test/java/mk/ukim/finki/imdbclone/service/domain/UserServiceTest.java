@@ -30,14 +30,24 @@ class UserServiceTest {
     @MockitoBean
     private PasswordEncoder passwordEncoder;
 
+    @MockitoBean
+    private UserPreferenceService userPreferenceService;
+
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl(userRepository, mediaRepository, passwordEncoder);
+        userService = new UserServiceImpl(
+                userRepository,
+                mediaRepository,
+                passwordEncoder,
+                userPreferenceService
+        );
+
         userRepository.deleteAll();
 
-        when(passwordEncoder.encode(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(passwordEncoder.encode(anyString()))
+                .thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     private User createTestUser(String username, String email) {

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.imdbclone.model.dto.CreateTVSeriesDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayCardMediaDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayTVSeriesDto;
+import mk.ukim.finki.imdbclone.model.dto.SearchResultDto;
+import mk.ukim.finki.imdbclone.service.application.SearchApplicationService;
 import mk.ukim.finki.imdbclone.service.application.TVSeriesApplicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class TVSeriesController {
 
     private final TVSeriesApplicationService tvSeriesApplicationService;
+    private final SearchApplicationService searchApplicationService;
 
     @GetMapping
     public ResponseEntity<List<DisplayTVSeriesDto>> getAllTVSeries() {
@@ -54,10 +57,10 @@ public class TVSeriesController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<DisplayTVSeriesDto>> searchTVSeries(@RequestParam String title) {
-        return ResponseEntity.ok(tvSeriesApplicationService.search(title));
-    }
+//    @GetMapping("/search")
+//    public ResponseEntity<SearchResultDto> searchTVSeries(@RequestParam String title) {
+//        return ResponseEntity.ok(searchApplicationService.search(title));
+//    }
 
     @GetMapping("/top-rated")
     public ResponseEntity<List<DisplayTVSeriesDto>> getTopRatedTVSeries() {
