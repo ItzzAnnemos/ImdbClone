@@ -20,7 +20,7 @@ export function WatchlistCard({ media, className, ...props }) {
     };
 
     return (
-        <Link to={`/movie/${media.id}`}>
+        <Link to={media.type === "tv" ? `/tv/${media.id}` : `/movie/${media.id}`}>
             <motion.div
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -62,7 +62,7 @@ export function WatchlistCard({ media, className, ...props }) {
                                     className={cn(
                                         "shrink-0 flex h-8 w-8 items-center justify-center rounded-full shadow transition-all duration-200",
                                         inWatchlist
-                                            ? "bg-primary text-primary-foreground hover:bg-primary/80"
+                                            ? "bg-yellow-400 text-primary-foreground hover:bg-yellow-400/80"
                                             : "bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground",
                                     )}
                                 >

@@ -5,23 +5,24 @@ import { cn } from "../../lib/utils";
 import { useAuth } from "../../context/AuthContext";
 import { useWatchlist } from "../../hooks/useWatchlist";
 
-export function MovieCard({ id, title, rating, image, year, className, ...props }) {
+export function MediaCard({ id, title, rating, image, year, type, className, ...props }) {
     const { user } = useAuth();
     const { inWatchlist, toggling, toggle } = useWatchlist(user?.username, id);
 
     const handleToggle = (e) => {
-        e.preventDefault(); // prevent Link navigation
+        e.preventDefault();
         e.stopPropagation();
         toggle();
     };
 
+    const linkPath = type === "tv" ? `/tv/${id}` : `/movie/${id}`;
+
     return (
-        <Link to={`/movie/${id}`}>
+        <Link to={linkPath}>
             <motion.div
-                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                    "group relative overflow-hidden rounded-lg bg-card shadow-lg transition-all hover:shadow-xl cursor-pointer",
+                    "group relative overflow-hidden rounded-lg bg-card shadow-lg transition-all hover:shadow-xl cursor-pointer h-full",
                     className,
                 )}
                 {...props}
@@ -35,7 +36,6 @@ export function MovieCard({ id, title, rating, image, year, className, ...props 
                     />
                 </div>
 
-                {/* Watchlist button — always visible in top-right corner */}
                 {user && (
                     <button
                         onClick={handleToggle}
@@ -44,8 +44,8 @@ export function MovieCard({ id, title, rating, image, year, className, ...props 
                         className={cn(
                             "absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full shadow-md backdrop-blur-sm transition-all duration-200",
                             inWatchlist
-                                ? "bg-primary text-primary-foreground hover:bg-primary/80"
-                                : "bg-black/50 text-white hover:bg-black/70",
+                                ? "bg-yellow-400 text-primary-foreground hover:bg-yellow-400/80"
+                                : "bg-black/60 text-white hover:bg-black/80",
                         )}
                     >
                         {toggling ? (

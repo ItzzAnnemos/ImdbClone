@@ -1,73 +1,77 @@
+import { useState, useEffect } from "react";
 import { Layout } from "../components/layout/Layout";
-import { MovieCard } from "../components/ui/MovieCard";
+import { MediaSlider } from "../components/ui/MediaSlider";
 import { Button } from "../components/ui/Button";
 import { Hero } from "../components/ui/Hero";
-
-const DUMMY_MOVIES = [
-    {
-        id: 1,
-        title: "Inception",
-        rating: 8.8,
-        year: 2010,
-        image: "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKqWD8f5vFZNuDHZM7.jpg",
-    },
-    {
-        id: 2,
-        title: "The Dark Knight",
-        rating: 9.0,
-        year: 2008,
-        image: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
-    },
-    {
-        id: 3,
-        title: "Interstellar",
-        rating: 8.6,
-        year: 2014,
-        image: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-    },
-    {
-        id: 4,
-        title: "Parasite",
-        rating: 8.5,
-        year: 2019,
-        image: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
-    },
-    {
-        id: 5,
-        title: "Avengers: Endgame",
-        rating: 8.4,
-        year: 2019,
-        image: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
-    },
-    {
-        id: 6,
-        title: "Joker",
-        rating: 8.2,
-        year: 2019,
-        image: "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
-    },
-];
+import { Loader2 } from "lucide-react";
+import * as mediaService from "../lib/mediaService";
 
 export function Home() {
+    const [trendingMovies, setTrendingMovies] = useState([]);
+    const [recentMovies, setRecentMovies] = useState([]);
+    const [trendingTVSeries, setTrendingTVSeries] = useState([]);
+    const [recentTVSeries, setRecentTVSeries] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const [trendingM, recentM, trendingTV, recentTV] = await Promise.all([
+                    mediaService.getTrendingMovies(),
+                    mediaService.getRecentMovies(),
+                    mediaService.getTrendingTVSeries(),
+                    mediaService.getRecentTVSeries(),
+                ]);
+
+                setTrendingMovies(trendingM);
+                setRecentMovies(recentM);
+                setTrendingTVSeries(trendingTV);
+                setRecentTVSeries(recentTV);
+                setError(null);
+            } catch (err) {
+                console.error("Error fetching media content:", err);
+                setError("Failed to load content. Please try again later.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const MediaSection = ({ title, items }) => (
+        <MediaSlider title={title} items={items} />
+    );
+
     return (
         <Layout>
-            <Hero />
+            <Hero movie={trendingMovies[0]} />
 
-            {/* Movie Grid */}
-            <section>
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-foreground">Trending Now</h2>
-                    <Button variant="link" className="text-primary">
-                        View All
-                    </Button>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                    {DUMMY_MOVIES.map((movie) => (
-                        <MovieCard key={movie.id} {...movie} />
-                    ))}
-                </div>
-            </section>
+            <div className="container mx-auto px-4 py-8">
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center min-h-[400px] text-muted-foreground">
+                        <Loader2 className="h-10 w-10 animate-spin mb-4 text-primary" />
+                        <p>Loading your favorite content...</p>
+                    </div>
+                ) : error ? (
+                    <div className="flex flex-col items-center justify-center min-h-[400px] text-destructive">
+                        <p className="text-xl font-semibold mb-2">Oops!</p>
+                        <p>{error}</p>
+                        <Button onClick={() => window.location.reload()} variant="outline" className="mt-4">
+                            Retry
+                        </Button>
+                    </div>
+                ) : (
+                    <>
+                        <MediaSection title="Trending Movies" items={trendingMovies} />
+                        <MediaSection title="Recent Movies" items={recentMovies} />
+                        <MediaSection title="Trending TV Series" items={trendingTVSeries} />
+                        <MediaSection title="Recent TV Series" items={recentTVSeries} />
+                    </>
+                )}
+            </div>
         </Layout>
     );
 }

@@ -17,7 +17,7 @@ public class PreferenceMatchingHelper {
             case GENRE -> {
                 boolean matchesGenre = media.getGenres() != null &&
                         media.getGenres().stream()
-                                .anyMatch(g -> g.getName().equalsIgnoreCase(preference.getValue()));
+                                .anyMatch(g -> g.getName().equalsIgnoreCase(preference.getPreferenceValue()));
 
                 if (matchesGenre) {
                     return preference.getScore();
@@ -31,7 +31,7 @@ public class PreferenceMatchingHelper {
                                 .map(mp -> mp.getPerson())
                                 .filter(Objects::nonNull)
                                 .map(p -> p.getFirstName() + " " + p.getLastName())
-                                .anyMatch(name -> name.equalsIgnoreCase(preference.getValue()));
+                                .anyMatch(name -> name.equalsIgnoreCase(preference.getPreferenceValue()));
 
                 if (matchesDirector) {
                     return preference.getScore();
@@ -45,7 +45,7 @@ public class PreferenceMatchingHelper {
                                 .map(mp -> mp.getPerson())
                                 .filter(Objects::nonNull)
                                 .map(p -> p.getFirstName() + " " + p.getLastName())
-                                .anyMatch(name -> name.equalsIgnoreCase(preference.getValue()));
+                                .anyMatch(name -> name.equalsIgnoreCase(preference.getPreferenceValue()));
 
                 if (matchesActor) {
                     return preference.getScore();

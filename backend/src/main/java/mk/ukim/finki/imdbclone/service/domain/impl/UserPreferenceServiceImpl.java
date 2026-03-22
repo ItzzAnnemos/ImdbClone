@@ -82,7 +82,7 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
 
     private void updatePreference(User user, PreferenceType type, String value, double delta) {
         UserPreference preference = userPreferenceRepository
-                .findByUserAndPreferenceTypeAndValue(user, type, value)
+                .findByUserAndPreferenceTypeAndPreferenceValue(user, type, value)
                 .orElseGet(() -> new UserPreference(user, type, value, 0.0));
 
         preference.setScore(preference.getScore() + delta);

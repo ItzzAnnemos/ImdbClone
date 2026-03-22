@@ -29,6 +29,7 @@ export function fromApi(raw) {
         title:  raw.title,
         image:  raw.posterUrl ?? null,
         rating: raw.averageRating ?? null,
+        type:   raw.type ?? "movie",
     };
 }
 

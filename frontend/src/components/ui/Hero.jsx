@@ -4,12 +4,9 @@ import { Play, Info } from "lucide-react";
 export function Hero({ movie }) {
     // Default values if no movie is passed (or for the static version)
     const title = movie?.title || "Dune: Part Two";
-    const description =
-        movie?.overview ||
+    const description = movie?.description ||
         "Paul Atreides unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, he endeavors to prevent a terrible future only he can foresee.";
-    const image = movie?.backdrop_path
-        ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
-        : "https://image.tmdb.org/t/p/original/mSDsSDwaP3E7dEfUPWy4J0djt4O.jpg";
+    const image = movie?.image || "https://image.tmdb.org/t/p/original/mSDsSDwaP3E7dEfUPWy4J0djt4O.jpg";
 
     return (
         <section className="relative mb-12 rounded-xl overflow-hidden shadow-2xl">

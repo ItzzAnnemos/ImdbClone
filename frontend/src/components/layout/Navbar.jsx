@@ -27,7 +27,7 @@ export function Navbar() {
                         to="/"
                         className="flex items-center gap-2 font-bold text-lg md:text-xl text-primary hover:opacity-90 transition-opacity"
                     >
-                        <span className="bg-yellow-500 text-black px-2 py-0.5 rounded-md">
+                        <span className="bg-yellow-400 text-black px-2 py-0.5 rounded-md">
                             IMDb
                         </span>
                         <span className="hidden sm:inline-block">Clone</span>

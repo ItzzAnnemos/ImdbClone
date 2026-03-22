@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public interface UserPreferenceRepository extends JpaRepository<UserPreference, Long> {
 
-    Optional<UserPreference> findByUserAndPreferenceTypeAndValue(
+    Optional<UserPreference> findByUserAndPreferenceTypeAndPreferenceValue(
             User user,
             PreferenceType preferenceType,
-            String value
+            String preferenceValue
     );
 
     List<UserPreference> findAllByUserOrderByScoreDesc(User user);

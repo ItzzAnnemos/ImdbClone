@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record DisplayTVSeriesDto(
+        Long id,
         String title,
         String description,
         Integer releaseYear,
@@ -17,6 +18,7 @@ public record DisplayTVSeriesDto(
 
     public static DisplayTVSeriesDto from(TVSeries series) {
         return new DisplayTVSeriesDto(
+                series.getId(),
                 series.getTitle(),
                 series.getDescription(),
                 series.getReleaseYear(),

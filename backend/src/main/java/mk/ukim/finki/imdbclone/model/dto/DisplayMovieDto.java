@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record DisplayMovieDto(
+        Long id,
         String title,
         String description,
         Integer releaseYear,
@@ -16,6 +17,7 @@ public record DisplayMovieDto(
 
     public static DisplayMovieDto from(Movie movie) {
         return new DisplayMovieDto(
+                movie.getId(),
                 movie.getTitle(),
                 movie.getDescription(),
                 movie.getReleaseYear(),

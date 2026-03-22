@@ -24,15 +24,15 @@ public class UserPreference {
     private PreferenceType preferenceType;
 
     @Column(nullable = false)
-    private String value; // example: "Sci-Fi", "Christopher Nolan"
+    private String preferenceValue; // example: "Sci-Fi", "Christopher Nolan"
 
     @Column(nullable = false)
     private Double score = 0.0;
 
-    public UserPreference(User user, PreferenceType preferenceType, String value, Double score) {
+    public UserPreference(User user, PreferenceType preferenceType, String preferenceValue, Double score) {
         this.user = user;
         this.preferenceType = preferenceType;
-        this.value = value;
+        this.preferenceValue = preferenceValue;
         this.score = score;
     }
 }
