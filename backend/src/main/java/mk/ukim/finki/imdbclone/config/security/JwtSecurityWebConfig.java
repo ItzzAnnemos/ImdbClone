@@ -55,7 +55,11 @@ public class JwtSecurityWebConfig {
                                                 "/swagger-ui/**",
                                                 "/v3/api-docs/**",
                                                 "/api/user/register",
-                                                "/api/user/login"
+                                                "/api/user/login",
+                                                "/api/movies/recent",
+                                                "/api/movies/top-rated",
+                                                "/api/tv-series/recent",
+                                                "/api/tv-series/top-rated"
                                         )
                                         .permitAll()
                                         .anyRequest()

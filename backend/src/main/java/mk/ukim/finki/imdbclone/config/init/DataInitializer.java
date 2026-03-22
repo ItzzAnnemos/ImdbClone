@@ -11,8 +11,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @Component
 public class DataInitializer {
+    private final PasswordEncoder passwordEncoder;
     public static List<User> users;
     public static List<Genre> genres;
     public static List<Movie> movies;
@@ -38,7 +41,8 @@ public class DataInitializer {
                            RatingRepository ratingRepository,
                            ReviewRepository reviewRepository,
                            PersonRepository personRepository,
-                           MediaPersonRepository mediaPersonRepository) {
+                           MediaPersonRepository mediaPersonRepository,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.genreRepository = genreRepository;
         this.movieRepository = movieRepository;
@@ -47,6 +51,7 @@ public class DataInitializer {
         this.reviewRepository = reviewRepository;
         this.personRepository = personRepository;
         this.mediaPersonRepository = mediaPersonRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
@@ -55,21 +60,21 @@ public class DataInitializer {
         if (this.userRepository.count() == 0) {
             User user1 = new User();
             user1.setUsername("john_doe");
-            user1.setPassword("password123");
+            user1.setPassword(passwordEncoder.encode("password123"));
             user1.setFirstName("John");
             user1.setLastName("Doe");
             user1.setEmail("john@test.com");
 
             User user2 = new User();
             user2.setUsername("jane_smith");
-            user2.setPassword("password123");
+            user2.setPassword(passwordEncoder.encode("password123"));
             user2.setFirstName("Jane");
             user2.setLastName("Smith");
             user2.setEmail("jane@test.com");
 
             User user3 = new User();
             user3.setUsername("moviefan99");
-            user3.setPassword("password123");
+            user3.setPassword(passwordEncoder.encode("password123"));
             user3.setFirstName("Mike");
             user3.setLastName("Fan");
             user3.setEmail("mike@test.com");
@@ -152,13 +157,18 @@ public class DataInitializer {
             movie1.setReleaseYear(2010);
             movie1.setDuration(148);
             movie1.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(1)))); // Action, Sci-Fi
+            movie1.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg");
 
             Movie movie2 = new Movie();
             movie2.setTitle("The Godfather");
-            movie2.setDescription("The aging patriarch of an organized crime dynasty transfers control to his son.");
+            movie2.setDescription(
+                    "The aging patriarch of an organized crime dynasty transfers control to his son.");
             movie2.setReleaseYear(1972);
             movie2.setDuration(175);
             movie2.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
+            movie2.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg");
 
             Movie movie3 = new Movie();
             movie3.setTitle("Interstellar");
@@ -166,6 +176,8 @@ public class DataInitializer {
             movie3.setReleaseYear(2014);
             movie3.setDuration(169);
             movie3.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(1)))); // Action, Sci-Fi
+            movie3.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg");
 
             Movie movie4 = new Movie();
             movie4.setTitle("Tenet");
@@ -173,6 +185,8 @@ public class DataInitializer {
             movie4.setReleaseYear(2020);
             movie4.setDuration(150);
             movie4.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(1)))); // Action, Sci-Fi
+            movie4.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BMzQxNzQzOTQwM15BMl5BanBnXkFtZTgwMDQ2NTcwODM@._V1_.jpg");
 
             Movie movie5 = new Movie();
             movie5.setTitle("The Matrix");
@@ -180,6 +194,8 @@ public class DataInitializer {
             movie5.setReleaseYear(1999);
             movie5.setDuration(136);
             movie5.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(1)))); // Action, Sci-Fi
+            movie5.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg");
 
             Movie movie6 = new Movie();
             movie6.setTitle("Goodfellas");
@@ -187,6 +203,8 @@ public class DataInitializer {
             movie6.setReleaseYear(1990);
             movie6.setDuration(146);
             movie6.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
+            movie6.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BN2E5NzI2ZGMtY2VjNi00YTRjLWI1MDUtZGY5OWU1MWJjZjRjXkEyXkFqcGc@._V1_QL75_UX380_CR0");
 
             Movie movie7 = new Movie();
             movie7.setTitle("Scarface");
@@ -194,6 +212,8 @@ public class DataInitializer {
             movie7.setReleaseYear(1983);
             movie7.setDuration(170);
             movie7.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
+            movie7.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BNjdjNGQ4NDEtNTEwYS00MTgxLTliYzQtYzE2ZDRiZjFhZmNlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg");
 
             Movie movie8 = new Movie();
             movie8.setTitle("Casino");
@@ -201,6 +221,8 @@ public class DataInitializer {
             movie8.setReleaseYear(1995);
             movie8.setDuration(178);
             movie8.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
+            movie8.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BMDRlZWZjZjYtYzY2NS00ZWVjLTkwYzAtZTA2ZDAzMGRiYmYwXkEyXkFqcGc@._V1_QL75_UX380_CR0");
 
             Movie movie9 = new Movie();
             movie9.setTitle("Titanic");
@@ -208,6 +230,8 @@ public class DataInitializer {
             movie9.setReleaseYear(1997);
             movie9.setDuration(195);
             movie9.setGenres(new HashSet<>(List.of(genres.get(2)))); // Drama
+            movie9.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BYzYyN2FiZmUtYWYzMy00MzViLWJkZTMtOGY1ZjgzNWMwN2YxXkEyXkFqcGc@._V1_QL75_UX380_CR0");
 
             Movie movie10 = new Movie();
             movie10.setTitle("The Notebook");
@@ -215,6 +239,8 @@ public class DataInitializer {
             movie10.setReleaseYear(2004);
             movie10.setDuration(123);
             movie10.setGenres(new HashSet<>(List.of(genres.get(2)))); // Drama
+            movie10.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BZjE0ZjgzMzYtMTAxYi00NGMzLThmZDktNzFlMzA2MWRmYWQ0XkEyXkFqcGc@._V1_QL75_UX380_CR0");
 
             Movie movie11 = new Movie();
             movie11.setTitle("The Hangover");
@@ -222,6 +248,8 @@ public class DataInitializer {
             movie11.setReleaseYear(2009);
             movie11.setDuration(100);
             movie11.setGenres(new HashSet<>(List.of(genres.get(3)))); // Comedy
+            movie11.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BNDI2MzBhNzgtOWYyOS00NDM2LWE0OGYtOGQ0M2FjMTI2NTllXkEyXkFqcGc@._V1_QL75_UX380_CR0");
 
             Movie movie12 = new Movie();
             movie12.setTitle("Superbad");
@@ -229,6 +257,8 @@ public class DataInitializer {
             movie12.setReleaseYear(2007);
             movie12.setDuration(113);
             movie12.setGenres(new HashSet<>(List.of(genres.get(3)))); // Comedy
+            movie12.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BNjk0MzdlZGEtNTRkOC00ZDRiLWJkYjAtMzUzYTRiNzk1YTViXkEyXkFqcGc@._V1_QL75_UX380_CR0");
 
             Movie movie13 = new Movie();
             movie13.setTitle("Blade Runner 2049");
@@ -236,6 +266,8 @@ public class DataInitializer {
             movie13.setReleaseYear(2017);
             movie13.setDuration(164);
             movie13.setGenres(new HashSet<>(List.of(genres.get(1), genres.get(2)))); // Sci-Fi, Drama
+            movie13.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_.jpg");
 
             Movie movie14 = new Movie();
             movie14.setTitle("Arrival");
@@ -243,20 +275,31 @@ public class DataInitializer {
             movie14.setReleaseYear(2016);
             movie14.setDuration(116);
             movie14.setGenres(new HashSet<>(List.of(genres.get(1), genres.get(2)))); // Sci-Fi, Drama
+            movie14.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BMTExMzU0ODcxNDheQTJeQWpwZ15BbWU4MDE1OTI4MzAy._V1_QL75_UX380_CR0");
 
             Movie movie15 = new Movie();
             movie15.setTitle("Пред дождот");
-            movie15.setDescription("A Macedonian drama about interconnected stories set before the outbreak of war.");
+            movie15.setDescription(
+                    "A Macedonian drama about interconnected stories set before the outbreak of war.");
             movie15.setReleaseYear(1994);
             movie15.setDuration(113);
             movie15.setGenres(new HashSet<>(List.of(genres.get(2)))); // Drama
+            movie15.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BNmYwMmU4ZGQtMjA0YS00NjQ2LThlMzMtNzQ5NTEwNjA5MmJlXkEyXkFqcGc@._V1_QL75_UX380_CR0"); // Before
+            // the
+            // Rain
 
             Movie movie16 = new Movie();
             movie16.setTitle("Црно семе");
-            movie16.setDescription("A Macedonian drama set during World War II, following the suffering of prisoners.");
+            movie16.setDescription(
+                    "A Macedonian drama set during World War II, following the suffering of prisoners.");
             movie16.setReleaseYear(1971);
             movie16.setDuration(98);
             movie16.setGenres(new HashSet<>(List.of(genres.get(2)))); // Drama
+            movie16.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BNzNiYjcxNjMtODlkNS00MzQxLThmNWMtMGYwNDkzMzM4OGYzXkEyXkFqcGc@._V1_QL75_UX380_CR0"); // Black
+            // Seed
 
             this.movieRepository.saveAll(List.of(
                     movie1, movie2, movie3, movie4, movie5,
@@ -264,8 +307,7 @@ public class DataInitializer {
                     movie9, movie10,
                     movie11, movie12,
                     movie13, movie14,
-                    movie15, movie16
-            ));
+                    movie15, movie16));
 
             movies = this.movieRepository.findAll();
         } else {
@@ -282,6 +324,8 @@ public class DataInitializer {
             show1.setNumberOfSeasons(5);
             show1.setStatus("Ended");
             show1.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4)))); // Drama, Crime
+            show1.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BMzU5ZGYzNmQtMTdhYy00OGRiLTg0NmQtYjVjNzliZTg1ZGE4XkEyXkFqcGc@._V1_QL75_UX380_CR0");
 
             TVSeries show2 = new TVSeries();
             show2.setTitle("Severance");
@@ -291,8 +335,44 @@ public class DataInitializer {
             show2.setNumberOfSeasons(2);
             show2.setStatus("Returning Series");
             show2.setGenres(new HashSet<>(List.of(genres.get(1), genres.get(2)))); // Sci-Fi, Drama
+            show2.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BZDI5YzJhODQtMzQyNy00YWNmLWIxMjUtNDBjNjA5YWRjMzExXkEyXkFqcGc@._V1_QL75_UX380_CR0"); // Try
+            // this
 
-            this.tvSeriesRepository.saveAll(List.of(show1, show2));
+            TVSeries show3 = new TVSeries();
+            show3.setTitle("The Bear");
+            show3.setDescription(
+                    "A young chef from the fine dining world comes home to Chicago to run his family's sandwich shop.");
+            show3.setReleaseYear(2022);
+            show3.setNumberOfSeasons(3);
+            show3.setStatus("Returning Series");
+            show3.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(3)))); // Drama, Comedy
+            show3.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BYWZhNDZiMzAtZmZlYS00MWFmLWE2MWEtNDAxZTZiN2U4Y2U2XkEyXkFqcGc@._V1_QL75_UY562_CR35");
+
+            TVSeries show4 = new TVSeries();
+            show4.setTitle("Succession");
+            show4.setDescription(
+                    "The Roy family is known for controlling the biggest media and entertainment company in the world.");
+            show4.setReleaseYear(2018);
+            show4.setNumberOfSeasons(4);
+            show4.setStatus("Ended");
+            show4.setGenres(new HashSet<>(List.of(genres.get(2)))); // Drama
+            show4.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BYTY4YTVkY2QtMjRmOS00YzliLWIxOWQtMTdkOTVkN2UzODNmXkEyXkFqcGc@._V1_QL75_UX380_CR0");
+
+            TVSeries show5 = new TVSeries();
+            show5.setTitle("The Last of Us");
+            show5.setDescription(
+                    "After a global pandemic destroys civilization, a hardened survivor takes charge of a 14-year-old girl.");
+            show5.setReleaseYear(2023);
+            show5.setNumberOfSeasons(2);
+            show5.setStatus("Returning Series");
+            show5.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(2)))); // Action, Drama
+            show5.setPosterUrl(
+                    "https://m.media-amazon.com/images/M/MV5BYWI3ODJlMzktY2U5NC00ZjdlLWE1MGItNWQxZDk3NWNjN2RhXkEyXkFqcGc@._V1_QL75_UX380_CR0");
+
+            this.tvSeriesRepository.saveAll(List.of(show1, show2, show3, show4, show5));
             tvSeries = this.tvSeriesRepository.findAll();
         } else {
             tvSeries = tvSeriesRepository.findAll();
@@ -391,14 +471,17 @@ public class DataInitializer {
             this.ratingRepository.saveAll(List.of(r1, r2, r3, r4, r5, r6, r7, r8));
             ratings = ratingRepository.findAll();
 
-            movies.get(0).setAverageRating(9.0);   // Inception
-            movies.get(1).setAverageRating(10.0);  // The Godfather
-            movies.get(14).setAverageRating(9.5);  // Пред дождот
-            movies.get(15).setAverageRating(8.0);  // Црно семе
+            movies.get(0).setAverageRating(9.0); // Inception
+            movies.get(1).setAverageRating(10.0); // The Godfather
+            movies.get(14).setAverageRating(9.5); // Пред дождот
+            movies.get(15).setAverageRating(8.0); // Црно семе
             movieRepository.saveAll(movies);
 
             tvSeries.get(0).setAverageRating(9.0); // Breaking Bad
             tvSeries.get(1).setAverageRating(8.0); // Severance
+            tvSeries.get(2).setAverageRating(8.6); // The Bear
+            tvSeries.get(3).setAverageRating(8.9); // Succession
+            tvSeries.get(4).setAverageRating(8.8); // The Last of Us
             tvSeriesRepository.saveAll(tvSeries);
         } else {
             ratings = ratingRepository.findAll();
@@ -409,12 +492,14 @@ public class DataInitializer {
             Review rev1 = new Review();
             rev1.setUser(users.get(0));
             rev1.setMedia(movies.get(0));
-            rev1.setReviewText("Absolutely mind-blowing from start to finish. The practical effects are insane.");
+            rev1.setReviewText(
+                    "Absolutely mind-blowing from start to finish. The practical effects are insane.");
 
             Review rev2 = new Review();
             rev2.setUser(users.get(1));
             rev2.setMedia(movies.get(0));
-            rev2.setReviewText("Great concept but the exposition dumps were a bit heavy in the first half.");
+            rev2.setReviewText(
+                    "Great concept but the exposition dumps were a bit heavy in the first half.");
 
             Review rev3 = new Review();
             rev3.setUser(users.get(2));
@@ -424,12 +509,14 @@ public class DataInitializer {
             Review rev4 = new Review();
             rev4.setUser(users.get(0));
             rev4.setMedia(tvSeries.get(0));
-            rev4.setReviewText("The character development of Walter White is unparalleled in television history.");
+            rev4.setReviewText(
+                    "The character development of Walter White is unparalleled in television history.");
 
             Review rev5 = new Review();
             rev5.setUser(users.get(0));
             rev5.setMedia(movies.get(14)); // Пред дождот
-            rev5.setReviewText("One of the most important Macedonian films, visually powerful and emotionally deep.");
+            rev5.setReviewText(
+                    "One of the most important Macedonian films, visually powerful and emotionally deep.");
 
             this.reviewRepository.saveAll(List.of(rev1, rev2, rev3, rev4, rev5));
             reviews = reviewRepository.findAll();
