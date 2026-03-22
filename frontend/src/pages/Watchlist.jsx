@@ -27,12 +27,8 @@ export function Watchlist() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Redirect unauthenticated users
-    if (!user) {
-        return <Navigate to="/login" replace />;
-    }
-
     useEffect(() => {
+        if (!user) return;
         let cancelled = false;
 
         async function fetchWatchlist() {
@@ -47,7 +43,7 @@ export function Watchlist() {
                 if (!cancelled) {
                     setError(
                         err?.response?.data?.message ||
-                            "Failed to load your watchlist. Please try again.",
+                        "Failed to load your watchlist. Please try again.",
                     );
                 }
             } finally {
@@ -59,7 +55,13 @@ export function Watchlist() {
         return () => {
             cancelled = true;
         };
-    }, [user.username]);
+    }, [user?.username]);
+
+    // Redirect unauthenticated users
+    // This must be after ALL hooks to avoid Rule of Hooks errors
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
 
     return (
         <Layout>

@@ -47,11 +47,16 @@ export const AuthProvider = ({ children }) => {
         return response.data;
     };
 
-    const logout = () => {
-        setToken(null);
-        setUser(null);
-        localStorage.removeItem("token");
-        api.get("/api/user/logout").catch((err) => console.error("Logout error", err));
+    const logout = async () => {
+        try {
+            await api.get("/api/user/logout");
+        } catch (err) {
+            console.error("Logout error", err);
+        } finally {
+            setToken(null);
+            setUser(null);
+            localStorage.removeItem("token");
+        }
     };
 
     const value = {
