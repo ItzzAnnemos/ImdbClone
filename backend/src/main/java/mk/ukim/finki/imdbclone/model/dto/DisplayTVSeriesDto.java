@@ -13,7 +13,9 @@ public record DisplayTVSeriesDto(
         String posterUrl,
         Double averageRating,
         Integer numberOfSeasons,
-        String status
+        String status,
+        List<DisplayGenreDto> genres,
+        List<DisplayMediaPersonDto> cast
 ) {
 
     public static DisplayTVSeriesDto from(TVSeries series) {
@@ -25,7 +27,9 @@ public record DisplayTVSeriesDto(
                 series.getPosterUrl(),
                 series.getAverageRating(),
                 series.getNumberOfSeasons(),
-                series.getStatus()
+                series.getStatus(),
+                DisplayGenreDto.from(series.getGenres().stream().toList()),
+                DisplayMediaPersonDto.from(series.getCastAndCrew())
         );
     }
 

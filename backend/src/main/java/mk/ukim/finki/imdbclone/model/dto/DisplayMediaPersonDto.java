@@ -7,18 +7,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record DisplayMediaPersonDto(
-        String mediaTitle,
+        Long personId,
         String personFirstName,
         String personLastName,
+        String personProfilePictureUrl,
         Role role,
         String characterName
 ) {
 
     public static DisplayMediaPersonDto from(MediaPerson mediaPerson) {
         return new DisplayMediaPersonDto(
-                mediaPerson.getMedia().getTitle(),
+                mediaPerson.getPerson().getId(),
                 mediaPerson.getPerson().getFirstName(),
                 mediaPerson.getPerson().getLastName(),
+                mediaPerson.getPerson().getProfilePictureUrl(),
                 mediaPerson.getRole(),
                 mediaPerson.getCharacterName()
         );

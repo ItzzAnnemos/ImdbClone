@@ -12,7 +12,9 @@ public record DisplayMovieDto(
         Integer releaseYear,
         String posterUrl,
         Double averageRating,
-        Integer duration
+        Integer duration,
+        List<DisplayGenreDto> genres,
+        List<DisplayMediaPersonDto> cast
 ) {
 
     public static DisplayMovieDto from(Movie movie) {
@@ -23,7 +25,9 @@ public record DisplayMovieDto(
                 movie.getReleaseYear(),
                 movie.getPosterUrl(),
                 movie.getAverageRating(),
-                movie.getDuration()
+                movie.getDuration(),
+                DisplayGenreDto.from(movie.getGenres().stream().toList()),
+                DisplayMediaPersonDto.from(movie.getCastAndCrew())
         );
     }
 

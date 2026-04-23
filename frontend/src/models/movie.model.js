@@ -37,6 +37,8 @@ export function fromApi(raw) {
         image:       raw.posterUrl     ?? null,
         rating:      raw.averageRating ?? null,
         duration:    raw.duration      ?? null,
+        genres:      raw.genres        ?? [],
+        cast:        raw.cast          ?? [],
         type:        "movie",
     };
 }

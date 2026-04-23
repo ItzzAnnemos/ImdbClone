@@ -39,6 +39,8 @@ export function fromApi(raw) {
         rating:          raw.averageRating    ?? null,
         numberOfSeasons: raw.numberOfSeasons  ?? null,
         status:          raw.status           ?? null,
+        genres:          raw.genres           ?? [],
+        cast:            raw.cast             ?? [],
         type:            "tv",
     };
 }

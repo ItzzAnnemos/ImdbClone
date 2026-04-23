@@ -10,8 +10,7 @@ public record DisplayGenreDto(Long id, String name) {
     public static DisplayGenreDto from(Genre genre) {
         return new DisplayGenreDto(
                 genre.getId(),
-                genre.getName()
-        );
+                genre.getName());
     }
 
     public static List<DisplayGenreDto> from(List<Genre> genres) {

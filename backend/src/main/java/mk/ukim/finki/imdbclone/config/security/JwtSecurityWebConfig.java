@@ -50,20 +50,24 @@ public class JwtSecurityWebConfig {
                         corsCustomizer.configurationSource(corsConfigurationSource())
                 )
                 .authorizeHttpRequests(authorizeHttpRequestsCustomizer ->
-                                authorizeHttpRequestsCustomizer
-                                        .requestMatchers(
-                                                "/swagger-ui/**",
-                                                "/v3/api-docs/**",
-                                                "/api/user/register",
-                                                "/api/user/login",
-                                                "/api/movies/recent",
-                                                "/api/movies/top-rated",
-                                                "/api/tv-series/recent",
-                                                "/api/tv-series/top-rated"
-                                        )
-                                        .permitAll()
-                                        .anyRequest()
-                                        .authenticated()
+                        authorizeHttpRequestsCustomizer
+                                .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/api/user/register",
+                                        "/api/user/login",
+                                        "/api/movies/recent",
+                                        "/api/movies/top-rated",
+                                        "/api/movies/{id}",
+                                        "/api/movies/{id}/similar",
+                                        "/api/tv-series/recent",
+                                        "/api/tv-series/top-rated",
+                                        "/api/tv-series/{id}",
+                                        "/api/tv-series/{id}/similar"
+                                )
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
                 .sessionManagement(sessionManagementConfigurer ->
                         sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

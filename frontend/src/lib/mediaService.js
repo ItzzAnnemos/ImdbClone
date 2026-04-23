@@ -37,3 +37,41 @@ export async function getRecentTVSeries() {
     const response = await api.get("/api/tv-series/recent");
     return TVSeries.fromApiList(response.data);
 }
+
+/**
+ * Fetches movie details by ID.
+ * @param {number|string} id
+ * @returns {Promise<Movie>}
+ */
+export async function getMovieById(id) {
+    const response = await api.get(`/api/movies/${id}`);
+    return Movie.fromApi(response.data);
+}
+
+/**
+ * Fetches TV series details by ID.
+ * @param {number|string} id
+ * @returns {Promise<TVSeries>}
+ */
+export async function getTVSeriesById(id) {
+    const response = await api.get(`/api/tv-series/${id}`);
+    return TVSeries.fromApi(response.data);
+}
+
+/**
+ * Fetches similar movies.
+ * @param {number|string} id
+ */
+export async function getSimilarMovies(id) {
+    const response = await api.get(`/api/movies/${id}/similar`);
+    return response.data; // These are DisplayCardMediaDto
+}
+
+/**
+ * Fetches similar TV series.
+ * @param {number|string} id
+ */
+export async function getSimilarTVSeries(id) {
+    const response = await api.get(`/api/tv-series/${id}/similar`);
+    return response.data; // These are DisplayCardMediaDto
+}

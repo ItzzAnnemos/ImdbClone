@@ -38,21 +38,22 @@ export const WatchlistProvider = ({ children }) => {
     const toggleWatchlist = async (mediaId) => {
         if (!user) return;
 
-        const isInWatchlist = watchlistIds.has(mediaId);
+        const numericId = Number(mediaId);
+        const isInWatchlist = watchlistIds.has(numericId);
         
         try {
             if (isInWatchlist) {
-                await api.delete(`/api/user/${encodeURIComponent(user.username)}/watchlist/${mediaId}`);
+                await api.delete(`/api/user/${encodeURIComponent(user.username)}/watchlist/${numericId}`);
                 setWatchlistIds(prev => {
                     const next = new Set(prev);
-                    next.delete(mediaId);
+                    next.delete(numericId);
                     return next;
                 });
             } else {
-                await api.post(`/api/user/${encodeURIComponent(user.username)}/watchlist/${mediaId}`);
+                await api.post(`/api/user/${encodeURIComponent(user.username)}/watchlist/${numericId}`);
                 setWatchlistIds(prev => {
                     const next = new Set(prev);
-                    next.add(mediaId);
+                    next.add(numericId);
                     return next;
                 });
             }
@@ -67,7 +68,7 @@ export const WatchlistProvider = ({ children }) => {
         watchlistIds,
         loading,
         toggleWatchlist,
-        isInWatchlist: (mediaId) => watchlistIds.has(mediaId),
+        isInWatchlist: (mediaId) => watchlistIds.has(Number(mediaId)),
         refresh: fetchWatchlist
     };
 
