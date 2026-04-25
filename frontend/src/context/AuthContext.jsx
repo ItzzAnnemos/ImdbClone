@@ -19,7 +19,12 @@ export const AuthProvider = ({ children }) => {
                 const payload = JSON.parse(atob(token.split(".")[1]));
                 // The backend JwtHelper puts the username in the 'sub' (subject) claim
                 if (payload.sub) {
-                    setUser({ username: payload.sub });
+                    const storedUser = localStorage.getItem("user");
+                    if (storedUser) {
+                        setUser(JSON.parse(storedUser));
+                    } else {
+                        setUser({ username: payload.sub });
+                    }
                 }
             } catch (err) {
                 console.error("Failed to decode token", err);
@@ -33,12 +38,12 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         const response = await api.post("/api/user/login", { username, password });
-        const { token } = response.data;
+        const { token, user: userData } = response.data;
         setToken(token);
         localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(userData));
 
-        // In a real app, you might also fetch user details here or decode the JWT
-        setUser({ username });
+        setUser(userData);
         return response.data;
     };
 
@@ -56,6 +61,7 @@ export const AuthProvider = ({ children }) => {
             setToken(null);
             setUser(null);
             localStorage.removeItem("token");
+            localStorage.removeItem("user");
         }
     };
 

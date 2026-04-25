@@ -20,7 +20,7 @@ export function WatchlistCard({ media, className, ...props }) {
     };
 
     return (
-        <Link to={media.type === "tv" ? `/tv/${media.id}` : `/movie/${media.id}`}>
+        <Link to={`/media/${media.id}`}>
             <motion.div
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}

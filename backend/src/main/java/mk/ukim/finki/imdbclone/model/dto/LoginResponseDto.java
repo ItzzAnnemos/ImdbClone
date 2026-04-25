@@ -1,6 +1,7 @@
 package mk.ukim.finki.imdbclone.model.dto;
 
 public record LoginResponseDto(
-        String token
+        String token,
+        DisplayUserDto user
 ) {
 }

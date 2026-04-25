@@ -15,7 +15,7 @@ export function MediaCard({ id, title, rating, image, year, type, className, ...
         toggle();
     };
 
-    const linkPath = type === "tv" ? `/tv/${id}` : `/movie/${id}`;
+    const linkPath = `/media/${id}`;
 
     return (
         <Link to={linkPath}>

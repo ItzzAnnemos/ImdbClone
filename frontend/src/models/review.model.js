@@ -3,6 +3,7 @@
  *
  * Raw API shape:
  * {
+ *   id:         Number
  *   username:   String
  *   mediaTitle: String
  *   reviewText: String
@@ -13,6 +14,7 @@
 
 /**
  * @typedef {Object} Review
+ * @property {number}      id
  * @property {string}      username
  * @property {string}      mediaTitle
  * @property {string}      reviewText
@@ -27,6 +29,7 @@
  */
 export function fromApi(raw) {
     return {
+        id:         raw.id,
         username:   raw.username,
         mediaTitle: raw.mediaTitle,
         reviewText: raw.reviewText,

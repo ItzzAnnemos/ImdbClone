@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record DisplayReviewDto(
+        Long id,
         String username,
         String mediaTitle,
         String reviewText,
@@ -15,7 +16,6 @@ public record DisplayReviewDto(
 ) {
 
     public static DisplayReviewDto from(Review review) {
-
         LocalDateTime updated = null;
 
         if (review.getUpdatedAt() != null &&
@@ -24,6 +24,7 @@ public record DisplayReviewDto(
         }
 
         return new DisplayReviewDto(
+                review.getId(),
                 review.getUser().getUsername(),
                 review.getMedia().getTitle(),
                 review.getReviewText(),

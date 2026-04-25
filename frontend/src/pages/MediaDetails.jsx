@@ -21,13 +21,19 @@ import * as mediaService from "../lib/mediaService";
 import { useAuth } from "../context/AuthContext";
 import { useWatchlist } from "../hooks/useWatchlist";
 import { cn } from "../lib/utils";
+import * as ratingService from "../lib/ratingService";
+import * as reviewService from "../lib/reviewService";
+import { RatingModal } from "../components/ui/RatingModal";
+import { ReviewSidebar } from "../components/ui/ReviewSidebar";
+import { ReviewCard } from "../components/ui/ReviewCard";
+import { MessageSquarePlus } from "lucide-react";
 
 export function MediaDetails() {
     const { id } = useParams();
     const location = useLocation();
     const { user } = useAuth();
 
-    const isTV = location.pathname.startsWith("/tv");
+    const [isTV, setIsTV] = useState(false);
     const { inWatchlist, toggling, toggle } = useWatchlist(user?.username, id);
 
     const [media, setMedia] = useState(null);
@@ -35,21 +41,45 @@ export function MediaDetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Rating & Review state
+    const [userRating, setUserRating] = useState(null);
+    const [userReview, setUserReview] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
+    const [isReviewSidebarOpen, setIsReviewSidebarOpen] = useState(false);
+    const [editingReview, setEditingReview] = useState(null);
+    const [ratingCount, setRatingCount] = useState(0);
+
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             setError(null);
             try {
-                const mediaData = isTV
-                    ? await mediaService.getTVSeriesById(id)
-                    : await mediaService.getMovieById(id);
+                const mediaData = await mediaService.getMediaById(id);
+                const currentIsTV = mediaData.type === 'tv';
+                setIsTV(currentIsTV);
 
-                const similarData = isTV
-                    ? await mediaService.getSimilarTVSeries(id)
-                    : await mediaService.getSimilarMovies(id);
+                const similarData = await mediaService.getSimilarMedia(id, currentIsTV);
 
                 setMedia(mediaData);
                 setSimilarMedia(similarData);
+
+                // Fetch rating count
+                const count = await ratingService.getRatingCount(id);
+                setRatingCount(count);
+
+                // Fetch reviews
+                const reviewsData = await reviewService.getMediaReviews(id);
+                setReviews(reviewsData);
+
+                // Fetch user rating if logged in
+                if (user) {
+                    const rating = await ratingService.getUserRating(user.id, id);
+                    setUserRating(rating);
+                    
+                    const review = await reviewService.getUserReview(user.id, id);
+                    setUserReview(review);
+                }
             } catch (err) {
                 console.error("Error fetching media details:", err);
                 setError("Failed to load media details. Please try again later.");
@@ -60,7 +90,66 @@ export function MediaDetails() {
 
         fetchData();
         window.scrollTo(0, 0);
-    }, [id, isTV]);
+    }, [id, user]);
+
+    const handleRate = async (rating) => {
+        try {
+            const result = await ratingService.rateMedia({
+                userId: user.id,
+                mediaId: id,
+                rating: rating
+            });
+            setUserRating(result);
+            setIsRatingModalOpen(false);
+            // Refresh rating count and media rating (average)
+            const count = await ratingService.getRatingCount(id);
+            setRatingCount(count);
+            // In a real app, we'd also update media.rating
+        } catch (err) {
+            console.error("Failed to rate:", err);
+        }
+    };
+
+    const handleReviewSubmit = async (text) => {
+        try {
+            if (editingReview) {
+                await reviewService.updateReview(editingReview.id, text);
+            } else {
+                await reviewService.addReview({
+                    userId: user.id,
+                    mediaId: id,
+                    reviewText: text
+                });
+            }
+            setIsReviewSidebarOpen(false);
+            setEditingReview(null);
+            // Refresh reviews
+            const reviewsData = await reviewService.getMediaReviews(id);
+            setReviews(reviewsData);
+            
+            const review = await reviewService.getUserReview(user.id, id);
+            setUserReview(review);
+        } catch (err) {
+            console.error("Failed to submit review:", err);
+        }
+    };
+
+    const handleReviewEdit = (review) => {
+        setEditingReview(review);
+        setIsReviewSidebarOpen(true);
+    };
+
+    const handleReviewDelete = async (reviewId) => {
+        if (!window.confirm("Are you sure you want to delete your review?")) return;
+        try {
+            await reviewService.deleteReview(reviewId);
+            const reviewsData = await reviewService.getMediaReviews(id);
+            setReviews(reviewsData);
+            setUserReview(null);
+        } catch (err) {
+            console.error("Failed to delete review:", err);
+        }
+    };
 
     if (loading) {
         return (
@@ -134,10 +223,31 @@ export function MediaDetails() {
                                     <Star className="h-8 w-8 text-yellow-400 fill-current" />
                                     <div>
                                         <div className="text-2xl font-bold leading-none">{media.rating?.toFixed(1) || "N/A"}<span className="text-muted-foreground text-sm">/10</span></div>
-                                        <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">from users</div>
+                                        <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">{ratingCount.toLocaleString()} ratings</div>
                                     </div>
                                 </div>
                             </div>
+
+                            {user && (
+                                <div className="flex flex-col items-center">
+                                    <span className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-1">YOUR RATING</span>
+                                    <div 
+                                        className="flex items-center gap-2 cursor-pointer group"
+                                        onClick={() => setIsRatingModalOpen(true)}
+                                    >
+                                        <Star className={cn(
+                                            "h-8 w-8 transition-all duration-300",
+                                            userRating ? "text-primary fill-current" : "text-muted-foreground group-hover:text-primary"
+                                        )} />
+                                        <div>
+                                            <div className="text-2xl font-bold leading-none">
+                                                {userRating ? `${userRating.rating}` : "Rate"}
+                                                <span className="text-muted-foreground text-sm">/10</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {user && (
                                 <Button
@@ -279,7 +389,7 @@ export function MediaDetails() {
                                         Full cast & crew <ChevronRight className="h-4 w-4" />
                                     </Link>
                                 </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 pb-12 border-b border-border">
                                     {media.cast.filter(p => p.role.includes("ACTOR")).slice(0, 8).map((person, i) => (
                                         <motion.div
                                             key={`${person.personId}-${i}`}
@@ -303,6 +413,54 @@ export function MediaDetails() {
                                     ))}
                                 </div>
                             </section>
+
+                            {/* User Reviews Section */}
+                            <section className="pt-8">
+                                <div className="flex items-center justify-between mb-8">
+                                    <h3 className="text-2xl font-bold flex items-center gap-2">
+                                        <Star className="h-6 w-6 text-yellow-400" /> User Reviews
+                                    </h3>
+                                    {user && !userReview && (
+                                        <Button
+                                            onClick={() => setIsReviewSidebarOpen(true)}
+                                            className="bg-yellow-400 hover:bg-yellow-500 text-black border-none font-bold flex items-center gap-2"
+                                        >
+                                            <MessageSquarePlus className="h-5 w-5" />
+                                            Review
+                                        </Button>
+                                    )}
+                                </div>
+
+                                {reviews.length > 0 ? (
+                                    <div className="space-y-6">
+                                        {reviews.slice(0, 3).map((review, i) => (
+                                            <ReviewCard 
+                                                key={i} 
+                                                review={review} 
+                                                onEdit={handleReviewEdit}
+                                                onDelete={handleReviewDelete}
+                                            />
+                                        ))}
+                                        {reviews.length > 3 && (
+                                            <Link to={`/media/${id}/reviews`} className="block text-center p-4 border border-border rounded-xl font-bold hover:bg-muted transition-colors">
+                                                Read all {reviews.length} reviews
+                                            </Link>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="bg-muted/30 border border-dashed border-border rounded-xl p-12 text-center">
+                                        <p className="text-muted-foreground mb-4">No reviews yet. Be the first to share your thoughts!</p>
+                                        {user && !userReview && (
+                                            <Button 
+                                                variant="outline"
+                                                onClick={() => setIsReviewSidebarOpen(true)}
+                                            >
+                                                Write a Review
+                                            </Button>
+                                        )}
+                                    </div>
+                                )}
+                            </section>
                         </div>
 
                         {/* Sidebar */}
@@ -313,7 +471,7 @@ export function MediaDetails() {
                                     {similarMedia.slice(0, 4).map(item => (
                                         <Link
                                             key={item.id}
-                                            to={item.type === 'tv' ? `/tv/${item.id}` : `/movie/${item.id}`}
+                                            to={`/media/${item.id}`}
                                             className="flex gap-4 group"
                                         >
                                             <div className="w-16 h-24 flex-shrink-0 overflow-hidden rounded shadow-md">
@@ -379,6 +537,25 @@ export function MediaDetails() {
                     </section>
                 )}
             </div>
+
+            <RatingModal
+                isOpen={isRatingModalOpen}
+                onClose={() => setIsRatingModalOpen(false)}
+                onRate={handleRate}
+                initialRating={userRating?.rating || 0}
+                title={media.title}
+            />
+
+            <ReviewSidebar
+                isOpen={isReviewSidebarOpen}
+                onClose={() => {
+                    setIsReviewSidebarOpen(false);
+                    setEditingReview(null);
+                }}
+                onSubmit={handleReviewSubmit}
+                title={media.title}
+                initialReview={editingReview}
+            />
         </Layout>
     );
 }

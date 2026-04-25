@@ -59,6 +59,20 @@ export async function getTVSeriesById(id) {
 }
 
 /**
+ * Fetches media details by ID, trying movie first then TV series.
+ * @param {number|string} id
+ */
+export async function getMediaById(id) {
+    try {
+        const movie = await getMovieById(id);
+        return { ...movie, type: 'movie' };
+    } catch (err) {
+        const tv = await getTVSeriesById(id);
+        return { ...tv, type: 'tv' };
+    }
+}
+
+/**
  * Fetches similar movies.
  * @param {number|string} id
  */
@@ -74,4 +88,13 @@ export async function getSimilarMovies(id) {
 export async function getSimilarTVSeries(id) {
     const response = await api.get(`/api/tv-series/${id}/similar`);
     return response.data; // These are DisplayCardMediaDto
+}
+
+/**
+ * Fetches similar media based on type.
+ * @param {number|string} id
+ * @param {boolean} isTV
+ */
+export async function getSimilarMedia(id, isTV) {
+    return isTV ? getSimilarTVSeries(id) : getSimilarMovies(id);
 }

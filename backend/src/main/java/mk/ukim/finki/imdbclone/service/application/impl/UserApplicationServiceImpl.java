@@ -42,8 +42,9 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         );
 
         String token = jwtHelper.generateToken(user);
+        DisplayUserDto displayUserDto = DisplayUserDto.from(user);
 
-        return Optional.of(new LoginResponseDto(token));
+        return Optional.of(new LoginResponseDto(token, displayUserDto));
     }
 
     @Override

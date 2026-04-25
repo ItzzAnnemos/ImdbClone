@@ -4,6 +4,7 @@ import { MediaDetails } from "./pages/MediaDetails";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Watchlist } from "./pages/Watchlist";
+import { MediaReviews } from "./pages/MediaReviews";
 import { AuthProvider } from "./context/AuthContext";
 import { WatchlistProvider } from "./context/WatchlistContext";
 
@@ -14,8 +15,8 @@ function App() {
                 <Router>
                     <Routes>
                         <Route path="/" element={<Home />} />
-                        <Route path="/movie/:id" element={<MediaDetails />} />
-                        <Route path="/tv/:id" element={<MediaDetails />} />
+                        <Route path="/media/:id" element={<MediaDetails />} />
+                        <Route path="/media/:id/reviews" element={<MediaReviews />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/watchlist" element={<Watchlist />} />

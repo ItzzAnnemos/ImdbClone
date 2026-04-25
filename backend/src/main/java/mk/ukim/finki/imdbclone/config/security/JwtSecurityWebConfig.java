@@ -17,7 +17,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-
 @Configuration
 @Profile("jwt")
 @EnableWebSecurity
@@ -26,7 +25,8 @@ public class JwtSecurityWebConfig {
     private final CustomUsernamePasswordAuthenticationProvider authenticationProvider;
     private final JwtFilter jwtFilter;
 
-    public JwtSecurityWebConfig(CustomUsernamePasswordAuthenticationProvider authenticationProvider, JwtFilter jwtFilter) {
+    public JwtSecurityWebConfig(CustomUsernamePasswordAuthenticationProvider authenticationProvider,
+                                JwtFilter jwtFilter) {
         this.authenticationProvider = authenticationProvider;
         this.jwtFilter = jwtFilter;
     }
@@ -46,32 +46,30 @@ public class JwtSecurityWebConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(corsCustomizer ->
-                        corsCustomizer.configurationSource(corsConfigurationSource())
-                )
-                .authorizeHttpRequests(authorizeHttpRequestsCustomizer ->
-                        authorizeHttpRequestsCustomizer
-                                .requestMatchers(
-                                        "/swagger-ui/**",
-                                        "/v3/api-docs/**",
-                                        "/api/user/register",
-                                        "/api/user/login",
-                                        "/api/movies/recent",
-                                        "/api/movies/top-rated",
-                                        "/api/movies/{id}",
-                                        "/api/movies/{id}/similar",
-                                        "/api/tv-series/recent",
-                                        "/api/tv-series/top-rated",
-                                        "/api/tv-series/{id}",
-                                        "/api/tv-series/{id}/similar"
-                                )
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-                )
-                .sessionManagement(sessionManagementConfigurer ->
-                        sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(authorizeHttpRequestsCustomizer -> authorizeHttpRequestsCustomizer
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/api/user/register",
+                                "/api/user/login",
+                                "/api/movies/recent",
+                                "/api/movies/top-rated",
+                                "/api/movies/{id}",
+                                "/api/movies/{id}/similar",
+                                "/api/tv-series/recent",
+                                "/api/tv-series/top-rated",
+                                "/api/tv-series/{id}",
+                                "/api/tv-series/{id}/similar",
+                                "/api/ratings/media/**",
+                                "/api/ratings/by-user-media",
+                                "/api/reviews/media/**",
+                                "/api/reviews/by-user-media")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
