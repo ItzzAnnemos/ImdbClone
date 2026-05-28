@@ -101,10 +101,14 @@ export function MediaDetails() {
             });
             setUserRating(result);
             setIsRatingModalOpen(false);
-            // Refresh rating count and media rating (average)
-            const count = await ratingService.getRatingCount(id);
+            const [count, averageRating] = await Promise.all([
+                ratingService.getRatingCount(id),
+                ratingService.getAverageRating(id)
+            ]);
             setRatingCount(count);
-            // In a real app, we'd also update media.rating
+            setMedia(currentMedia => (
+                currentMedia ? { ...currentMedia, rating: averageRating } : currentMedia
+            ));
         } catch (err) {
             console.error("Failed to rate:", err);
         }
