@@ -34,6 +34,7 @@ The backend includes a Docker Compose Postgres database with a persistent named 
 Start Postgres:
 ```bash
 cd backend
+cp .env.example .env
 docker compose up -d
 ```
 
@@ -50,6 +51,8 @@ The local defaults are:
 - Password: `imdb`
 
 You can override them with `POSTGRES_JDBC_URL`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, and `POSTGRES_PORT`.
+
+Local overrides belong in `backend/.env`, copied from `backend/.env.example`. Docker Compose reads `backend/.env` automatically. Spring uses the same defaults from `application-postgres.properties`; if you change the database credentials or port in `.env`, export matching values before running `./mvnw spring-boot:run`.
 
 Reset to a fresh seeded database:
 ```bash
