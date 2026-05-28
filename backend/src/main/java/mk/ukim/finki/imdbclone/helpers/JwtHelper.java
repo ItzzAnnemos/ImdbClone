@@ -2,12 +2,16 @@ package mk.ukim.finki.imdbclone.helpers;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import mk.ukim.finki.imdbclone.constants.JwtConstants;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +20,21 @@ import java.util.function.Function;
 @Component
 public class JwtHelper {
 
+    private final String secretKey;
+
+    public JwtHelper(@Value("${jwt.secret:}") String secretKey,
+                     Environment environment) {
+        if (secretKey != null && !secretKey.isBlank()) {
+            this.secretKey = secretKey;
+        } else if (Arrays.asList(environment.getActiveProfiles()).contains("dev")) {
+            this.secretKey = Encoders.BASE64.encode(Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded());
+        } else {
+            throw new IllegalStateException("JWT secret must be configured with jwt.secret or JWT_SECRET");
+        }
+    }
+
     private Key getSignIn() {
-        byte[] keyBytes = Decoders.BASE64.decode(JwtConstants.SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

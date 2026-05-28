@@ -19,8 +19,6 @@ export default defineConfig([
     ],
     plugins: {
       react,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
       prettier: prettierPlugin, // Incorporate eslint-plugin-prettier
     },
     languageOptions: {

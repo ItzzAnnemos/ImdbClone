@@ -62,9 +62,7 @@ public class JwtSecurityWebConfig {
                                 "/api/tv-series/{id}",
                                 "/api/tv-series/{id}/similar",
                                 "/api/ratings/media/**",
-                                "/api/ratings/by-user-media",
-                                "/api/reviews/media/**",
-                                "/api/reviews/by-user-media")
+                                "/api/reviews/media/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())

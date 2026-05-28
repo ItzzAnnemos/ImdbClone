@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -16,10 +17,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()) // Allow all for development
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for development
-                .headers(headers -> headers
-                        .frameOptions(frame -> frame.disable())); // Allow H2 console frames
+                        .anyRequest().denyAll())
+                .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }

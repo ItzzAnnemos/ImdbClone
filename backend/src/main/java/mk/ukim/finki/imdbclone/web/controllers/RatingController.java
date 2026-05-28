@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.imdbclone.model.dto.CreateRatingDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayRatingDto;
 import mk.ukim.finki.imdbclone.service.application.RatingApplicationService;
+import mk.ukim.finki.imdbclone.web.helpers.ControllerAuthorizationHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +20,16 @@ import java.util.Optional;
 public class RatingController {
 
     private final RatingApplicationService ratingApplicationService;
+    private final ControllerAuthorizationHelper authorizationHelper;
 
     @GetMapping("/by-user-media")
     public ResponseEntity<DisplayRatingDto> getRating(@RequestParam Long userId,
-                                                      @RequestParam Long mediaId) {
+                                                      @RequestParam Long mediaId,
+                                                      Authentication authentication) {
+        if (!authorizationHelper.isAuthenticatedUserId(userId, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Optional<DisplayRatingDto> rating =
                 ratingApplicationService.findByUserAndMedia(userId, mediaId);
 
@@ -30,7 +38,12 @@ public class RatingController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<DisplayRatingDto> rateMedia(@RequestBody CreateRatingDto ratingDto) {
+    public ResponseEntity<DisplayRatingDto> rateMedia(@RequestBody CreateRatingDto ratingDto,
+                                                      Authentication authentication) {
+        if (!authorizationHelper.isAuthenticatedUserId(ratingDto.userId(), authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return ratingApplicationService.save(ratingDto)
                 .map(rating -> ResponseEntity.status(HttpStatus.CREATED).body(rating))
                 .orElse(ResponseEntity.badRequest().build());
@@ -38,7 +51,12 @@ public class RatingController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteRating(@RequestParam Long userId,
-                                             @RequestParam Long mediaId) {
+                                             @RequestParam Long mediaId,
+                                             Authentication authentication) {
+        if (!authorizationHelper.isAuthenticatedUserId(userId, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         ratingApplicationService.delete(userId, mediaId);
         return ResponseEntity.noContent().build();
     }
@@ -49,7 +67,12 @@ public class RatingController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<DisplayRatingDto>> getRatingsByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<DisplayRatingDto>> getRatingsByUser(@PathVariable Long userId,
+                                                                   Authentication authentication) {
+        if (!authorizationHelper.isAuthenticatedUserId(userId, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return ResponseEntity.ok(ratingApplicationService.findByUser(userId));
     }
 

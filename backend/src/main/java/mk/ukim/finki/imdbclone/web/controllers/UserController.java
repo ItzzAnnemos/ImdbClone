@@ -9,7 +9,10 @@ import mk.ukim.finki.imdbclone.model.exceptions.InvalidUserCredentialsException;
 import mk.ukim.finki.imdbclone.model.exceptions.PasswordsDoNotMatchException;
 import mk.ukim.finki.imdbclone.service.application.RecommendationApplicationService;
 import mk.ukim.finki.imdbclone.service.application.UserApplicationService;
+import mk.ukim.finki.imdbclone.web.helpers.ControllerAuthorizationHelper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +23,14 @@ import java.util.List;
 public class UserController {
     private final UserApplicationService userApplicationService;
     private final RecommendationApplicationService recommendationApplicationService;
+    private final ControllerAuthorizationHelper authorizationHelper;
 
-    public UserController(UserApplicationService userApplicationService,  RecommendationApplicationService recommendationApplicationService) {
+    public UserController(UserApplicationService userApplicationService,
+                          RecommendationApplicationService recommendationApplicationService,
+                          ControllerAuthorizationHelper authorizationHelper) {
         this.userApplicationService = userApplicationService;
         this.recommendationApplicationService = recommendationApplicationService;
+        this.authorizationHelper = authorizationHelper;
     }
 
     @Operation(summary = "Register a new user", description = "Creates a new user account")
@@ -60,7 +67,11 @@ public class UserController {
     @PostMapping("/{username}/watchlist/{mediaId}")
     public ResponseEntity<DisplayUserDto> addMediaToWatchlist(
             @PathVariable String username,
-            @PathVariable Long mediaId) {
+            @PathVariable Long mediaId,
+            Authentication authentication) {
+        if (!authorizationHelper.isAuthenticatedUsername(username, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
         return userApplicationService.addMediaToWatchlist(username, mediaId)
                 .map(ResponseEntity::ok)
@@ -71,7 +82,11 @@ public class UserController {
     @DeleteMapping("/{username}/watchlist/{mediaId}")
     public ResponseEntity<DisplayUserDto> removeMediaFromWatchlist(
             @PathVariable String username,
-            @PathVariable Long mediaId) {
+            @PathVariable Long mediaId,
+            Authentication authentication) {
+        if (!authorizationHelper.isAuthenticatedUsername(username, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
         return userApplicationService.removeMediaFromWatchlist(username, mediaId)
                 .map(ResponseEntity::ok)
@@ -79,7 +94,12 @@ public class UserController {
     }
 
     @GetMapping("/{username}/watchlist")
-    public ResponseEntity<List<DisplayCardMediaDto>> getWatchlist(@PathVariable String username) {
+    public ResponseEntity<List<DisplayCardMediaDto>> getWatchlist(@PathVariable String username,
+                                                                  Authentication authentication) {
+        if (!authorizationHelper.isAuthenticatedUsername(username, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return ResponseEntity.ok(userApplicationService.getWatchlist(username));
     }
 
@@ -87,13 +107,22 @@ public class UserController {
     @GetMapping("/{username}/watchlist/{mediaId}")
     public ResponseEntity<Boolean> isMediaInWatchlist(
             @PathVariable String username,
-            @PathVariable Long mediaId) {
+            @PathVariable Long mediaId,
+            Authentication authentication) {
+        if (!authorizationHelper.isAuthenticatedUsername(username, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
         return ResponseEntity.ok(userApplicationService.isMediaInWatchlist(username, mediaId));
     }
 
     @GetMapping("/{userId}/recommendations")
-    public ResponseEntity<List<DisplayCardMediaDto>> getRecommendations(@PathVariable Long userId) {
+    public ResponseEntity<List<DisplayCardMediaDto>> getRecommendations(@PathVariable Long userId,
+                                                                        Authentication authentication) {
+        if (!authorizationHelper.isAuthenticatedUserId(userId, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return ResponseEntity.ok(recommendationApplicationService.getRecommendationsForUser(userId));
     }
 }
