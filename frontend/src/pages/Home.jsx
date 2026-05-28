@@ -41,9 +41,7 @@ export function Home() {
         fetchData();
     }, []);
 
-    const MediaSection = ({ title, items }) => (
-        <MediaSlider title={title} items={items} />
-    );
+    const MediaSection = ({ title, items }) => <MediaSlider title={title} items={items} />;
 
     return (
         <Layout>
@@ -59,7 +57,11 @@ export function Home() {
                     <div className="flex flex-col items-center justify-center min-h-[400px] text-destructive">
                         <p className="text-xl font-semibold mb-2">Oops!</p>
                         <p>{error}</p>
-                        <Button onClick={() => window.location.reload()} variant="outline" className="mt-4">
+                        <Button
+                            onClick={() => window.location.reload()}
+                            variant="outline"
+                            className="mt-4"
+                        >
                             Retry
                         </Button>
                     </div>

@@ -20,7 +20,7 @@
  */
 export function fromApi(raw) {
     return {
-        id:   raw.id,
+        id: raw.id,
         name: raw.name,
     };
 }

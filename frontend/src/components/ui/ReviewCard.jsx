@@ -2,13 +2,12 @@ import { Star, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { useAuth } from "../../context/AuthContext";
 import { useState, useRef, useEffect } from "react";
-import { cn } from "../../lib/utils";
 
 export function ReviewCard({ review, onEdit, onDelete }) {
     const { user } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
-    
+
     const date = review.createdAt ? format(new Date(review.createdAt), "dd MMM yyyy") : "Recently";
     const isOwner = user && user.username === review.username;
 
@@ -33,20 +32,24 @@ export function ReviewCard({ review, onEdit, onDelete }) {
                         <h4 className="font-bold text-foreground">{review.username}</h4>
                         <p className="text-xs text-muted-foreground">
                             {date}
-                            {review.isEdited && <span className="ml-2 text-[10px] uppercase tracking-tighter opacity-70">(Edited)</span>}
+                            {review.isEdited && (
+                                <span className="ml-2 text-[10px] uppercase tracking-tighter opacity-70">
+                                    (Edited)
+                                </span>
+                            )}
                         </p>
                     </div>
                 </div>
-                
+
                 {isOwner && (
                     <div className="relative" ref={menuRef}>
-                        <button 
+                        <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className="text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-muted transition-colors"
                         >
                             <MoreHorizontal className="h-5 w-5" />
                         </button>
-                        
+
                         {isMenuOpen && (
                             <div className="absolute right-0 mt-2 w-36 bg-popover border border-border rounded-lg shadow-xl z-20 overflow-hidden animate-in fade-in zoom-in duration-200">
                                 <button
@@ -74,9 +77,7 @@ export function ReviewCard({ review, onEdit, onDelete }) {
             </div>
 
             <div className="mb-2">
-                <p className="text-muted-foreground leading-relaxed">
-                    {review.reviewText}
-                </p>
+                <p className="text-muted-foreground leading-relaxed">{review.reviewText}</p>
             </div>
         </div>
     );

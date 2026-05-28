@@ -21,8 +21,10 @@ export const WatchlistProvider = ({ children }) => {
 
         setLoading(true);
         try {
-            const response = await api.get(`/api/user/${encodeURIComponent(user.username)}/watchlist`);
-            const ids = new Set(response.data.map(item => item.id));
+            const response = await api.get(
+                `/api/user/${encodeURIComponent(user.username)}/watchlist`,
+            );
+            const ids = new Set(response.data.map((item) => item.id));
             setWatchlistIds(ids);
         } catch (err) {
             console.error("Failed to fetch watchlist:", err);
@@ -40,18 +42,22 @@ export const WatchlistProvider = ({ children }) => {
 
         const numericId = Number(mediaId);
         const isInWatchlist = watchlistIds.has(numericId);
-        
+
         try {
             if (isInWatchlist) {
-                await api.delete(`/api/user/${encodeURIComponent(user.username)}/watchlist/${numericId}`);
-                setWatchlistIds(prev => {
+                await api.delete(
+                    `/api/user/${encodeURIComponent(user.username)}/watchlist/${numericId}`,
+                );
+                setWatchlistIds((prev) => {
                     const next = new Set(prev);
                     next.delete(numericId);
                     return next;
                 });
             } else {
-                await api.post(`/api/user/${encodeURIComponent(user.username)}/watchlist/${numericId}`);
-                setWatchlistIds(prev => {
+                await api.post(
+                    `/api/user/${encodeURIComponent(user.username)}/watchlist/${numericId}`,
+                );
+                setWatchlistIds((prev) => {
                     const next = new Set(prev);
                     next.add(numericId);
                     return next;
@@ -69,12 +75,8 @@ export const WatchlistProvider = ({ children }) => {
         loading,
         toggleWatchlist,
         isInWatchlist: (mediaId) => watchlistIds.has(Number(mediaId)),
-        refresh: fetchWatchlist
+        refresh: fetchWatchlist,
     };
 
-    return (
-        <WatchlistContext.Provider value={value}>
-            {children}
-        </WatchlistContext.Provider>
-    );
+    return <WatchlistContext.Provider value={value}>{children}</WatchlistContext.Provider>;
 };

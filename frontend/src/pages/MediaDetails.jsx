@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     Star,
@@ -12,7 +12,7 @@ import {
     Loader2,
     Users,
     Clapperboard,
-    Info
+    Info,
 } from "lucide-react";
 import { Layout } from "../components/layout/Layout";
 import { Button } from "../components/ui/Button";
@@ -30,7 +30,6 @@ import { MessageSquarePlus } from "lucide-react";
 
 export function MediaDetails() {
     const { id } = useParams();
-    const location = useLocation();
     const { user } = useAuth();
 
     const [isTV, setIsTV] = useState(false);
@@ -56,7 +55,7 @@ export function MediaDetails() {
             setError(null);
             try {
                 const mediaData = await mediaService.getMediaById(id);
-                const currentIsTV = mediaData.type === 'tv';
+                const currentIsTV = mediaData.type === "tv";
                 setIsTV(currentIsTV);
 
                 const similarData = await mediaService.getSimilarMedia(id, currentIsTV);
@@ -76,7 +75,7 @@ export function MediaDetails() {
                 if (user) {
                     const rating = await ratingService.getUserRating(user.id, id);
                     setUserRating(rating);
-                    
+
                     const review = await reviewService.getUserReview(user.id, id);
                     setUserReview(review);
                 }
@@ -97,18 +96,18 @@ export function MediaDetails() {
             const result = await ratingService.rateMedia({
                 userId: user.id,
                 mediaId: id,
-                rating: rating
+                rating: rating,
             });
             setUserRating(result);
             setIsRatingModalOpen(false);
             const [count, averageRating] = await Promise.all([
                 ratingService.getRatingCount(id),
-                ratingService.getAverageRating(id)
+                ratingService.getAverageRating(id),
             ]);
             setRatingCount(count);
-            setMedia(currentMedia => (
-                currentMedia ? { ...currentMedia, rating: averageRating } : currentMedia
-            ));
+            setMedia((currentMedia) =>
+                currentMedia ? { ...currentMedia, rating: averageRating } : currentMedia,
+            );
         } catch (err) {
             console.error("Failed to rate:", err);
         }
@@ -122,7 +121,7 @@ export function MediaDetails() {
                 await reviewService.addReview({
                     userId: user.id,
                     mediaId: id,
-                    reviewText: text
+                    reviewText: text,
                 });
             }
             setIsReviewSidebarOpen(false);
@@ -130,7 +129,7 @@ export function MediaDetails() {
             // Refresh reviews
             const reviewsData = await reviewService.getMediaReviews(id);
             setReviews(reviewsData);
-            
+
             const review = await reviewService.getUserReview(user.id, id);
             setUserReview(review);
         } catch (err) {
@@ -171,16 +170,20 @@ export function MediaDetails() {
                 <div className="flex flex-col items-center justify-center h-[70vh] text-center px-4">
                     <Info className="h-16 w-16 text-muted-foreground mb-4" />
                     <h2 className="text-2xl font-bold mb-2">Oops! Something went wrong</h2>
-                    <p className="text-muted-foreground mb-6 max-w-md">{error || "Media not found."}</p>
+                    <p className="text-muted-foreground mb-6 max-w-md">
+                        {error || "Media not found."}
+                    </p>
                     <Button onClick={() => window.location.reload()}>Try Again</Button>
                 </div>
             </Layout>
         );
     }
 
-    const directors = media.cast.filter(p => p.role === "DIRECTOR" || p.role === "CREATOR");
-    const writers = media.cast.filter(p => p.role === "WRITER");
-    const stars = media.cast.filter(p => p.role === "MAIN_ACTOR" || p.role === "ACTOR").slice(0, 3);
+    const directors = media.cast.filter((p) => p.role === "DIRECTOR" || p.role === "CREATOR");
+    const writers = media.cast.filter((p) => p.role === "WRITER");
+    const stars = media.cast
+        .filter((p) => p.role === "MAIN_ACTOR" || p.role === "ACTOR")
+        .slice(0, 3);
 
     return (
         <Layout>
@@ -207,10 +210,14 @@ export function MediaDetails() {
                                 </span>
                                 <span className="text-border">•</span>
                                 {isTV ? (
-                                    <span>{media.numberOfSeasons} {media.numberOfSeasons === 1 ? 'Season' : 'Seasons'}</span>
+                                    <span>
+                                        {media.numberOfSeasons}{" "}
+                                        {media.numberOfSeasons === 1 ? "Season" : "Seasons"}
+                                    </span>
                                 ) : (
                                     <span className="flex items-center gap-1">
-                                        <Clock className="h-4 w-4" /> {Math.floor(media.duration / 60)}h {media.duration % 60}m
+                                        <Clock className="h-4 w-4" />{" "}
+                                        {Math.floor(media.duration / 60)}h {media.duration % 60}m
                                     </span>
                                 )}
                                 <span className="text-border">•</span>
@@ -222,31 +229,48 @@ export function MediaDetails() {
 
                         <div className="flex items-center gap-6">
                             <div className="flex flex-col items-center">
-                                <span className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-1">IMDb RATING</span>
+                                <span className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-1">
+                                    IMDb RATING
+                                </span>
                                 <div className="flex items-center gap-2">
                                     <Star className="h-8 w-8 text-yellow-400 fill-current" />
                                     <div>
-                                        <div className="text-2xl font-bold leading-none">{media.rating?.toFixed(1) || "N/A"}<span className="text-muted-foreground text-sm">/10</span></div>
-                                        <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">{ratingCount.toLocaleString()} ratings</div>
+                                        <div className="text-2xl font-bold leading-none">
+                                            {media.rating?.toFixed(1) || "N/A"}
+                                            <span className="text-muted-foreground text-sm">
+                                                /10
+                                            </span>
+                                        </div>
+                                        <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">
+                                            {ratingCount.toLocaleString()} ratings
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             {user && (
                                 <div className="flex flex-col items-center">
-                                    <span className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-1">YOUR RATING</span>
-                                    <div 
+                                    <span className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-1">
+                                        YOUR RATING
+                                    </span>
+                                    <div
                                         className="flex items-center gap-2 cursor-pointer group"
                                         onClick={() => setIsRatingModalOpen(true)}
                                     >
-                                        <Star className={cn(
-                                            "h-8 w-8 transition-all duration-300",
-                                            userRating ? "text-primary fill-current" : "text-muted-foreground group-hover:text-primary"
-                                        )} />
+                                        <Star
+                                            className={cn(
+                                                "h-8 w-8 transition-all duration-300",
+                                                userRating
+                                                    ? "text-primary fill-current"
+                                                    : "text-muted-foreground group-hover:text-primary",
+                                            )}
+                                        />
                                         <div>
                                             <div className="text-2xl font-bold leading-none">
                                                 {userRating ? `${userRating.rating}` : "Rate"}
-                                                <span className="text-muted-foreground text-sm">/10</span>
+                                                <span className="text-muted-foreground text-sm">
+                                                    /10
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -259,7 +283,8 @@ export function MediaDetails() {
                                     size="lg"
                                     className={cn(
                                         "h-14 px-8 rounded-full font-bold transition-all duration-300",
-                                        !inWatchlist && "bg-yellow-400 hover:bg-yellow-500 text-black border-none"
+                                        !inWatchlist &&
+                                            "bg-yellow-400 hover:bg-yellow-500 text-black border-none",
                                     )}
                                     onClick={toggle}
                                     disabled={toggling}
@@ -312,7 +337,9 @@ export function MediaDetails() {
                                 >
                                     <Play className="h-10 w-10 text-black fill-current ml-1" />
                                 </motion.div>
-                                <p className="mt-4 font-bold text-lg tracking-widest uppercase text-white shadow-sm">Play Trailer</p>
+                                <p className="mt-4 font-bold text-lg tracking-widest uppercase text-white shadow-sm">
+                                    Play Trailer
+                                </p>
                             </div>
                         </motion.div>
                     </div>
@@ -322,7 +349,7 @@ export function MediaDetails() {
                         <div className="lg:col-span-2 space-y-8">
                             {/* Genres */}
                             <div className="flex flex-wrap gap-2">
-                                {media.genres.map(genre => (
+                                {media.genres.map((genre) => (
                                     <Link
                                         key={genre.id}
                                         to={`/genre/${genre.name}`}
@@ -339,7 +366,8 @@ export function MediaDetails() {
                                     <Info className="h-5 w-5 text-yellow-400" /> Plot Summary
                                 </h3>
                                 <p className="text-lg leading-relaxed text-muted-foreground">
-                                    {media.description || "No description available for this title."}
+                                    {media.description ||
+                                        "No description available for this title."}
                                 </p>
                             </div>
 
@@ -347,10 +375,16 @@ export function MediaDetails() {
                             <div className="space-y-4 border-y border-border py-6">
                                 {directors.length > 0 && (
                                     <div className="flex gap-4">
-                                        <span className="font-bold min-w-[100px]">{isTV ? 'Creators' : 'Directors'}</span>
+                                        <span className="font-bold min-w-[100px]">
+                                            {isTV ? "Creators" : "Directors"}
+                                        </span>
                                         <div className="flex flex-wrap gap-x-4 gap-y-1">
-                                            {directors.map(d => (
-                                                <Link key={d.personId} to={`/person/${d.personId}`} className="text-primary hover:underline font-medium">
+                                            {directors.map((d) => (
+                                                <Link
+                                                    key={d.personId}
+                                                    to={`/person/${d.personId}`}
+                                                    className="text-primary hover:underline font-medium"
+                                                >
                                                     {d.personFirstName} {d.personLastName}
                                                 </Link>
                                             ))}
@@ -361,8 +395,12 @@ export function MediaDetails() {
                                     <div className="flex gap-4 border-t border-border/50 pt-4">
                                         <span className="font-bold min-w-[100px]">Writers</span>
                                         <div className="flex flex-wrap gap-x-4 gap-y-1">
-                                            {writers.map(w => (
-                                                <Link key={w.personId} to={`/person/${w.personId}`} className="text-primary hover:underline font-medium">
+                                            {writers.map((w) => (
+                                                <Link
+                                                    key={w.personId}
+                                                    to={`/person/${w.personId}`}
+                                                    className="text-primary hover:underline font-medium"
+                                                >
                                                     {w.personFirstName} {w.personLastName}
                                                 </Link>
                                             ))}
@@ -373,8 +411,12 @@ export function MediaDetails() {
                                     <div className="flex gap-4 border-t border-border/50 pt-4">
                                         <span className="font-bold min-w-[100px]">Stars</span>
                                         <div className="flex flex-wrap gap-x-4 gap-y-1">
-                                            {stars.map(s => (
-                                                <Link key={s.personId} to={`/person/${s.personId}`} className="text-primary hover:underline font-medium">
+                                            {stars.map((s) => (
+                                                <Link
+                                                    key={s.personId}
+                                                    to={`/person/${s.personId}`}
+                                                    className="text-primary hover:underline font-medium"
+                                                >
                                                     {s.personFirstName} {s.personLastName}
                                                 </Link>
                                             ))}
@@ -389,32 +431,46 @@ export function MediaDetails() {
                                     <h3 className="text-2xl font-bold flex items-center gap-2">
                                         <Users className="h-6 w-6 text-yellow-400" /> Top Cast
                                     </h3>
-                                    <Link to={`/title/${id}/fullcredits`} className="text-primary hover:underline flex items-center text-sm font-bold">
+                                    <Link
+                                        to={`/title/${id}/fullcredits`}
+                                        className="text-primary hover:underline flex items-center text-sm font-bold"
+                                    >
                                         Full cast & crew <ChevronRight className="h-4 w-4" />
                                     </Link>
                                 </div>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 pb-12 border-b border-border">
-                                    {media.cast.filter(p => p.role.includes("ACTOR")).slice(0, 8).map((person, i) => (
-                                        <motion.div
-                                            key={`${person.personId}-${i}`}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: i * 0.05 }}
-                                            className="flex flex-col items-center text-center group"
-                                        >
-                                            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-yellow-400 transition-all duration-300">
-                                                <img
-                                                    src={person.personProfilePictureUrl || `https://ui-avatars.com/api/?name=${person.personFirstName}+${person.personLastName}&background=random`}
-                                                    alt={person.personFirstName}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </div>
-                                            <Link to={`/person/${person.personId}`} className="font-bold hover:text-primary transition-colors">
-                                                {person.personFirstName} {person.personLastName}
-                                            </Link>
-                                            <span className="text-sm text-muted-foreground line-clamp-1">{person.characterName || "Actor"}</span>
-                                        </motion.div>
-                                    ))}
+                                    {media.cast
+                                        .filter((p) => p.role.includes("ACTOR"))
+                                        .slice(0, 8)
+                                        .map((person, i) => (
+                                            <motion.div
+                                                key={`${person.personId}-${i}`}
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: i * 0.05 }}
+                                                className="flex flex-col items-center text-center group"
+                                            >
+                                                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-yellow-400 transition-all duration-300">
+                                                    <img
+                                                        src={
+                                                            person.personProfilePictureUrl ||
+                                                            `https://ui-avatars.com/api/?name=${person.personFirstName}+${person.personLastName}&background=random`
+                                                        }
+                                                        alt={person.personFirstName}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                                <Link
+                                                    to={`/person/${person.personId}`}
+                                                    className="font-bold hover:text-primary transition-colors"
+                                                >
+                                                    {person.personFirstName} {person.personLastName}
+                                                </Link>
+                                                <span className="text-sm text-muted-foreground line-clamp-1">
+                                                    {person.characterName || "Actor"}
+                                                </span>
+                                            </motion.div>
+                                        ))}
                                 </div>
                             </section>
 
@@ -438,24 +494,29 @@ export function MediaDetails() {
                                 {reviews.length > 0 ? (
                                     <div className="space-y-6">
                                         {reviews.slice(0, 3).map((review, i) => (
-                                            <ReviewCard 
-                                                key={i} 
-                                                review={review} 
+                                            <ReviewCard
+                                                key={i}
+                                                review={review}
                                                 onEdit={handleReviewEdit}
                                                 onDelete={handleReviewDelete}
                                             />
                                         ))}
                                         {reviews.length > 3 && (
-                                            <Link to={`/media/${id}/reviews`} className="block text-center p-4 border border-border rounded-xl font-bold hover:bg-muted transition-colors">
+                                            <Link
+                                                to={`/media/${id}/reviews`}
+                                                className="block text-center p-4 border border-border rounded-xl font-bold hover:bg-muted transition-colors"
+                                            >
                                                 Read all {reviews.length} reviews
                                             </Link>
                                         )}
                                     </div>
                                 ) : (
                                     <div className="bg-muted/30 border border-dashed border-border rounded-xl p-12 text-center">
-                                        <p className="text-muted-foreground mb-4">No reviews yet. Be the first to share your thoughts!</p>
+                                        <p className="text-muted-foreground mb-4">
+                                            No reviews yet. Be the first to share your thoughts!
+                                        </p>
                                         {user && !userReview && (
-                                            <Button 
+                                            <Button
                                                 variant="outline"
                                                 onClick={() => setIsReviewSidebarOpen(true)}
                                             >
@@ -470,9 +531,11 @@ export function MediaDetails() {
                         {/* Sidebar */}
                         <div className="space-y-8">
                             <div className="bg-card border border-border rounded-xl p-6 shadow-lg">
-                                <h4 className="font-bold mb-4 uppercase tracking-widest text-xs text-muted-foreground">More Like This</h4>
+                                <h4 className="font-bold mb-4 uppercase tracking-widest text-xs text-muted-foreground">
+                                    More Like This
+                                </h4>
                                 <div className="space-y-4">
-                                    {similarMedia.slice(0, 4).map(item => (
+                                    {similarMedia.slice(0, 4).map((item) => (
                                         <Link
                                             key={item.id}
                                             to={`/media/${item.id}`}
@@ -491,22 +554,30 @@ export function MediaDetails() {
                                                 </span>
                                                 <div className="flex items-center gap-2 mt-1">
                                                     <Star className="h-3 w-3 text-yellow-400 fill-current" />
-                                                    <span className="text-xs text-muted-foreground">{item.averageRating?.toFixed(1) || "N/A"}</span>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {item.averageRating?.toFixed(1) || "N/A"}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </Link>
                                     ))}
                                 </div>
-                                <Button variant="secondary" className="w-full mt-6 text-sm font-bold py-5">
+                                <Button
+                                    variant="secondary"
+                                    className="w-full mt-6 text-sm font-bold py-5"
+                                >
                                     Explore More Similar
                                 </Button>
                             </div>
 
                             <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl p-6 text-black shadow-lg shadow-yellow-500/20">
                                 <Clapperboard className="h-8 w-8 mb-4" />
-                                <h4 className="text-xl font-extrabold mb-2 leading-tight">Pro Tip: Track your favorites</h4>
+                                <h4 className="text-xl font-extrabold mb-2 leading-tight">
+                                    Pro Tip: Track your favorites
+                                </h4>
                                 <p className="text-sm font-medium opacity-90 mb-4">
-                                    Sign in to save movies to your watchlist and get personalized recommendations based on what you love.
+                                    Sign in to save movies to your watchlist and get personalized
+                                    recommendations based on what you love.
                                 </p>
                                 {!user && (
                                     <Link to="/login">
@@ -529,12 +600,12 @@ export function MediaDetails() {
                             </h3>
                             <MediaSlider
                                 title=""
-                                items={similarMedia.map(m => ({
+                                items={similarMedia.map((m) => ({
                                     id: m.id,
                                     title: m.title,
                                     rating: m.averageRating,
                                     image: m.posterUrl,
-                                    type: m.type
+                                    type: m.type,
                                 }))}
                             />
                         </div>

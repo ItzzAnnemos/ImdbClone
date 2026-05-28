@@ -30,7 +30,7 @@ export async function addReview(reviewDto) {
 export async function getUserReview(userId, mediaId) {
     try {
         const response = await api.get(`/api/reviews/by-user-media`, {
-            params: { userId, mediaId }
+            params: { userId, mediaId },
         });
         return Review.fromApi(response.data);
     } catch (err) {

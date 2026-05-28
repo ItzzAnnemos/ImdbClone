@@ -39,11 +39,16 @@ export default defineConfig([
       // Add prettier/prettier rule to report formatting issues as lint errors
       'prettier/prettier': 'error',
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'react/prop-types': 'off',
+      'react/no-unescaped-entities': 'off',
       'react/jsx-no-target-blank': 'off',
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
     },
   },
 ])

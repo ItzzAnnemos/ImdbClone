@@ -32,9 +32,9 @@
  */
 export function fromApi(raw) {
     return {
-        username:  raw.username,
+        username: raw.username,
         firstName: raw.firstName,
-        lastName:  raw.lastName,
+        lastName: raw.lastName,
     };
 }
 

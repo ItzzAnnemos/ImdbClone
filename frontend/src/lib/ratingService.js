@@ -10,7 +10,7 @@ import * as Rating from "../models/rating.model";
 export async function getUserRating(userId, mediaId) {
     try {
         const response = await api.get(`/api/ratings/by-user-media`, {
-            params: { userId, mediaId }
+            params: { userId, mediaId },
         });
         return Rating.fromApi(response.data);
     } catch (err) {
@@ -38,7 +38,7 @@ export async function rateMedia(ratingDto) {
  */
 export async function deleteRating(userId, mediaId) {
     await api.delete("/api/ratings/delete", {
-        params: { userId, mediaId }
+        params: { userId, mediaId },
     });
 }
 

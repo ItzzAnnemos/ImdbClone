@@ -55,9 +55,7 @@ export function WatchlistCard({ media, className, ...props }) {
                                     onClick={handleToggle}
                                     disabled={toggling}
                                     aria-label={
-                                        inWatchlist
-                                            ? "Remove from watchlist"
-                                            : "Add to watchlist"
+                                        inWatchlist ? "Remove from watchlist" : "Add to watchlist"
                                     }
                                     className={cn(
                                         "shrink-0 flex h-8 w-8 items-center justify-center rounded-full shadow transition-all duration-200",
@@ -81,7 +79,9 @@ export function WatchlistCard({ media, className, ...props }) {
                         <div className="mt-1 flex items-center gap-3 text-sm">
                             <div className="flex items-center gap-1 text-yellow-500">
                                 <Star className="h-3.5 w-3.5 fill-current" />
-                                <span className="font-semibold text-foreground">{media.rating}</span>
+                                <span className="font-semibold text-foreground">
+                                    {media.rating}
+                                </span>
                             </div>
                             <span className="text-muted-foreground">{media.releaseYear}</span>
                         </div>

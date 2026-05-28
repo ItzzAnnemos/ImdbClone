@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
-import {
-    Star,
-    ChevronLeft,
-    MessageSquarePlus,
-    Loader2,
-    Filter,
-    ArrowUpDown
-} from "lucide-react";
+import { useParams, Link } from "react-router-dom";
+import { Star, ChevronLeft, MessageSquarePlus, Loader2, Filter, ArrowUpDown } from "lucide-react";
 import { Layout } from "../components/layout/Layout";
 import { Button } from "../components/ui/Button";
 import { ReviewCard } from "../components/ui/ReviewCard";
@@ -60,7 +53,7 @@ export function MediaReviews() {
 
         fetchData();
         window.scrollTo(0, 0);
-    }, [id]);
+    }, [id, user]);
 
     const handleReviewSubmit = async (text) => {
         try {
@@ -70,7 +63,7 @@ export function MediaReviews() {
                 await reviewService.addReview({
                     userId: user.id,
                     mediaId: id,
-                    reviewText: text
+                    reviewText: text,
                 });
             }
             setIsReviewSidebarOpen(false);
@@ -133,7 +126,12 @@ export function MediaReviews() {
                         >
                             <ChevronLeft className="h-4 w-4" /> Back to details
                         </Link>
-                        <h1 className="text-4xl font-black mb-4">{media.title} <span className="text-muted-foreground font-normal">({media.year})</span></h1>
+                        <h1 className="text-4xl font-black mb-4">
+                            {media.title}{" "}
+                            <span className="text-muted-foreground font-normal">
+                                ({media.year})
+                            </span>
+                        </h1>
 
                         <div className="flex flex-wrap items-center gap-6">
                             <div className="flex items-center gap-2">
@@ -141,16 +139,25 @@ export function MediaReviews() {
                                     <Star className="h-5 w-5 text-black fill-current" />
                                 </div>
                                 <div>
-                                    <div className="text-xl font-bold leading-none">{media.rating?.toFixed(1) || "N/A"}<span className="text-muted-foreground text-sm">/10</span></div>
-                                    <div className="text-[10px] text-muted-foreground font-bold uppercase">{ratingCount.toLocaleString()} RATINGS</div>
+                                    <div className="text-xl font-bold leading-none">
+                                        {media.rating?.toFixed(1) || "N/A"}
+                                        <span className="text-muted-foreground text-sm">/10</span>
+                                    </div>
+                                    <div className="text-[10px] text-muted-foreground font-bold uppercase">
+                                        {ratingCount.toLocaleString()} RATINGS
+                                    </div>
                                 </div>
                             </div>
 
                             <div className="h-10 w-px bg-border hidden md:block" />
 
                             <div>
-                                <div className="text-xl font-bold leading-none">{reviews.length}</div>
-                                <div className="text-[10px] text-muted-foreground font-bold uppercase">USER REVIEWS</div>
+                                <div className="text-xl font-bold leading-none">
+                                    {reviews.length}
+                                </div>
+                                <div className="text-[10px] text-muted-foreground font-bold uppercase">
+                                    USER REVIEWS
+                                </div>
                             </div>
 
                             {user && !userReview && (
@@ -185,7 +192,9 @@ export function MediaReviews() {
                         </div>
                     ) : (
                         <div className="bg-muted/30 border border-dashed border-border rounded-2xl p-20 text-center">
-                            <p className="text-xl text-muted-foreground mb-6">No one has reviewed this title yet.</p>
+                            <p className="text-xl text-muted-foreground mb-6">
+                                No one has reviewed this title yet.
+                            </p>
                             {user && !userReview && (
                                 <Button
                                     size="lg"

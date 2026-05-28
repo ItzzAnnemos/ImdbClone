@@ -5,7 +5,7 @@ import { cn } from "../../lib/utils";
 import { useAuth } from "../../context/AuthContext";
 import { useWatchlist } from "../../hooks/useWatchlist";
 
-export function MediaCard({ id, title, rating, image, year, type, className, ...props }) {
+export function MediaCard({ id, title, rating, image, year, className, ...props }) {
     const { user } = useAuth();
     const { inWatchlist, toggling, toggle } = useWatchlist(user?.username, id);
 

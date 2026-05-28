@@ -29,13 +29,13 @@
  */
 export function fromApi(raw) {
     return {
-        id:         raw.id,
-        username:   raw.username,
+        id: raw.id,
+        username: raw.username,
         mediaTitle: raw.mediaTitle,
         reviewText: raw.reviewText,
-        createdAt:  raw.createdAt,
-        updatedAt:  raw.updatedAt ?? null,
-        isEdited:   raw.updatedAt != null,
+        createdAt: raw.createdAt,
+        updatedAt: raw.updatedAt ?? null,
+        isEdited: raw.updatedAt != null,
     };
 }
 

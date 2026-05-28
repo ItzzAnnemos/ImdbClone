@@ -30,16 +30,16 @@
  */
 export function fromApi(raw) {
     return {
-        id:          raw.id,
-        title:       raw.title,
-        description: raw.description   ?? null,
-        year:        raw.releaseYear   ?? null,
-        image:       raw.posterUrl     ?? null,
-        rating:      raw.averageRating ?? null,
-        duration:    raw.duration      ?? null,
-        genres:      raw.genres        ?? [],
-        cast:        raw.cast          ?? [],
-        type:        "movie",
+        id: raw.id,
+        title: raw.title,
+        description: raw.description ?? null,
+        year: raw.releaseYear ?? null,
+        image: raw.posterUrl ?? null,
+        rating: raw.averageRating ?? null,
+        duration: raw.duration ?? null,
+        genres: raw.genres ?? [],
+        cast: raw.cast ?? [],
+        type: "movie",
     };
 }
 

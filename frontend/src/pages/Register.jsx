@@ -40,7 +40,7 @@ export const Register = () => {
         try {
             await register(formData);
             navigate("/login");
-        } catch (err) {
+        } catch {
             setError("Failed to create account. Please check your details.");
         } finally {
             setLoading(false);

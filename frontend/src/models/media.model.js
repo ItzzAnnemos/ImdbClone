@@ -25,11 +25,11 @@
  */
 export function fromApi(raw) {
     return {
-        id:     raw.id,
-        title:  raw.title,
-        image:  raw.posterUrl ?? null,
+        id: raw.id,
+        title: raw.title,
+        image: raw.posterUrl ?? null,
         rating: raw.averageRating ?? null,
-        type:   raw.type ?? "movie",
+        type: raw.type ?? "movie",
     };
 }
 

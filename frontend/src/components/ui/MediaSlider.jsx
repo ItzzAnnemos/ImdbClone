@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, useMotionValue, animate } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { MediaCard } from "./MediaCard";
@@ -10,23 +10,23 @@ export function MediaSlider({ title, items }) {
     const containerRef = useRef(null);
     const sliderRef = useRef(null);
 
-    const updateScrollState = () => {
+    const updateScrollState = useCallback(() => {
         if (!sliderRef.current || !containerRef.current) return;
         const currentX = x.get();
         const maxScroll = containerRef.current.offsetWidth - sliderRef.current.scrollWidth;
 
         setCanScrollLeft(currentX < -10);
         setCanScrollRight(currentX > maxScroll + 10);
-    };
+    }, [x]);
 
     useEffect(() => {
         const unsubscribe = x.on("change", updateScrollState);
         return () => unsubscribe();
-    }, []);
+    }, [x, updateScrollState]);
 
     useEffect(() => {
         updateScrollState();
-    }, [items]);
+    }, [items, updateScrollState]);
 
     const handleScroll = (direction) => {
         if (!sliderRef.current || !containerRef.current) return;
@@ -43,7 +43,7 @@ export function MediaSlider({ title, items }) {
         animate(x, targetX, {
             type: "spring",
             stiffness: 300,
-            damping: 30
+            damping: 30,
         });
     };
 
@@ -73,10 +73,7 @@ export function MediaSlider({ title, items }) {
                 </div>
             </div>
 
-            <div
-                ref={containerRef}
-                className="relative overflow-hidden"
-            >
+            <div ref={containerRef} className="relative overflow-hidden">
                 <motion.div
                     ref={sliderRef}
                     drag="x"
@@ -87,7 +84,7 @@ export function MediaSlider({ title, items }) {
                         x,
                         width: "max-content",
                         display: "flex",
-                        gap: "1.5rem"
+                        gap: "1.5rem",
                     }}
                 >
                     {items.map((item) => (

@@ -46,11 +46,11 @@
  */
 export function fromApi(raw) {
     return {
-        firstName:         raw.firstName,
-        lastName:          raw.lastName,
-        fullName:          `${raw.firstName} ${raw.lastName}`,
-        biography:         raw.biography         ?? null,
-        birthDate:         raw.birthDate         ?? null,
+        firstName: raw.firstName,
+        lastName: raw.lastName,
+        fullName: `${raw.firstName} ${raw.lastName}`,
+        biography: raw.biography ?? null,
+        birthDate: raw.birthDate ?? null,
         profilePictureUrl: raw.profilePictureUrl ?? null,
     };
 }
@@ -61,11 +61,11 @@ export function fromApi(raw) {
  */
 export function mediaPersonFromApi(raw) {
     return {
-        mediaTitle:    raw.mediaTitle,
-        firstName:     raw.personFirstName,
-        lastName:      raw.personLastName,
-        fullName:      `${raw.personFirstName} ${raw.personLastName}`,
-        role:          raw.role,
+        mediaTitle: raw.mediaTitle,
+        firstName: raw.personFirstName,
+        lastName: raw.personLastName,
+        fullName: `${raw.personFirstName} ${raw.personLastName}`,
+        role: raw.role,
         characterName: raw.characterName ?? null,
     };
 }

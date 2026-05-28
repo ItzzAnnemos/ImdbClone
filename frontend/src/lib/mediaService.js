@@ -65,10 +65,10 @@ export async function getTVSeriesById(id) {
 export async function getMediaById(id) {
     try {
         const movie = await getMovieById(id);
-        return { ...movie, type: 'movie' };
-    } catch (err) {
+        return { ...movie, type: "movie" };
+    } catch {
         const tv = await getTVSeriesById(id);
-        return { ...tv, type: 'tv' };
+        return { ...tv, type: "tv" };
     }
 }
 

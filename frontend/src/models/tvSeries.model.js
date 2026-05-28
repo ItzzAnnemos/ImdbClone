@@ -31,17 +31,17 @@
  */
 export function fromApi(raw) {
     return {
-        id:              raw.id,
-        title:           raw.title,
-        description:     raw.description     ?? null,
-        year:            raw.releaseYear      ?? null,
-        image:           raw.posterUrl        ?? null,
-        rating:          raw.averageRating    ?? null,
-        numberOfSeasons: raw.numberOfSeasons  ?? null,
-        status:          raw.status           ?? null,
-        genres:          raw.genres           ?? [],
-        cast:            raw.cast             ?? [],
-        type:            "tv",
+        id: raw.id,
+        title: raw.title,
+        description: raw.description ?? null,
+        year: raw.releaseYear ?? null,
+        image: raw.posterUrl ?? null,
+        rating: raw.averageRating ?? null,
+        numberOfSeasons: raw.numberOfSeasons ?? null,
+        status: raw.status ?? null,
+        genres: raw.genres ?? [],
+        cast: raw.cast ?? [],
+        type: "tv",
     };
 }
 

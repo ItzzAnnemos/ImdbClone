@@ -24,10 +24,10 @@
  */
 export function fromApi(raw) {
     return {
-        username:   raw.username,
+        username: raw.username,
         mediaTitle: raw.mediaTitle,
-        rating:     raw.rating,
-        createdAt:  raw.createdAt,
+        rating: raw.rating,
+        createdAt: raw.createdAt,
     };
 }
 

@@ -60,7 +60,7 @@ export function RatingModal({ isOpen, onClose, onRate, initialRating = 0, title 
                             {[...Array(10)].map((_, i) => {
                                 const ratingValue = i + 1;
                                 const isFilled = ratingValue <= (hoveredRating || selectedRating);
-                                
+
                                 return (
                                     <motion.button
                                         key={ratingValue}
@@ -74,9 +74,9 @@ export function RatingModal({ isOpen, onClose, onRate, initialRating = 0, title 
                                         <Star
                                             className={cn(
                                                 "h-8 w-8 transition-colors",
-                                                isFilled 
-                                                    ? "text-yellow-400 fill-current" 
-                                                    : "text-muted-foreground"
+                                                isFilled
+                                                    ? "text-yellow-400 fill-current"
+                                                    : "text-muted-foreground",
                                             )}
                                         />
                                     </motion.button>

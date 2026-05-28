@@ -77,31 +77,44 @@ export function ReviewSidebar({ isOpen, onClose, onSubmit, title, initialReview 
                                     placeholder="Write your thoughts here..."
                                     className={cn(
                                         "w-full h-64 p-4 bg-muted border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none text-lg",
-                                        reviewText.length > 0 && reviewText.length < 10 && "border-destructive focus:ring-destructive"
+                                        reviewText.length > 0 &&
+                                            reviewText.length < 10 &&
+                                            "border-destructive focus:ring-destructive",
                                     )}
                                 />
                                 <div className="flex justify-between mt-2">
-                                    <p className={cn(
-                                        "text-xs font-medium",
-                                        reviewText.length > 0 && reviewText.length < 10 ? "text-destructive" : "text-muted-foreground"
-                                    )}>
-                                        {reviewText.length > 0 && reviewText.length < 10 
+                                    <p
+                                        className={cn(
+                                            "text-xs font-medium",
+                                            reviewText.length > 0 && reviewText.length < 10
+                                                ? "text-destructive"
+                                                : "text-muted-foreground",
+                                        )}
+                                    >
+                                        {reviewText.length > 0 && reviewText.length < 10
                                             ? `Minimum 10 characters required (${10 - reviewText.length} more)`
-                                            : reviewText.length > 5000 
-                                                ? "Maximum 5000 characters allowed"
-                                                : "Describe your experience"}
+                                            : reviewText.length > 5000
+                                              ? "Maximum 5000 characters allowed"
+                                              : "Describe your experience"}
                                     </p>
-                                    <span className={cn(
-                                        "text-xs font-mono",
-                                        (reviewText.length < 10 && reviewText.length > 0) || reviewText.length > 5000 ? "text-destructive font-bold" : "text-muted-foreground"
-                                    )}>
+                                    <span
+                                        className={cn(
+                                            "text-xs font-mono",
+                                            (reviewText.length < 10 && reviewText.length > 0) ||
+                                                reviewText.length > 5000
+                                                ? "text-destructive font-bold"
+                                                : "text-muted-foreground",
+                                        )}
+                                    >
                                         {reviewText.length}/5000
                                     </span>
                                 </div>
                             </label>
 
                             <div className="bg-muted/50 p-4 rounded-xl border border-dashed border-border">
-                                <h5 className="text-xs font-bold uppercase text-muted-foreground mb-2">Review Guidelines</h5>
+                                <h5 className="text-xs font-bold uppercase text-muted-foreground mb-2">
+                                    Review Guidelines
+                                </h5>
                                 <ul className="text-xs text-muted-foreground space-y-1 list-disc pl-4">
                                     <li>Be respectful and avoid spoilers if possible.</li>
                                     <li>Focus on the quality of the media and performance.</li>

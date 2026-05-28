@@ -23,12 +23,13 @@ const itemVariants = {
 
 export function Watchlist() {
     const { user } = useAuth();
+    const username = user?.username;
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (!user) return;
+        if (!username) return;
         let cancelled = false;
 
         async function fetchWatchlist() {
@@ -36,14 +37,14 @@ export function Watchlist() {
                 setLoading(true);
                 setError(null);
                 const response = await api.get(
-                    `/api/user/${encodeURIComponent(user.username)}/watchlist`,
+                    `/api/user/${encodeURIComponent(username)}/watchlist`,
                 );
                 if (!cancelled) setMovies(MediaModel.fromApiList(response.data));
             } catch (err) {
                 if (!cancelled) {
                     setError(
                         err?.response?.data?.message ||
-                        "Failed to load your watchlist. Please try again.",
+                            "Failed to load your watchlist. Please try again.",
                     );
                 }
             } finally {
@@ -55,7 +56,7 @@ export function Watchlist() {
         return () => {
             cancelled = true;
         };
-    }, [user?.username]);
+    }, [username]);
 
     // Redirect unauthenticated users
     // This must be after ALL hooks to avoid Rule of Hooks errors
@@ -74,9 +75,7 @@ export function Watchlist() {
                     <h1 className="text-2xl font-bold text-foreground">My Watchlist</h1>
                     <p className="text-sm text-muted-foreground">
                         Logged in as{" "}
-                        <span className="font-medium text-foreground">
-                            {user.username}
-                        </span>
+                        <span className="font-medium text-foreground">{user.username}</span>
                     </p>
                 </div>
                 {!loading && !error && movies.length > 0 && (
