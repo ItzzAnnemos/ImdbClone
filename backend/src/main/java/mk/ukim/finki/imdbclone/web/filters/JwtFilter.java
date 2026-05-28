@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
@@ -26,12 +25,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtHelper jwtHelper;
     private final UserService userService;
-    private final HandlerExceptionResolver handlerExceptionResolver;
 
-    public JwtFilter(JwtHelper jwtHelper, UserService userService, HandlerExceptionResolver handlerExceptionResolver) {
+    public JwtFilter(JwtHelper jwtHelper, UserService userService) {
         this.jwtHelper = jwtHelper;
         this.userService = userService;
-        this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
     @Override
@@ -67,13 +64,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } catch (JwtException jwtException) {
-            handlerExceptionResolver.resolveException(
-                    request,
-                    response,
-                    null,
-                    jwtException
-            );
-            return;
+            SecurityContextHolder.clearContext();
         } catch (UsernameNotFoundException ex) {
             SecurityContextHolder.clearContext();
         }

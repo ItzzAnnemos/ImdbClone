@@ -79,7 +79,7 @@ public class ReviewController {
                 reviewApplicationService.findByUserAndMedia(userId, mediaId);
 
         return review.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.noContent().build());
     }
 
     @GetMapping("/{reviewId}")

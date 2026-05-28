@@ -19,4 +19,18 @@ api.interceptors.request.use(
     },
 );
 
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        const status = error.response ? error.response.status : undefined;
+        if ((status === 401 || status === 403) && localStorage.getItem("token")) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.dispatchEvent(new Event("auth:logout"));
+        }
+
+        return Promise.reject(error);
+    },
+);
+
 export default api;

@@ -27,7 +27,11 @@ export const WatchlistProvider = ({ children }) => {
             const ids = new Set(response.data.map((item) => item.id));
             setWatchlistIds(ids);
         } catch (err) {
-            console.error("Failed to fetch watchlist:", err);
+            setWatchlistIds(new Set());
+            const status = err.response ? err.response.status : undefined;
+            if (status !== 401 && status !== 403) {
+                console.error("Failed to fetch watchlist:", err);
+            }
         } finally {
             setLoading(false);
         }

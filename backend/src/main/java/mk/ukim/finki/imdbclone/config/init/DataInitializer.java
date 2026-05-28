@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import mk.ukim.finki.imdbclone.model.domain.*;
 import mk.ukim.finki.imdbclone.model.enumerations.Role;
 import mk.ukim.finki.imdbclone.repository.*;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Component
+@Profile("dev")
 public class DataInitializer {
     private final PasswordEncoder passwordEncoder;
     public static List<User> users;

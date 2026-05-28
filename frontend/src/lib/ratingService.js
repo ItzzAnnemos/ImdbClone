@@ -12,6 +12,9 @@ export async function getUserRating(userId, mediaId) {
         const response = await api.get(`/api/ratings/by-user-media`, {
             params: { userId, mediaId },
         });
+        if (response.status === 204 || !response.data) {
+            return null;
+        }
         return Rating.fromApi(response.data);
     } catch (err) {
         if (err.response && err.response.status === 404) {

@@ -5,7 +5,7 @@ import { cn } from "../../lib/utils";
 import { useAuth } from "../../context/AuthContext";
 import { useWatchlist } from "../../hooks/useWatchlist";
 
-export function MediaCard({ id, title, rating, image, year, className, ...props }) {
+export function MediaCard({ id, title, rating, image, year, className }) {
     const { user } = useAuth();
     const { inWatchlist, toggling, toggle } = useWatchlist(user?.username, id);
 
@@ -25,7 +25,6 @@ export function MediaCard({ id, title, rating, image, year, className, ...props 
                     "group relative overflow-hidden rounded-lg bg-card shadow-lg transition-all hover:shadow-xl cursor-pointer h-full",
                     className,
                 )}
-                {...props}
             >
                 <div className="aspect-[2/3] w-full overflow-hidden">
                     <img

@@ -23,12 +23,47 @@ ImdbClone/
 - Java 17 or higher
 - Node.js 16 or higher
 - Maven 3.6+
+- Docker and Docker Compose
+
+### Local Postgres Setup
+
+The backend includes a Docker Compose Postgres database with a persistent named volume. Spring creates/updates the schema from JPA entities and seeds initial users, media, ratings, reviews, genres, and people on the first empty startup through the `dev` profile.
+
+`application.properties` enables `dev,jwt,postgres` by default, so the backend uses this Docker Postgres database without requiring every developer to set `SPRING_PROFILES_ACTIVE` manually.
+
+Start Postgres:
+```bash
+cd backend
+docker compose up -d
+```
+
+Run the backend against Postgres:
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+
+The local defaults are:
+- JDBC URL: `jdbc:postgresql://localhost:2345/imdb_clone_app`
+- Database: `imdb_clone_app`
+- User: `imdb`
+- Password: `imdb`
+
+You can override them with `POSTGRES_JDBC_URL`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, and `POSTGRES_PORT`.
+
+Reset to a fresh seeded database:
+```bash
+cd backend
+docker compose down -v
+docker compose up -d
+./mvnw spring-boot:run
+```
 
 ### Backend Setup
 ```bash
 cd backend
-mvn clean install
-mvn spring-boot:run
+./mvnw clean install
+./mvnw spring-boot:run
 ```
 
 The backend server will start on `http://localhost:8080`

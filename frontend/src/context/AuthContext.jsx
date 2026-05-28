@@ -30,11 +30,23 @@ export const AuthProvider = ({ children }) => {
                 console.error("Failed to decode token", err);
                 // Token is malformed; clean up
                 setToken(null);
+                setUser(null);
                 localStorage.removeItem("token");
+                localStorage.removeItem("user");
             }
         }
         setLoading(false);
     }, [token, user]);
+
+    useEffect(() => {
+        const handleLogout = () => {
+            setToken(null);
+            setUser(null);
+        };
+
+        window.addEventListener("auth:logout", handleLogout);
+        return () => window.removeEventListener("auth:logout", handleLogout);
+    }, []);
 
     const login = async (username, password) => {
         const response = await api.post("/api/user/login", { username, password });
