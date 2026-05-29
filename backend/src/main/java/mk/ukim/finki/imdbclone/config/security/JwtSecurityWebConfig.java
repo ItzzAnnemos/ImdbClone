@@ -53,14 +53,25 @@ public class JwtSecurityWebConfig {
                                 "/v3/api-docs/**",
                                 "/api/user/register",
                                 "/api/user/login",
+                                // ----- Movies: public browse endpoints -----
+                                "/api/movies",
                                 "/api/movies/recent",
                                 "/api/movies/top-rated",
                                 "/api/movies/{id}",
                                 "/api/movies/{id}/similar",
+                                "/api/movies/genre/**",
+                                "/api/movies/year/**",
+                                "/api/movies/year-range",
+                                "/api/movies/director",
+                                // ----- TV series: public browse endpoints -----
+                                "/api/tv-series",
                                 "/api/tv-series/recent",
                                 "/api/tv-series/top-rated",
                                 "/api/tv-series/{id}",
                                 "/api/tv-series/{id}/similar",
+                                "/api/tv-series/status",
+                                // ----- Global search (media + people + year) -----
+                                "/api/search",
                                 "/api/ratings/media/**",
                                 "/api/reviews/media/**")
                         .permitAll()

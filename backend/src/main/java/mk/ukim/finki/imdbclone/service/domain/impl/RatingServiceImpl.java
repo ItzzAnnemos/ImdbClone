@@ -107,10 +107,26 @@ public class RatingServiceImpl implements RatingService {
 
     /**
      * Recalculates and persists {@code Media.averageRating} after any mutation.
+     * The average is taken over all ratings for the media and rounded to a
+     * single decimal place (e.g. 8.6666... -> 8.7). When the last rating is
+     * removed the average is reset to {@code null}.
      */
     private void syncAverageRating(Media media) {
         Double avg = ratingRepository.findAverageRatingByMediaId(media.getId());
-        media.setAverageRating(avg);
+        media.setAverageRating(roundToOneDecimal(avg));
         mediaRepository.save(media);
+    }
+
+    /**
+     * Rounds a rating average to one decimal place using half-up rounding.
+     *
+     * @param value the raw average (may be {@code null} when no ratings exist)
+     * @return the rounded value, or {@code null} if {@code value} is {@code null}
+     */
+    private Double roundToOneDecimal(Double value) {
+        if (value == null) {
+            return null;
+        }
+        return Math.round(value * 10.0) / 10.0;
     }
 }
