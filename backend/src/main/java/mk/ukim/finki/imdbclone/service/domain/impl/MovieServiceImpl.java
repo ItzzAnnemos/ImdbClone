@@ -8,6 +8,7 @@ import mk.ukim.finki.imdbclone.service.domain.helper.MediaSimilarityHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -69,5 +70,58 @@ public class MovieServiceImpl extends MediaServiceImpl<Movie> implements MovieSe
     @Transactional(readOnly = true)
     public List<Movie> getByGenre(String genreName) {
         return movieRepository.findByGenres_Name(genreName);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Movie> getTop250() {
+        return movieRepository.findAll()
+                .stream()
+                .sorted(topRatedComparator())
+                .limit(250)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Movie> getMostPopular() {
+        return movieRepository.findAll()
+                .stream()
+                .sorted(popularComparator())
+                .limit(250)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Movie> getRankedByGenre(String genreName) {
+        return movieRepository.findByGenres_Name(genreName)
+                .stream()
+                .sorted(topRatedComparator())
+                .toList();
+    }
+
+    private Comparator<Movie> topRatedComparator() {
+        return Comparator
+                .comparing((Movie movie) -> valueOrZero(movie.getAverageRating())).reversed()
+                .thenComparing((Movie movie) -> movie.getRatings().size(), Comparator.reverseOrder())
+                .thenComparing((Movie movie) -> valueOrZero(movie.getReleaseYear()), Comparator.reverseOrder())
+                .thenComparing(Movie::getTitle);
+    }
+
+    private Comparator<Movie> popularComparator() {
+        return Comparator
+                .comparing((Movie movie) -> movie.getRatings().size(), Comparator.reverseOrder())
+                .thenComparing((Movie movie) -> valueOrZero(movie.getAverageRating()), Comparator.reverseOrder())
+                .thenComparing((Movie movie) -> valueOrZero(movie.getReleaseYear()), Comparator.reverseOrder())
+                .thenComparing(Movie::getTitle);
+    }
+
+    private Double valueOrZero(Double value) {
+        return value == null ? 0.0 : value;
+    }
+
+    private Integer valueOrZero(Integer value) {
+        return value == null ? 0 : value;
     }
 }

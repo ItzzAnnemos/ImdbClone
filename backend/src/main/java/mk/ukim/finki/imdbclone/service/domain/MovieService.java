@@ -102,4 +102,28 @@ public interface MovieService extends MediaService<Movie> {
      * @return List of movies in that genre
      */
     List<Movie> getByGenre(String genreName);
+
+    /**
+     * Get the highest-rated movies for the Top 250 discovery chart.
+     * Movies are ranked by average rating, then rating count, release year, and title.
+     *
+     * @return List of up to 250 ranked movies
+     */
+    List<Movie> getTop250();
+
+    /**
+     * Get the most popular movies for the discovery chart.
+     * Movies are ranked by rating count, then average rating, release year, and title.
+     *
+     * @return List of up to 250 popular movies
+     */
+    List<Movie> getMostPopular();
+
+    /**
+     * Get movies in a genre ranked with the same ordering used by the Top 250 chart.
+     *
+     * @param genreName the genre name
+     * @return List of ranked movies in that genre
+     */
+    List<Movie> getRankedByGenre(String genreName);
 }

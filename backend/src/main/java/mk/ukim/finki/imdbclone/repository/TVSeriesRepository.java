@@ -26,6 +26,8 @@ public interface TVSeriesRepository extends JpaRepository<TVSeries, Long> {
      */
     List<TVSeries> findAllByTitleContainingIgnoreCase(String title);
 
+    List<TVSeries> findByGenres_Name(String genreName);
+
     /**
      * Find the top 10 TV series ordered by average rating in descending order
      *
