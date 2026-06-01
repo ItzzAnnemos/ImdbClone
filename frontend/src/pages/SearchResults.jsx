@@ -163,30 +163,28 @@ export function SearchResults() {
                             ))}
                         </section>
 
-                        <div className="mt-6 flex items-center justify-between">
-                            <Button
-                                variant="outline"
-                                size="sm"
+                        <div className="mt-6 flex items-center justify-center gap-3 sm:gap-4">
+                            <button
+                                type="button"
                                 disabled={!searchPage.hasPrevious}
                                 onClick={() => setPage(page - 1)}
-                                className="gap-2"
+                                className="rounded-full border bg-background p-2 shadow-sm transition-all hover:bg-muted disabled:cursor-not-allowed disabled:opacity-30"
+                                aria-label="Previous search results page"
                             >
-                                <ChevronLeft className="h-4 w-4" />
-                                Previous
-                            </Button>
-                            <span className="text-sm text-muted-foreground">
+                                <ChevronLeft className="h-5 w-5" />
+                            </button>
+                            <span className="min-w-24 text-center text-sm text-muted-foreground">
                                 Page {currentPage} of {totalPages}
                             </span>
-                            <Button
-                                variant="outline"
-                                size="sm"
+                            <button
+                                type="button"
                                 disabled={!searchPage.hasNext}
                                 onClick={() => setPage(page + 1)}
-                                className="gap-2"
+                                className="rounded-full border bg-background p-2 shadow-sm transition-all hover:bg-muted disabled:cursor-not-allowed disabled:opacity-30"
+                                aria-label="Next search results page"
                             >
-                                Next
-                                <ChevronRight className="h-4 w-4" />
-                            </Button>
+                                <ChevronRight className="h-5 w-5" />
+                            </button>
                         </div>
                     </>
                 )}

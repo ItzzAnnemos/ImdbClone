@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { Star, ChevronLeft, MessageSquarePlus, Loader2, Filter, ArrowUpDown } from "lucide-react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { Star, ChevronLeft, MessageSquarePlus, Loader2, ArrowLeft } from "lucide-react";
 import { Layout } from "../components/layout/Layout";
 import { Button } from "../components/ui/Button";
 import { ReviewCard } from "../components/ui/ReviewCard";
@@ -12,6 +12,7 @@ import { useAuth } from "../context/AuthContext";
 
 export function MediaReviews() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { user } = useAuth();
 
     const [media, setMedia] = useState(null);
@@ -95,6 +96,15 @@ export function MediaReviews() {
         }
     };
 
+    const handleBack = () => {
+        if (window.history.length > 1) {
+            navigate(-1);
+            return;
+        }
+
+        navigate(`/media/${id}`);
+    };
+
     if (loading) {
         return (
             <Layout>
@@ -110,6 +120,13 @@ export function MediaReviews() {
     return (
         <Layout>
             <div className="container mx-auto px-4 py-8">
+                <div className="mb-6">
+                    <Button variant="ghost" size="sm" className="gap-2" onClick={handleBack}>
+                        <ArrowLeft className="h-4 w-4" />
+                        Back
+                    </Button>
+                </div>
+
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row gap-8 mb-12 bg-card border border-border p-6 rounded-2xl shadow-sm">
                     <div className="w-32 h-48 flex-shrink-0 rounded-lg overflow-hidden shadow-md">

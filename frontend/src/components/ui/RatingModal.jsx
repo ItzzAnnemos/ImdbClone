@@ -29,8 +29,8 @@ export function RatingModal({ isOpen, onClose, onRate, initialRating = 0, title 
                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
                     className="relative w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl overflow-hidden"
                 >
-                    <div className="p-6">
-                        <div className="flex items-center justify-between mb-8">
+                    <div className="p-4 sm:p-6">
+                        <div className="mb-6 flex items-center justify-between sm:mb-8">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-yellow-400 rounded-lg">
                                     <Star className="h-6 w-6 text-black fill-current" />
@@ -45,18 +45,18 @@ export function RatingModal({ isOpen, onClose, onRate, initialRating = 0, title 
                             </button>
                         </div>
 
-                        <div className="text-center mb-8">
-                            <h4 className="text-2xl font-black text-yellow-400 uppercase tracking-tight mb-2">
+                        <div className="mb-6 text-center sm:mb-8">
+                            <h4 className="mb-2 text-xl font-black uppercase tracking-tight text-yellow-400 sm:text-2xl">
                                 {title}
                             </h4>
-                            <div className="text-6xl font-bold text-foreground">
+                            <div className="text-5xl font-bold text-foreground sm:text-6xl">
                                 {selectedRating || hoveredRating || "?"}
                                 <span className="text-2xl text-muted-foreground ml-1">/ 10</span>
                             </div>
                         </div>
 
                         {/* Stars Grid */}
-                        <div className="flex justify-center gap-1 mb-10">
+                        <div className="mb-8 flex justify-center gap-0.5 sm:mb-10 sm:gap-1">
                             {[...Array(10)].map((_, i) => {
                                 const ratingValue = i + 1;
                                 const isFilled = ratingValue <= (hoveredRating || selectedRating);
@@ -69,11 +69,11 @@ export function RatingModal({ isOpen, onClose, onRate, initialRating = 0, title 
                                         onMouseEnter={() => setHoveredRating(ratingValue)}
                                         onMouseLeave={() => setHoveredRating(0)}
                                         onClick={() => setSelectedRating(ratingValue)}
-                                        className="relative p-1 focus:outline-none"
+                                        className="relative p-0.5 focus:outline-none sm:p-1"
                                     >
                                         <Star
                                             className={cn(
-                                                "h-8 w-8 transition-colors",
+                                                "h-6 w-6 transition-colors sm:h-8 sm:w-8",
                                                 isFilled
                                                     ? "text-yellow-400 fill-current"
                                                     : "text-muted-foreground",

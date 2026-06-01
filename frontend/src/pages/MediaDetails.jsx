@@ -187,7 +187,7 @@ export function MediaDetails() {
 
     return (
         <Layout>
-            <div className="relative pb-20">
+            <div className="relative pb-4 md:pb-20">
                 {/* Background Backdrop Blur (IMDb style) */}
                 <div className="absolute inset-0 h-[500px] overflow-hidden -z-10 opacity-20 blur-3xl pointer-events-none">
                     <img
@@ -227,7 +227,7 @@ export function MediaDetails() {
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-6">
+                        <div className="flex w-full flex-wrap items-center gap-4 sm:gap-6 md:w-auto md:justify-end">
                             <div className="flex flex-col items-center">
                                 <span className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-1">
                                     IMDb RATING
@@ -282,7 +282,7 @@ export function MediaDetails() {
                                     variant={inWatchlist ? "secondary" : "primary"}
                                     size="lg"
                                     className={cn(
-                                        "h-14 px-8 rounded-full font-bold transition-all duration-300",
+                                        "h-12 w-full rounded-full px-4 font-bold transition-all duration-300 sm:h-14 sm:w-auto sm:px-8",
                                         !inWatchlist &&
                                             "bg-yellow-400 hover:bg-yellow-500 text-black border-none",
                                     )}
@@ -476,23 +476,46 @@ export function MediaDetails() {
 
                             {/* User Reviews Section */}
                             <section className="pt-8">
-                                <div className="flex items-center justify-between mb-8">
-                                    <h3 className="text-2xl font-bold flex items-center gap-2">
-                                        <Star className="h-6 w-6 text-yellow-400" /> User Reviews
-                                    </h3>
-                                    {user && !userReview && (
-                                        <Button
-                                            onClick={() => setIsReviewSidebarOpen(true)}
-                                            className="bg-yellow-400 hover:bg-yellow-500 text-black border-none font-bold flex items-center gap-2"
-                                        >
-                                            <MessageSquarePlus className="h-5 w-5" />
-                                            Review
-                                        </Button>
-                                    )}
+                                <div className="mb-8 flex flex-col gap-3">
+                                    <div className="flex items-center justify-between gap-3">
+                                        <h3 className="flex min-w-0 items-center gap-2 text-2xl font-bold">
+                                            <Star className="h-6 w-6 shrink-0 text-yellow-400" />
+                                            <span className="truncate">User Reviews</span>
+                                        </h3>
+                                        <div className="flex shrink-0 items-center gap-3">
+                                            <Link
+                                                to={`/media/${id}/reviews`}
+                                                className="text-sm font-semibold text-primary underline underline-offset-4 hover:text-primary/80"
+                                            >
+                                                View all
+                                            </Link>
+                                            {user && !userReview && (
+                                                <Button
+                                                    size="sm"
+                                                    onClick={() => setIsReviewSidebarOpen(true)}
+                                                    className="hidden bg-yellow-400 hover:bg-yellow-500 text-black border-none font-bold sm:inline-flex"
+                                                >
+                                                    <MessageSquarePlus className="h-4 w-4 mr-2" />
+                                                    Write a Review
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {reviews.length > 0 ? (
                                     <div className="space-y-6">
+                                        {user && !userReview && (
+                                            <div>
+                                                <Button
+                                                    onClick={() => setIsReviewSidebarOpen(true)}
+                                                    className="w-full bg-yellow-400 hover:bg-yellow-500 text-black border-none font-bold sm:hidden"
+                                                >
+                                                    <MessageSquarePlus className="h-5 w-5 mr-2" />
+                                                    Write a Review
+                                                </Button>
+                                            </div>
+                                        )}
                                         {reviews.slice(0, 3).map((review, i) => (
                                             <ReviewCard
                                                 key={i}
@@ -570,32 +593,32 @@ export function MediaDetails() {
                                 </Button>
                             </div>
 
-                            <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl p-6 text-black shadow-lg shadow-yellow-500/20">
-                                <Clapperboard className="h-8 w-8 mb-4" />
-                                <h4 className="text-xl font-extrabold mb-2 leading-tight">
-                                    Pro Tip: Track your favorites
-                                </h4>
-                                <p className="text-sm font-medium opacity-90 mb-4">
-                                    Sign in to save movies to your watchlist and get personalized
-                                    recommendations based on what you love.
-                                </p>
-                                {!user && (
+                            {!user && (
+                                <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl p-6 text-black shadow-lg shadow-yellow-500/20">
+                                    <Clapperboard className="h-8 w-8 mb-4" />
+                                    <h4 className="text-xl font-extrabold mb-2 leading-tight">
+                                        Pro Tip: Track your favorites
+                                    </h4>
+                                    <p className="text-sm font-medium opacity-90 mb-4">
+                                        Sign in to save movies to your watchlist and get
+                                        personalized recommendations based on what you love.
+                                    </p>
                                     <Link to="/login">
                                         <Button className="w-full bg-black text-white hover:bg-black/80 border-none font-bold">
                                             Join Now
                                         </Button>
                                     </Link>
-                                )}
-                            </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
 
                 {/* Similar Media Section (Full Width Slider) */}
                 {similarMedia.length > 0 && (
-                    <section className="mt-16 py-16">
+                    <section className="mt-10 py-8 md:mt-16 md:py-16">
                         <div className="container mx-auto px-4">
-                            <h3 className="text-3xl font-bold mb-8 px-4 border-l-4 border-yellow-400 pl-6">
+                            <h3 className="mb-5 border-l-4 border-yellow-400 px-4 pl-6 text-2xl font-bold md:mb-8 md:text-3xl">
                                 Customers also watched
                             </h3>
                             <MediaSlider
