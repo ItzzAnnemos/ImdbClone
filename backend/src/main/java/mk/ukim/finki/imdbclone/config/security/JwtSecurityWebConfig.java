@@ -57,6 +57,9 @@ public class JwtSecurityWebConfig {
                                 "/api/movies",
                                 "/api/movies/recent",
                                 "/api/movies/top-rated",
+                                "/api/movies/top-250",
+                                "/api/movies/most-popular",
+                                "/api/movies/genre-ranked/**",
                                 "/api/movies/{id}",
                                 "/api/movies/{id}/similar",
                                 "/api/movies/genre/**",
@@ -67,11 +70,17 @@ public class JwtSecurityWebConfig {
                                 "/api/tv-series",
                                 "/api/tv-series/recent",
                                 "/api/tv-series/top-rated",
+                                "/api/tv-series/top-250",
+                                "/api/tv-series/most-popular",
+                                "/api/tv-series/genre-ranked/**",
                                 "/api/tv-series/{id}",
                                 "/api/tv-series/{id}/similar",
                                 "/api/tv-series/status",
                                 // ----- Global search (media + people + year) -----
                                 "/api/search",
+                                "/api/genres",
+                                "/api/persons/born-today",
+                                "/api/persons/most-popular",
                                 "/api/ratings/media/**",
                                 "/api/reviews/media/**")
                         .permitAll()

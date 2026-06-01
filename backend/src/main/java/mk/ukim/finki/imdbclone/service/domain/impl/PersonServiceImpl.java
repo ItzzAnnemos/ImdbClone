@@ -6,6 +6,8 @@ import mk.ukim.finki.imdbclone.service.domain.PersonService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,5 +66,34 @@ public class PersonServiceImpl implements PersonService {
     @Transactional(readOnly = true)
     public List<Person> getAllPersons() {
         return personRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Person> getBornToday(LocalDate date) {
+        return personRepository.findAll()
+                .stream()
+                .filter(person -> person.getBirthDate() != null)
+                .filter(person -> person.getBirthDate().getMonth() == date.getMonth()
+                        && person.getBirthDate().getDayOfMonth() == date.getDayOfMonth())
+                .sorted(popularComparator())
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Person> getMostPopular() {
+        return personRepository.findAll()
+                .stream()
+                .sorted(popularComparator())
+                .limit(250)
+                .toList();
+    }
+
+    private Comparator<Person> popularComparator() {
+        return Comparator
+                .comparing((Person person) -> person.getMediaCredits().size(), Comparator.reverseOrder())
+                .thenComparing(Person::getFirstName)
+                .thenComparing(Person::getLastName);
     }
 }

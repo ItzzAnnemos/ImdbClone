@@ -3,11 +3,13 @@ package mk.ukim.finki.imdbclone.service.application.impl;
 import mk.ukim.finki.imdbclone.model.domain.Movie;
 import mk.ukim.finki.imdbclone.model.dto.CreateMovieDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayMovieDto;
+import mk.ukim.finki.imdbclone.model.dto.DisplayRankedMediaDto;
 import mk.ukim.finki.imdbclone.service.application.MovieApplicationService;
 import mk.ukim.finki.imdbclone.service.domain.MovieService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class MovieApplicationServiceImpl
@@ -50,6 +52,28 @@ public class MovieApplicationServiceImpl
         return movieService.getByGenre(genreName)
                 .stream()
                 .map(DisplayMovieDto::from)
+                .toList();
+    }
+
+    @Override
+    public List<DisplayRankedMediaDto> findTop250() {
+        return toRankedMedia(movieService.getTop250());
+    }
+
+    @Override
+    public List<DisplayRankedMediaDto> findMostPopular() {
+        return toRankedMedia(movieService.getMostPopular());
+    }
+
+    @Override
+    public List<DisplayRankedMediaDto> findRankedByGenre(String genreName) {
+        return toRankedMedia(movieService.getRankedByGenre(genreName));
+    }
+
+    private List<DisplayRankedMediaDto> toRankedMedia(List<Movie> movies) {
+        AtomicInteger rank = new AtomicInteger(1);
+        return movies.stream()
+                .map(movie -> DisplayRankedMediaDto.from(movie, rank.getAndIncrement()))
                 .toList();
     }
 }

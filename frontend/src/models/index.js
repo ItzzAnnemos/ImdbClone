@@ -16,3 +16,4 @@ export * as PersonModel from "./person.model";
 export * as GenreModel from "./genre.model";
 export * as RatingModel from "./rating.model";
 export * as ReviewModel from "./review.model";
+export * as DiscoveryModel from "./discovery.model";

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.imdbclone.model.dto.CreateMovieDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayCardMediaDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayMovieDto;
+import mk.ukim.finki.imdbclone.model.dto.DisplayRankedMediaDto;
 import mk.ukim.finki.imdbclone.model.dto.SearchResultDto;
 import mk.ukim.finki.imdbclone.service.application.MovieApplicationService;
 import mk.ukim.finki.imdbclone.service.application.SearchApplicationService;
@@ -68,6 +69,16 @@ public class MovieController {
         return ResponseEntity.ok(movieApplicationService.findTopRated());
     }
 
+    @GetMapping("/top-250")
+    public ResponseEntity<List<DisplayRankedMediaDto>> getTop250Movies() {
+        return ResponseEntity.ok(movieApplicationService.findTop250());
+    }
+
+    @GetMapping("/most-popular")
+    public ResponseEntity<List<DisplayRankedMediaDto>> getMostPopularMovies() {
+        return ResponseEntity.ok(movieApplicationService.findMostPopular());
+    }
+
     @GetMapping("/recent")
     public ResponseEntity<List<DisplayMovieDto>> getRecentMovies() {
         return ResponseEntity.ok(movieApplicationService.findRecent());
@@ -96,6 +107,11 @@ public class MovieController {
     @GetMapping("/genre/{genreName}")
     public ResponseEntity<List<DisplayMovieDto>> getMoviesByGenre(@PathVariable String genreName) {
         return ResponseEntity.ok(movieApplicationService.findByGenre(genreName));
+    }
+
+    @GetMapping("/genre-ranked/{genreName}")
+    public ResponseEntity<List<DisplayRankedMediaDto>> getRankedMoviesByGenre(@PathVariable String genreName) {
+        return ResponseEntity.ok(movieApplicationService.findRankedByGenre(genreName));
     }
 
     @GetMapping("/{id}/similar")

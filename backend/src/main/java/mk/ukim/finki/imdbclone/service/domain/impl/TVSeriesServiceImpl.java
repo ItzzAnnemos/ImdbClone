@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mk.ukim.finki.imdbclone.service.domain.helper.MediaSimilarityHelper;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -52,5 +53,64 @@ public class TVSeriesServiceImpl extends MediaServiceImpl<TVSeries> implements T
     @Transactional(readOnly = true)
     public List<TVSeries> getByStatus(String status) {
         return tvSeriesRepository.findAllByStatus(status);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TVSeries> getByGenre(String genreName) {
+        return tvSeriesRepository.findByGenres_Name(genreName);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TVSeries> getTop250() {
+        return tvSeriesRepository.findAll()
+                .stream()
+                .sorted(topRatedComparator())
+                .limit(250)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TVSeries> getMostPopular() {
+        return tvSeriesRepository.findAll()
+                .stream()
+                .sorted(popularComparator())
+                .limit(250)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TVSeries> getRankedByGenre(String genreName) {
+        return tvSeriesRepository.findByGenres_Name(genreName)
+                .stream()
+                .sorted(topRatedComparator())
+                .toList();
+    }
+
+    private Comparator<TVSeries> topRatedComparator() {
+        return Comparator
+                .comparing((TVSeries tvSeries) -> valueOrZero(tvSeries.getAverageRating())).reversed()
+                .thenComparing((TVSeries tvSeries) -> tvSeries.getRatings().size(), Comparator.reverseOrder())
+                .thenComparing((TVSeries tvSeries) -> valueOrZero(tvSeries.getReleaseYear()), Comparator.reverseOrder())
+                .thenComparing(TVSeries::getTitle);
+    }
+
+    private Comparator<TVSeries> popularComparator() {
+        return Comparator
+                .comparing((TVSeries tvSeries) -> tvSeries.getRatings().size(), Comparator.reverseOrder())
+                .thenComparing((TVSeries tvSeries) -> valueOrZero(tvSeries.getAverageRating()), Comparator.reverseOrder())
+                .thenComparing((TVSeries tvSeries) -> valueOrZero(tvSeries.getReleaseYear()), Comparator.reverseOrder())
+                .thenComparing(TVSeries::getTitle);
+    }
+
+    private Double valueOrZero(Double value) {
+        return value == null ? 0.0 : value;
+    }
+
+    private Integer valueOrZero(Integer value) {
+        return value == null ? 0 : value;
     }
 }

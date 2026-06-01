@@ -3,12 +3,15 @@ package mk.ukim.finki.imdbclone.service.application.impl;
 import mk.ukim.finki.imdbclone.model.domain.Person;
 import mk.ukim.finki.imdbclone.model.dto.CreatePersonDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayPersonDto;
+import mk.ukim.finki.imdbclone.model.dto.DisplayRankedPersonDto;
 import mk.ukim.finki.imdbclone.service.application.PersonApplicationService;
 import mk.ukim.finki.imdbclone.service.domain.PersonService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class PersonApplicationServiceImpl implements PersonApplicationService {
@@ -56,5 +59,22 @@ public class PersonApplicationServiceImpl implements PersonApplicationService {
         return DisplayPersonDto.from(
                 personService.searchPersonsByName(name)
         );
+    }
+
+    @Override
+    public List<DisplayRankedPersonDto> findBornToday() {
+        return toRankedPeople(personService.getBornToday(LocalDate.now()));
+    }
+
+    @Override
+    public List<DisplayRankedPersonDto> findMostPopular() {
+        return toRankedPeople(personService.getMostPopular());
+    }
+
+    private List<DisplayRankedPersonDto> toRankedPeople(List<Person> people) {
+        AtomicInteger rank = new AtomicInteger(1);
+        return people.stream()
+                .map(person -> DisplayRankedPersonDto.from(person, rank.getAndIncrement()))
+                .toList();
     }
 }

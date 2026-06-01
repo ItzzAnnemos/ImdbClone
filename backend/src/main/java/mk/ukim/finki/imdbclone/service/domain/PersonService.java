@@ -2,6 +2,7 @@ package mk.ukim.finki.imdbclone.service.domain;
 
 import mk.ukim.finki.imdbclone.model.domain.Person;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,4 +59,21 @@ public interface PersonService {
      * @return List of all persons
      */
     List<Person> getAllPersons();
+
+    /**
+     * Find people whose birthday matches the month and day of the supplied date.
+     * Results are ordered by popularity, based on media credit count and name.
+     *
+     * @param date date whose month and day should be matched
+     * @return List of people born on the same month and day
+     */
+    List<Person> getBornToday(LocalDate date);
+
+    /**
+     * Get the most popular people for celebrity discovery.
+     * Popularity is based on media credit count, with name as a stable tie-breaker.
+     *
+     * @return List of up to 250 popular people
+     */
+    List<Person> getMostPopular();
 }
