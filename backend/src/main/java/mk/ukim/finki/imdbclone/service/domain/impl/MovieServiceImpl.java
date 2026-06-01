@@ -44,6 +44,7 @@ public class MovieServiceImpl extends MediaServiceImpl<Movie> implements MovieSe
         movie.setDescription(movieDetails.getDescription());
         movie.setReleaseYear(movieDetails.getReleaseYear());
         movie.setPosterUrl(movieDetails.getPosterUrl());
+        movie.setTrailerUrl(movieDetails.getTrailerUrl());
         movie.setDuration(movieDetails.getDuration());
         return movieRepository.save(movie);
     }

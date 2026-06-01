@@ -3,16 +3,22 @@ import { Layout } from "../components/layout/Layout";
 import { MediaSlider } from "../components/ui/MediaSlider";
 import { Button } from "../components/ui/Button";
 import { Hero } from "../components/ui/Hero";
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, Sparkles } from "lucide-react";
 import * as mediaService from "../lib/mediaService";
+import * as userMediaService from "../lib/userMediaService";
+import { useAuth } from "../context/AuthContext";
 
 export function Home() {
+    const { user } = useAuth();
     const [trendingMovies, setTrendingMovies] = useState([]);
     const [recentMovies, setRecentMovies] = useState([]);
     const [trendingTVSeries, setTrendingTVSeries] = useState([]);
     const [recentTVSeries, setRecentTVSeries] = useState([]);
+    const [recommendations, setRecommendations] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [recommendationsLoading, setRecommendationsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [recommendationsError, setRecommendationsError] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,7 +47,84 @@ export function Home() {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (!user?.id) {
+            setRecommendations([]);
+            setRecommendationsLoading(false);
+            setRecommendationsError(null);
+            return;
+        }
+        let cancelled = false;
+
+        async function fetchRecommendations() {
+            try {
+                setRecommendationsLoading(true);
+                setRecommendationsError(null);
+                const data = await userMediaService.getRecommendations(user.id);
+                if (!cancelled) setRecommendations(data);
+            } catch (err) {
+                console.error("Error fetching recommendations:", err);
+                if (!cancelled) {
+                    setRecommendationsError("Failed to load recommendations.");
+                }
+            } finally {
+                if (!cancelled) setRecommendationsLoading(false);
+            }
+        }
+
+        fetchRecommendations();
+        return () => {
+            cancelled = true;
+        };
+    }, [user?.id]);
+
     const MediaSection = ({ title, items }) => <MediaSlider title={title} items={items} />;
+
+    const RecommendationSection = () => {
+        if (!user) return null;
+
+        return (
+            <section className="mb-4 md:mb-12">
+                <div className="mb-6 flex items-center gap-3 px-1">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                        <Sparkles className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-bold text-foreground">Recommended for You</h2>
+                        <p className="text-sm text-muted-foreground">
+                            Personalized picks for {user.username}
+                        </p>
+                    </div>
+                </div>
+
+                {recommendationsLoading && (
+                    <div className="flex min-h-36 items-center justify-center gap-3 rounded-xl border border-border bg-muted/20 text-sm text-muted-foreground">
+                        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                        Loading recommendations...
+                    </div>
+                )}
+
+                {!recommendationsLoading && recommendationsError && (
+                    <div className="flex min-h-36 items-center justify-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 text-sm text-destructive">
+                        <AlertCircle className="h-5 w-5" />
+                        {recommendationsError}
+                    </div>
+                )}
+
+                {!recommendationsLoading &&
+                    !recommendationsError &&
+                    recommendations.length === 0 && (
+                        <div className="rounded-xl border border-dashed border-border bg-muted/20 px-4 py-8 text-center text-sm text-muted-foreground">
+                            Rate or save a few movies and TV series to shape this section.
+                        </div>
+                    )}
+
+                {!recommendationsLoading && !recommendationsError && recommendations.length > 0 && (
+                    <MediaSlider title="" items={recommendations} />
+                )}
+            </section>
+        );
+    };
 
     return (
         <Layout>
@@ -67,6 +150,7 @@ export function Home() {
                     </div>
                 ) : (
                     <>
+                        <RecommendationSection />
                         <MediaSection title="Trending Movies" items={trendingMovies} />
                         <MediaSection title="Recent Movies" items={recentMovies} />
                         <MediaSection title="Trending TV Series" items={trendingTVSeries} />

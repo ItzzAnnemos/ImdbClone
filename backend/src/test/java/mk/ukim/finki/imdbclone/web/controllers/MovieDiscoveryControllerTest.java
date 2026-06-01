@@ -53,6 +53,7 @@ class MovieDiscoveryControllerTest {
                 rank,
                 title,
                 null,
+                null,
                 2020,
                 rating,
                 ratingCount,

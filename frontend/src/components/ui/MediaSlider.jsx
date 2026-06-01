@@ -52,7 +52,7 @@ export function MediaSlider({ title, items }) {
     return (
         <section className="mb-4 md:mb-12">
             <div className="flex items-center justify-between mb-6 px-1">
-                <h2 className="text-2xl font-bold text-foreground">{title}</h2>
+                {title ? <h2 className="text-2xl font-bold text-foreground">{title}</h2> : <span />}
                 <div className="hidden md:flex items-center gap-2">
                     <button
                         onClick={() => handleScroll("left")}

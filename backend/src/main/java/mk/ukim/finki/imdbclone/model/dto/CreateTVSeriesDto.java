@@ -10,6 +10,7 @@ public record CreateTVSeriesDto(
         String description,
         Integer releaseYear,
         String posterUrl,
+        String trailerUrl,
         Integer numberOfSeasons,
         String status
 ) {
@@ -20,6 +21,7 @@ public record CreateTVSeriesDto(
                 series.getDescription(),
                 series.getReleaseYear(),
                 series.getPosterUrl(),
+                series.getTrailerUrl(),
                 series.getNumberOfSeasons(),
                 series.getStatus()
         );
@@ -37,6 +39,7 @@ public record CreateTVSeriesDto(
         series.setDescription(description);
         series.setReleaseYear(releaseYear);
         series.setPosterUrl(posterUrl);
+        series.setTrailerUrl(trailerUrl);
         series.setNumberOfSeasons(numberOfSeasons);
         series.setStatus(status);
         return series;

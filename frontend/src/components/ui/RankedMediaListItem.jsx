@@ -1,6 +1,6 @@
 import { Bookmark, BookmarkCheck, Loader2, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import { cn } from "../../lib/utils";
+import { cn, formatRating } from "../../lib/utils";
 import { useAuth } from "../../context/AuthContext";
 import { useWatchlist } from "../../hooks/useWatchlist";
 
@@ -49,7 +49,7 @@ export function RankedMediaListItem({ item, isLast }) {
                 <div className="mt-3 flex flex-wrap items-center gap-4 text-sm">
                     <span className="inline-flex items-center gap-1 font-semibold text-foreground">
                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        {item.rating ? item.rating.toFixed(1) : "N/A"}
+                        {formatRating(item.rating)}
                     </span>
                     <span className="text-muted-foreground">
                         {item.ratingCount} {item.ratingCount === 1 ? "rating" : "ratings"}

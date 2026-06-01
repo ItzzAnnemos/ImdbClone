@@ -40,6 +40,8 @@ public abstract class Media {
 
     private String posterUrl;
 
+    private String trailerUrl;
+
     private Double averageRating;
 
     @ManyToMany(fetch = FetchType.LAZY)

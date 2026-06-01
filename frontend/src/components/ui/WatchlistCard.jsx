@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Star, User2, Bookmark, BookmarkCheck, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { cn } from "../../lib/utils";
+import { cn, formatRating } from "../../lib/utils";
 import { useAuth } from "../../context/AuthContext";
 import { useWatchlist } from "../../hooks/useWatchlist";
 import { MediaModel } from "../../models";
@@ -80,7 +80,7 @@ export function WatchlistCard({ media, className, ...props }) {
                             <div className="flex items-center gap-1 text-yellow-500">
                                 <Star className="h-3.5 w-3.5 fill-current" />
                                 <span className="font-semibold text-foreground">
-                                    {media.rating}
+                                    {formatRating(media.rating)}
                                 </span>
                             </div>
                             <span className="text-muted-foreground">{media.releaseYear}</span>

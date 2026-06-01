@@ -46,6 +46,16 @@ export async function deleteRating(userId, mediaId) {
 }
 
 /**
+ * Gets all ratings created by a user.
+ * @param {number} userId
+ * @returns {Promise<Rating.Rating[]>}
+ */
+export async function getRatingsByUser(userId) {
+    const response = await api.get(`/api/ratings/user/${userId}`);
+    return Rating.fromApiList(response.data);
+}
+
+/**
  * Gets the average rating for a media item.
  * @param {number} mediaId
  */

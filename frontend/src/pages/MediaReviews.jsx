@@ -9,6 +9,7 @@ import * as mediaService from "../lib/mediaService";
 import * as reviewService from "../lib/reviewService";
 import * as ratingService from "../lib/ratingService";
 import { useAuth } from "../context/AuthContext";
+import { formatRating } from "../lib/utils";
 
 export function MediaReviews() {
     const { id } = useParams();
@@ -157,7 +158,7 @@ export function MediaReviews() {
                                 </div>
                                 <div>
                                     <div className="text-xl font-bold leading-none">
-                                        {media.rating?.toFixed(1) || "N/A"}
+                                        {formatRating(media.rating)}
                                         <span className="text-muted-foreground text-sm">/10</span>
                                     </div>
                                     <div className="text-[10px] text-muted-foreground font-bold uppercase">

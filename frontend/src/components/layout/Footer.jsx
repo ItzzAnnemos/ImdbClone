@@ -75,9 +75,38 @@ export function Footer() {
                 </div>
 
                 {/* Copyright */}
-                <div className="flex flex-col items-center gap-2 text-xs text-muted-foreground">
-                    <p>an Antigravity Company</p>
-                    <p>&copy; 1990-{new Date().getFullYear()} by IMDb.com, Inc.</p>
+                <div className="flex flex-col items-center gap-3 text-center text-xs text-muted-foreground">
+                    <div className="flex flex-col items-center gap-2">
+                        <span className="font-medium text-foreground">
+                            IMDbClone student project
+                        </span>
+                        <a
+                            href="https://www.themoviedb.org"
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label="The Movie Database"
+                        >
+                            <img
+                                src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3fec72548ebc1fea3fbbd1ad9e36364db38b.svg"
+                                alt="TMDB"
+                                className="h-8 w-auto"
+                            />
+                        </a>
+                    </div>
+                    <p>This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+                    <p>
+                        Movie data and images are provided by{" "}
+                        <a
+                            href="https://www.themoviedb.org"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="underline underline-offset-4 hover:text-foreground"
+                        >
+                            The Movie Database
+                        </a>
+                        .
+                    </p>
+                    <p>&copy; {new Date().getFullYear()} IMDbClone team.</p>
                 </div>
             </div>
         </footer>

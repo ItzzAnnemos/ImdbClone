@@ -31,10 +31,20 @@ public class TmdbImportRunner implements ApplicationRunner {
             log.warn("TMDB import is enabled but no 'tmdb.api-token' is set; skipping import.");
             return;
         }
-        log.info("Starting TMDB movie import ({} page(s))...", properties.getPages());
+        log.info(
+                "Starting TMDB import (up to {} movie(s), {} TV series, {} page(s) per sort)...",
+                properties.getMaxMovies(),
+                properties.getMaxTVSeries(),
+                properties.getPages()
+        );
         try {
-            int imported = importService.importPopularMovies();
-            log.info("TMDB import finished: {} new movie(s) added.", imported);
+            int importedMovies = importService.importMovies();
+            int importedTVSeries = importService.importTVSeries();
+            log.info(
+                    "TMDB import finished: {} new movie(s), {} new TV series added.",
+                    importedMovies,
+                    importedTVSeries
+            );
         } catch (Exception ex) {
             log.error("TMDB import failed: {}", ex.getMessage(), ex);
         }

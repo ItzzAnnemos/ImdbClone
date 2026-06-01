@@ -6,6 +6,7 @@
  *   id:            Long
  *   title:         String
  *   posterUrl:     String | null
+ *   trailerUrl:    String | null
  *   averageRating: Double | null
  * }
  */
@@ -15,6 +16,7 @@
  * @property {number}      id
  * @property {string}      title
  * @property {string|null} image         - poster image URL
+ * @property {string|null} trailerUrl    - embeddable trailer URL
  * @property {number|null} rating        - average rating (0–10)
  */
 
@@ -28,6 +30,7 @@ export function fromApi(raw) {
         id: raw.id,
         title: raw.title,
         image: raw.posterUrl ?? null,
+        trailerUrl: raw.trailerUrl ?? null,
         rating: raw.averageRating ?? null,
         type: raw.type ?? "movie",
     };

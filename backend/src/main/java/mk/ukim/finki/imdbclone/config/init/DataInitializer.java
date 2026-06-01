@@ -101,6 +101,27 @@ public class DataInitializer {
             users = userRepository.findAll();
         }
 
+        /*
+         * Legacy mock catalogue seed is intentionally disabled by default.
+         *
+         * The active catalogue now comes from TMDB through TmdbImportRunner. The
+         * old hand-written movie, TV, person, rating, and review examples are left
+         * below as reference only and can be temporarily re-enabled for debugging by
+         * running the JVM with:
+         *
+         *   -Dimdbclone.enableLegacyMockData=true
+         */
+        if (!Boolean.getBoolean("imdbclone.enableLegacyMockData")) {
+            genres = genreRepository.findAll();
+            people = personRepository.findAll();
+            movies = movieRepository.findAll();
+            tvSeries = tvSeriesRepository.findAll();
+            mediaPersons = mediaPersonRepository.findAll();
+            ratings = ratingRepository.findAll();
+            reviews = reviewRepository.findAll();
+            return;
+        }
+
         genres = new ArrayList<>();
         if (this.genreRepository.count() == 0) {
             Genre g1 = new Genre();

@@ -4,6 +4,7 @@ export function rankedMediaFromApi(raw) {
         rank: raw.rank,
         title: raw.title,
         image: raw.posterUrl ?? null,
+        trailerUrl: raw.trailerUrl ?? null,
         year: raw.releaseYear ?? null,
         rating: raw.averageRating ?? null,
         ratingCount: raw.ratingCount ?? 0,

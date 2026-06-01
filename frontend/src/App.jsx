@@ -4,6 +4,8 @@ import { MediaDetails } from "./pages/MediaDetails";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Watchlist } from "./pages/Watchlist";
+import { Ratings } from "./pages/Ratings";
+import { Profile } from "./pages/Profile";
 import { MediaReviews } from "./pages/MediaReviews";
 import { MediaChartPage } from "./pages/MediaChartPage";
 import { MediaGenrePage } from "./pages/MediaGenrePage";
@@ -64,6 +66,8 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/watchlist" element={<Watchlist />} />
+                        <Route path="/ratings" element={<Ratings />} />
+                        <Route path="/profile" element={<Profile />} />
                     </Routes>
                 </Router>
             </WatchlistProvider>

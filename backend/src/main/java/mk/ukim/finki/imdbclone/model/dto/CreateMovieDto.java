@@ -10,6 +10,7 @@ public record CreateMovieDto(
         String description,
         Integer releaseYear,
         String posterUrl,
+        String trailerUrl,
         Integer duration
 ) {
 
@@ -19,6 +20,7 @@ public record CreateMovieDto(
                 movie.getDescription(),
                 movie.getReleaseYear(),
                 movie.getPosterUrl(),
+                movie.getTrailerUrl(),
                 movie.getDuration()
         );
     }
@@ -35,6 +37,7 @@ public record CreateMovieDto(
         movie.setDescription(description);
         movie.setReleaseYear(releaseYear);
         movie.setPosterUrl(posterUrl);
+        movie.setTrailerUrl(trailerUrl);
         movie.setDuration(duration);
         return movie;
     }

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, User, LogOut, ChevronDown, Bookmark } from "lucide-react";
+import { Menu, User, LogOut, ChevronDown, Bookmark, Star } from "lucide-react";
 import { Button } from "../ui/Button";
 import { ModeToggle } from "../ui/ModeToggle";
 import { useAuth } from "../../context/AuthContext";
@@ -131,12 +131,28 @@ export function Navbar() {
                                         </div>
                                         <div className="p-1">
                                             <Link
+                                                to="/profile"
+                                                onClick={() => setIsDropdownOpen(false)}
+                                                className="w-full flex items-center justify-start gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary/80 rounded-sm transition-colors mb-1"
+                                            >
+                                                <User className="h-4 w-4" />
+                                                <span>Profile</span>
+                                            </Link>
+                                            <Link
                                                 to="/watchlist"
                                                 onClick={() => setIsDropdownOpen(false)}
                                                 className="w-full flex items-center justify-start gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary/80 rounded-sm transition-colors mb-1"
                                             >
                                                 <Bookmark className="h-4 w-4" />
                                                 <span>Watchlist</span>
+                                            </Link>
+                                            <Link
+                                                to="/ratings"
+                                                onClick={() => setIsDropdownOpen(false)}
+                                                className="w-full flex items-center justify-start gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary/80 rounded-sm transition-colors mb-1"
+                                            >
+                                                <Star className="h-4 w-4" />
+                                                <span>Ratings</span>
                                             </Link>
                                             <button
                                                 onClick={() => {
@@ -210,6 +226,36 @@ export function Navbar() {
                                 </div>
                             </div>
                         ))}
+                        {user && (
+                            <div>
+                                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                    Account
+                                </p>
+                                <div className="flex flex-col gap-1">
+                                    <Link
+                                        to="/profile"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className="rounded-md px-3 py-2 text-sm text-foreground transition hover:bg-secondary"
+                                    >
+                                        Profile
+                                    </Link>
+                                    <Link
+                                        to="/watchlist"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className="rounded-md px-3 py-2 text-sm text-foreground transition hover:bg-secondary"
+                                    >
+                                        Watchlist
+                                    </Link>
+                                    <Link
+                                        to="/ratings"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className="rounded-md px-3 py-2 text-sm text-foreground transition hover:bg-secondary"
+                                    >
+                                        Ratings
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

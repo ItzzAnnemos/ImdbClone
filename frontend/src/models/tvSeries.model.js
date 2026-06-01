@@ -7,6 +7,7 @@
  *   description:     String | null
  *   releaseYear:     Integer | null
  *   posterUrl:       String | null
+ *   trailerUrl:      String | null
  *   averageRating:   Double | null
  *   numberOfSeasons: Integer | null
  *   status:          String | null   (e.g. "Ongoing", "Ended")
@@ -20,6 +21,7 @@
  * @property {string|null} description
  * @property {number|null} year
  * @property {string|null} image            - poster image URL
+ * @property {string|null} trailerUrl       - embeddable trailer URL
  * @property {number|null} rating           - average rating (0–10)
  * @property {number|null} numberOfSeasons
  * @property {string|null} status
@@ -36,6 +38,7 @@ export function fromApi(raw) {
         description: raw.description ?? null,
         year: raw.releaseYear ?? null,
         image: raw.posterUrl ?? null,
+        trailerUrl: raw.trailerUrl ?? null,
         rating: raw.averageRating ?? null,
         numberOfSeasons: raw.numberOfSeasons ?? null,
         status: raw.status ?? null,

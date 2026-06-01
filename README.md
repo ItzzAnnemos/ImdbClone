@@ -29,7 +29,7 @@ ImdbClone/
 
 The backend includes a Docker Compose Postgres database with a persistent named volume. Spring creates/updates the schema from JPA entities and seeds initial users, media, ratings, reviews, genres, and people on the first empty startup through the `dev` profile.
 
-`application.properties` enables `dev,jwt,postgres` by default, so the backend uses this Docker Postgres database without requiring every developer to set `SPRING_PROFILES_ACTIVE` manually.
+`application.properties` defaults to the in-memory H2 `dev` profile for quick local starts. Use the `postgres` profile when you want imported TMDB data to remain after the backend stops.
 
 Start Postgres:
 ```bash
@@ -41,7 +41,7 @@ docker compose up -d
 Run the backend against Postgres:
 ```bash
 cd backend
-./mvnw spring-boot:run
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev,jwt,postgres
 ```
 
 The local defaults are:
@@ -59,8 +59,46 @@ Reset to a fresh seeded database:
 cd backend
 docker compose down -v
 docker compose up -d
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev,jwt,postgres
+```
+
+### Optional TMDB Import
+
+The backend imports a larger movie and TV-series catalogue from TMDB on startup when
+`TMDB_ENABLED=true`. For this student project it defaults to enabled, but the
+import is skipped if no token is configured. Put credentials in `backend/.env`;
+do not commit real TMDB tokens or API keys.
+
+```bash
+cd backend
+cp .env.example .env
+# Edit .env and set TMDB_API_TOKEN to your v4 Read Access Token.
 ./mvnw spring-boot:run
 ```
+
+For a persistent imported catalogue, start Postgres and run with
+`-Dspring-boot.run.profiles=dev,jwt,postgres`.
+
+Default import settings add up to 500 new movies and 300 new TV series, using
+several TMDB discovery sorts to get a mix of popular, highly rated, highly
+voted, and newer titles. Imported media includes genres, poster URL, TMDB vote
+average, trailer URL when available, and cast/creator/director credits.
+
+Useful overrides:
+
+- `TMDB_MAX_MOVIES=1000` changes the import cap for one startup run.
+- `TMDB_MAX_TV_SERIES=600` changes the TV-series import cap for one startup run.
+- `TMDB_PAGES=50` changes how many 20-item TMDB pages are read per sort.
+- `TMDB_DISCOVERY_SORTS=popularity.desc,vote_average.desc` changes the discovery
+  sort list for movies.
+- `TMDB_TV_DISCOVERY_SORTS=popularity.desc,vote_average.desc` changes the
+  discovery sort list for TV series.
+- `TMDB_MINIMUM_VOTE_COUNT=200` filters out obscure titles when sorting by rating.
+- `TMDB_MAX_CAST=10` changes how many cast members are stored per media item.
+
+TMDB requires attribution when their API data or images are used. Keep the
+approved TMDB logo and attribution notice visible in the application
+footer/About/Credits area.
 
 ### Backend Setup
 ```bash

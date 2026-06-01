@@ -7,6 +7,7 @@
  *   description:   String | null
  *   releaseYear:   Integer | null
  *   posterUrl:     String | null
+ *   trailerUrl:    String | null
  *   averageRating: Double | null
  *   duration:      Integer | null   (minutes)
  * }
@@ -19,6 +20,7 @@
  * @property {string|null} description
  * @property {number|null} year
  * @property {string|null} image         - poster image URL
+ * @property {string|null} trailerUrl    - embeddable trailer URL
  * @property {number|null} rating        - average rating (0–10)
  * @property {number|null} duration      - runtime in minutes
  */
@@ -35,6 +37,7 @@ export function fromApi(raw) {
         description: raw.description ?? null,
         year: raw.releaseYear ?? null,
         image: raw.posterUrl ?? null,
+        trailerUrl: raw.trailerUrl ?? null,
         rating: raw.averageRating ?? null,
         duration: raw.duration ?? null,
         genres: raw.genres ?? [],

@@ -20,7 +20,7 @@ import { MediaSlider } from "../components/ui/MediaSlider";
 import * as mediaService from "../lib/mediaService";
 import { useAuth } from "../context/AuthContext";
 import { useWatchlist } from "../hooks/useWatchlist";
-import { cn } from "../lib/utils";
+import { cn, formatRating } from "../lib/utils";
 import * as ratingService from "../lib/ratingService";
 import * as reviewService from "../lib/reviewService";
 import { RatingModal } from "../components/ui/RatingModal";
@@ -236,7 +236,7 @@ export function MediaDetails() {
                                     <Star className="h-8 w-8 text-yellow-400 fill-current" />
                                     <div>
                                         <div className="text-2xl font-bold leading-none">
-                                            {media.rating?.toFixed(1) || "N/A"}
+                                            {formatRating(media.rating)}
                                             <span className="text-muted-foreground text-sm">
                                                 /10
                                             </span>
@@ -317,30 +317,41 @@ export function MediaDetails() {
                             />
                         </motion.div>
 
-                        {/* Trailer/Hero Placeholder */}
+                        {/* Trailer */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             className="lg:col-span-2 relative aspect-video bg-muted rounded-xl overflow-hidden group shadow-2xl"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-                            <img
-                                src={media.image} // In real app, this would be a backdrop/trailer thumbnail
-                                alt="Trailer"
-                                className="w-full h-full object-cover opacity-60 grayscale-[0.5] group-hover:grayscale-0 transition-all duration-700"
-                            />
-                            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
-                                <motion.div
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.9 }}
-                                    className="h-20 w-20 bg-yellow-400 rounded-full flex items-center justify-center cursor-pointer shadow-lg shadow-yellow-400/20"
-                                >
-                                    <Play className="h-10 w-10 text-black fill-current ml-1" />
-                                </motion.div>
-                                <p className="mt-4 font-bold text-lg tracking-widest uppercase text-white shadow-sm">
-                                    Play Trailer
-                                </p>
-                            </div>
+                            {media.trailerUrl ? (
+                                <iframe
+                                    src={media.trailerUrl}
+                                    title={`${media.title} trailer`}
+                                    className="h-full w-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowFullScreen
+                                />
+                            ) : (
+                                <>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+                                    <img
+                                        src={
+                                            media.image ||
+                                            "https://placehold.co/960x540?text=No+Trailer"
+                                        }
+                                        alt=""
+                                        className="w-full h-full object-cover opacity-60 grayscale-[0.5]"
+                                    />
+                                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
+                                        <div className="h-20 w-20 bg-muted-foreground/30 rounded-full flex items-center justify-center shadow-lg">
+                                            <Play className="h-10 w-10 text-white fill-current ml-1" />
+                                        </div>
+                                        <p className="mt-4 font-bold text-lg tracking-widest uppercase text-white shadow-sm">
+                                            Trailer unavailable
+                                        </p>
+                                    </div>
+                                </>
+                            )}
                         </motion.div>
                     </div>
 
@@ -578,7 +589,7 @@ export function MediaDetails() {
                                                 <div className="flex items-center gap-2 mt-1">
                                                     <Star className="h-3 w-3 text-yellow-400 fill-current" />
                                                     <span className="text-xs text-muted-foreground">
-                                                        {item.averageRating?.toFixed(1) || "N/A"}
+                                                        {formatRating(item.averageRating)}
                                                     </span>
                                                 </div>
                                             </div>

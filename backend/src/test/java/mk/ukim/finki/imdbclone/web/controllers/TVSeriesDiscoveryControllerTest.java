@@ -52,6 +52,7 @@ class TVSeriesDiscoveryControllerTest {
                 rank,
                 title,
                 null,
+                null,
                 2022,
                 rating,
                 ratingCount,

@@ -9,6 +9,7 @@ public record DisplayCardMediaDto(
         Long id,
         String title,
         String posterUrl,
+        String trailerUrl,
         Double averageRating,
         String type
 ) {
@@ -19,6 +20,7 @@ public record DisplayCardMediaDto(
                 media.getId(),
                 media.getTitle(),
                 media.getPosterUrl(),
+                media.getTrailerUrl(),
                 media.getAverageRating(),
                 type
         );

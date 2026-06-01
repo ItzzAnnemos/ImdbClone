@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Star, Bookmark, BookmarkCheck, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { cn } from "../../lib/utils";
+import { cn, formatRating } from "../../lib/utils";
 import { useAuth } from "../../context/AuthContext";
 import { useWatchlist } from "../../hooks/useWatchlist";
 
@@ -62,7 +62,7 @@ export function MediaCard({ id, title, rating, image, year, className }) {
                     <div className="mt-2 flex items-center justify-between text-sm">
                         <div className="flex items-center gap-1 text-yellow-500">
                             <Star className="h-4 w-4 fill-current" />
-                            <span className="font-medium text-white">{rating}</span>
+                            <span className="font-medium text-white">{formatRating(rating)}</span>
                         </div>
                         <span className="text-gray-300">{year}</span>
                     </div>
