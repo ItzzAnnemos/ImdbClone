@@ -5,6 +5,7 @@ import mk.ukim.finki.imdbclone.model.domain.Media;
 import mk.ukim.finki.imdbclone.model.domain.MediaPerson;
 import mk.ukim.finki.imdbclone.model.domain.Person;
 import mk.ukim.finki.imdbclone.model.dto.SearchItemDto;
+import mk.ukim.finki.imdbclone.model.dto.PagedSearchResultDto;
 import mk.ukim.finki.imdbclone.model.dto.SearchResultDto;
 import mk.ukim.finki.imdbclone.repository.MediaRepository;
 import mk.ukim.finki.imdbclone.repository.PersonRepository;
@@ -21,6 +22,8 @@ import java.util.*;
 public class SearchServiceImpl implements SearchService {
 
     private static final int MAX_RESULTS = 20;
+    private static final int DEFAULT_PAGE_SIZE = 10;
+    private static final int MAX_PAGE_SIZE = 50;
 
     private final MediaRepository mediaRepository;
     private final PersonRepository personRepository;
@@ -32,17 +35,10 @@ public class SearchServiceImpl implements SearchService {
             return new SearchResultDto(List.of(), "empty");
         }
 
-        String normalizedQuery = SearchQueryUtil.normalize(query);
-
-        Map<String, SearchItemDto> results = new LinkedHashMap<>();
         List<String> sources = new ArrayList<>();
+        List<SearchItemDto> sorted = buildSortedResults(query, sources);
 
-        searchMedia(normalizedQuery, results, sources);
-        searchPeople(normalizedQuery, results, sources);
-        searchByYear(normalizedQuery, results, sources);
-
-        List<SearchItemDto> finalResults = results.values().stream()
-                .sorted(Comparator.comparing(SearchItemDto::score).reversed())
+        List<SearchItemDto> finalResults = sorted.stream()
                 .limit(MAX_RESULTS)
                 .toList();
 
@@ -50,6 +46,64 @@ public class SearchServiceImpl implements SearchService {
                 finalResults,
                 sources.isEmpty() ? "empty" : String.join(", ", sources)
         );
+    }
+
+    @Override
+    public PagedSearchResultDto search(String query, int page, int size) {
+        // Clamp the paging parameters into a sane range.
+        if (page < 0) {
+            page = 0;
+        }
+        if (size < 1) {
+            size = DEFAULT_PAGE_SIZE;
+        }
+        if (size > MAX_PAGE_SIZE) {
+            size = MAX_PAGE_SIZE;
+        }
+
+        if (query == null || query.isBlank()) {
+            return new PagedSearchResultDto(List.of(), "empty", page, size, 0L, 0, false, false);
+        }
+
+        List<String> sources = new ArrayList<>();
+        List<SearchItemDto> sorted = buildSortedResults(query, sources);
+
+        long totalResults = sorted.size();
+        int totalPages = (int) Math.ceil((double) totalResults / size);
+
+        int fromIndex = Math.min(page * size, sorted.size());
+        int toIndex = Math.min(fromIndex + size, sorted.size());
+        List<SearchItemDto> pageItems = sorted.subList(fromIndex, toIndex);
+
+        return new PagedSearchResultDto(
+                pageItems,
+                sources.isEmpty() ? "empty" : String.join(", ", sources),
+                page,
+                size,
+                totalResults,
+                totalPages,
+                page + 1 < totalPages,
+                page > 0 && totalResults > 0
+        );
+    }
+
+    /**
+     * Runs all matchers for the query and returns every matching item sorted by
+     * descending score. The {@code sources} list is populated as a side effect
+     * with the names of the matchers that contributed.
+     */
+    private List<SearchItemDto> buildSortedResults(String query, List<String> sources) {
+        String normalizedQuery = SearchQueryUtil.normalize(query);
+
+        Map<String, SearchItemDto> results = new LinkedHashMap<>();
+
+        searchMedia(normalizedQuery, results, sources);
+        searchPeople(normalizedQuery, results, sources);
+        searchByYear(normalizedQuery, results, sources);
+
+        return results.values().stream()
+                .sorted(Comparator.comparing(SearchItemDto::score).reversed())
+                .toList();
     }
 
     private void searchMedia(

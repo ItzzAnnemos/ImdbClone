@@ -81,7 +81,21 @@ public class DataInitializer {
             user3.setLastName("Fan");
             user3.setEmail("mike@test.com");
 
-            this.userRepository.saveAll(List.of(user1, user2, user3));
+            User user4 = new User();
+            user4.setUsername("alice_w");
+            user4.setPassword(passwordEncoder.encode("password123"));
+            user4.setFirstName("Alice");
+            user4.setLastName("Wong");
+            user4.setEmail("alice@test.com");
+
+            User user5 = new User();
+            user5.setUsername("carlos_m");
+            user5.setPassword(passwordEncoder.encode("password123"));
+            user5.setFirstName("Carlos");
+            user5.setLastName("Mendez");
+            user5.setEmail("carlos@test.com");
+
+            this.userRepository.saveAll(List.of(user1, user2, user3, user4, user5));
             users = this.userRepository.findAll();
         } else {
             users = userRepository.findAll();
@@ -108,6 +122,22 @@ public class DataInitializer {
             Genre g5 = new Genre();
             g5.setName("Crime");
             genres.add(g5);
+
+            Genre g6 = new Genre();
+            g6.setName("Thriller");
+            genres.add(g6);
+
+            Genre g7 = new Genre();
+            g7.setName("Romance");
+            genres.add(g7);
+
+            Genre g8 = new Genre();
+            g8.setName("Adventure");
+            genres.add(g8);
+
+            Genre g9 = new Genre();
+            g9.setName("Biography");
+            genres.add(g9);
 
             this.genreRepository.saveAll(genres);
         } else {
@@ -145,7 +175,80 @@ public class DataInitializer {
             p6.setLastName("Cenevski");
             p6.setBirthDate(LocalDate.of(1943, 2, 23));
 
-            this.personRepository.saveAll(List.of(p1, p2, p3, p4, p5, p6));
+            // --- Actors & additional directors (indices 6+) ---
+            Person p7 = new Person();
+            p7.setFirstName("Leonardo");
+            p7.setLastName("DiCaprio");
+            p7.setBirthDate(LocalDate.of(1974, 11, 11));
+
+            Person p8 = new Person();
+            p8.setFirstName("Al");
+            p8.setLastName("Pacino");
+            p8.setBirthDate(LocalDate.of(1940, 4, 25));
+
+            Person p9 = new Person();
+            p9.setFirstName("Marlon");
+            p9.setLastName("Brando");
+            p9.setBirthDate(LocalDate.of(1924, 4, 3));
+
+            Person p10 = new Person();
+            p10.setFirstName("Bryan");
+            p10.setLastName("Cranston");
+            p10.setBirthDate(LocalDate.of(1956, 3, 7));
+
+            Person p11 = new Person();
+            p11.setFirstName("Aaron");
+            p11.setLastName("Paul");
+            p11.setBirthDate(LocalDate.of(1979, 8, 27));
+
+            Person p12 = new Person();
+            p12.setFirstName("Keanu");
+            p12.setLastName("Reeves");
+            p12.setBirthDate(LocalDate.of(1964, 9, 2));
+
+            Person p13 = new Person();
+            p13.setFirstName("Cillian");
+            p13.setLastName("Murphy");
+            p13.setBirthDate(LocalDate.of(1976, 5, 25));
+
+            Person p14 = new Person();
+            p14.setFirstName("Matthew");
+            p14.setLastName("McConaughey");
+            p14.setBirthDate(LocalDate.of(1969, 11, 4));
+
+            Person p15 = new Person();
+            p15.setFirstName("Robert");
+            p15.setLastName("De Niro");
+            p15.setBirthDate(LocalDate.of(1943, 8, 17));
+
+            Person p16 = new Person();
+            p16.setFirstName("Adam");
+            p16.setLastName("Scott");
+            p16.setBirthDate(LocalDate.of(1973, 4, 3));
+
+            Person p17 = new Person();
+            p17.setFirstName("Jeremy");
+            p17.setLastName("Strong");
+            p17.setBirthDate(LocalDate.of(1978, 12, 25));
+
+            Person p18 = new Person();
+            p18.setFirstName("Pedro");
+            p18.setLastName("Pascal");
+            p18.setBirthDate(LocalDate.of(1975, 4, 2));
+
+            Person p19 = new Person();
+            p19.setFirstName("Martin");
+            p19.setLastName("Scorsese");
+            p19.setBirthDate(LocalDate.of(1942, 11, 17));
+
+            Person p20 = new Person();
+            p20.setFirstName("Denis");
+            p20.setLastName("Villeneuve");
+            p20.setBirthDate(LocalDate.of(1967, 10, 3));
+
+            this.personRepository.saveAll(List.of(
+                    p1, p2, p3, p4, p5, p6,
+                    p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20));
             people = this.personRepository.findAll();
         } else {
             people = personRepository.findAll();
@@ -303,13 +406,58 @@ public class DataInitializer {
                     "https://m.media-amazon.com/images/M/MV5BNzNiYjcxNjMtODlkNS00MzQxLThmNWMtMGYwNDkzMzM4OGYzXkEyXkFqcGc@._V1_QL75_UX380_CR0"); // Black
             // Seed
 
+            Movie movie17 = new Movie();
+            movie17.setTitle("The Dark Knight");
+            movie17.setDescription(
+                    "Batman faces the Joker, a criminal mastermind who wants to plunge Gotham City into anarchy.");
+            movie17.setReleaseYear(2008);
+            movie17.setDuration(152);
+            // Action, Crime, Thriller
+            movie17.setGenres(new HashSet<>(List.of(genres.get(0), genres.get(4), genres.get(5))));
+            movie17.setPosterUrl(
+                    "https://placehold.co/400x600?text=The+Dark+Knight");
+
+            Movie movie18 = new Movie();
+            movie18.setTitle("Joker");
+            movie18.setDescription(
+                    "A mentally troubled comedian embarks on a downward spiral that leads to the creation of an iconic villain.");
+            movie18.setReleaseYear(2019);
+            movie18.setDuration(122);
+            // Drama, Crime, Thriller
+            movie18.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(4), genres.get(5))));
+            movie18.setPosterUrl(
+                    "https://placehold.co/400x600?text=Joker");
+
+            Movie movie19 = new Movie();
+            movie19.setTitle("Dune");
+            movie19.setDescription(
+                    "A noble family becomes embroiled in a war for control over the galaxy's most valuable asset.");
+            movie19.setReleaseYear(2021);
+            movie19.setDuration(155);
+            // Sci-Fi, Adventure
+            movie19.setGenres(new HashSet<>(List.of(genres.get(1), genres.get(7))));
+            movie19.setPosterUrl(
+                    "https://placehold.co/400x600?text=Dune");
+
+            Movie movie20 = new Movie();
+            movie20.setTitle("Forrest Gump");
+            movie20.setDescription(
+                    "The history of the United States from the 1950s to the '70s unfolds through the life of an Alabama man.");
+            movie20.setReleaseYear(1994);
+            movie20.setDuration(142);
+            // Drama, Romance
+            movie20.setGenres(new HashSet<>(List.of(genres.get(2), genres.get(6))));
+            movie20.setPosterUrl(
+                    "https://placehold.co/400x600?text=Forrest+Gump");
+
             this.movieRepository.saveAll(List.of(
                     movie1, movie2, movie3, movie4, movie5,
                     movie6, movie7, movie8,
                     movie9, movie10,
                     movie11, movie12,
                     movie13, movie14,
-                    movie15, movie16));
+                    movie15, movie16,
+                    movie17, movie18, movie19, movie20));
 
             movies = this.movieRepository.findAll();
         } else {
@@ -374,7 +522,30 @@ public class DataInitializer {
             show5.setPosterUrl(
                     "https://m.media-amazon.com/images/M/MV5BYWI3ODJlMzktY2U5NC00ZjdlLWE1MGItNWQxZDk3NWNjN2RhXkEyXkFqcGc@._V1_QL75_UX380_CR0");
 
-            this.tvSeriesRepository.saveAll(List.of(show1, show2, show3, show4, show5));
+            TVSeries show6 = new TVSeries();
+            show6.setTitle("Stranger Things");
+            show6.setDescription(
+                    "When a young boy vanishes, a small town uncovers a mystery involving secret experiments and supernatural forces.");
+            show6.setReleaseYear(2016);
+            show6.setNumberOfSeasons(4);
+            show6.setStatus("Returning Series");
+            // Sci-Fi, Drama, Thriller
+            show6.setGenres(new HashSet<>(List.of(genres.get(1), genres.get(2), genres.get(5))));
+            show6.setPosterUrl(
+                    "https://placehold.co/400x600?text=Stranger+Things");
+
+            TVSeries show7 = new TVSeries();
+            show7.setTitle("The Office");
+            show7.setDescription(
+                    "A mockumentary on a group of typical office workers, where the workday consists of ego clashes and inappropriate behavior.");
+            show7.setReleaseYear(2005);
+            show7.setNumberOfSeasons(9);
+            show7.setStatus("Ended");
+            show7.setGenres(new HashSet<>(List.of(genres.get(3)))); // Comedy
+            show7.setPosterUrl(
+                    "https://placehold.co/400x600?text=The+Office");
+
+            this.tvSeriesRepository.saveAll(List.of(show1, show2, show3, show4, show5, show6, show7));
             tvSeries = this.tvSeriesRepository.findAll();
         } else {
             tvSeries = tvSeriesRepository.findAll();
@@ -422,7 +593,137 @@ public class DataInitializer {
             mp8.setPerson(people.get(5)); // Kiril Cenevski
             mp8.setRole(Role.DIRECTOR);
 
-            this.mediaPersonRepository.saveAll(List.of(mp1, mp2, mp3, mp4, mp5, mp6, mp7, mp8));
+            // ----- Cast (main actors) and extra directors -----
+            MediaPerson mp9 = new MediaPerson();
+            mp9.setMedia(movies.get(0)); // Inception
+            mp9.setPerson(people.get(6)); // Leonardo DiCaprio
+            mp9.setRole(Role.MAIN_ACTOR);
+            mp9.setCharacterName("Dom Cobb");
+
+            MediaPerson mp10 = new MediaPerson();
+            mp10.setMedia(movies.get(0)); // Inception
+            mp10.setPerson(people.get(12)); // Cillian Murphy
+            mp10.setRole(Role.ACTOR);
+            mp10.setCharacterName("Robert Fischer");
+
+            MediaPerson mp11 = new MediaPerson();
+            mp11.setMedia(movies.get(1)); // The Godfather
+            mp11.setPerson(people.get(8)); // Marlon Brando
+            mp11.setRole(Role.MAIN_ACTOR);
+            mp11.setCharacterName("Vito Corleone");
+
+            MediaPerson mp12 = new MediaPerson();
+            mp12.setMedia(movies.get(1)); // The Godfather
+            mp12.setPerson(people.get(7)); // Al Pacino
+            mp12.setRole(Role.MAIN_ACTOR);
+            mp12.setCharacterName("Michael Corleone");
+
+            MediaPerson mp13 = new MediaPerson();
+            mp13.setMedia(movies.get(2)); // Interstellar
+            mp13.setPerson(people.get(13)); // Matthew McConaughey
+            mp13.setRole(Role.MAIN_ACTOR);
+            mp13.setCharacterName("Cooper");
+
+            MediaPerson mp14 = new MediaPerson();
+            mp14.setMedia(movies.get(4)); // The Matrix
+            mp14.setPerson(people.get(11)); // Keanu Reeves
+            mp14.setRole(Role.MAIN_ACTOR);
+            mp14.setCharacterName("Neo");
+
+            MediaPerson mp15 = new MediaPerson();
+            mp15.setMedia(movies.get(5)); // Goodfellas
+            mp15.setPerson(people.get(14)); // Robert De Niro
+            mp15.setRole(Role.MAIN_ACTOR);
+            mp15.setCharacterName("Jimmy Conway");
+
+            MediaPerson mp16 = new MediaPerson();
+            mp16.setMedia(movies.get(5)); // Goodfellas
+            mp16.setPerson(people.get(18)); // Martin Scorsese
+            mp16.setRole(Role.DIRECTOR);
+
+            MediaPerson mp17 = new MediaPerson();
+            mp17.setMedia(movies.get(6)); // Scarface
+            mp17.setPerson(people.get(7)); // Al Pacino
+            mp17.setRole(Role.MAIN_ACTOR);
+            mp17.setCharacterName("Tony Montana");
+
+            MediaPerson mp18 = new MediaPerson();
+            mp18.setMedia(movies.get(7)); // Casino
+            mp18.setPerson(people.get(14)); // Robert De Niro
+            mp18.setRole(Role.MAIN_ACTOR);
+            mp18.setCharacterName("Ace Rothstein");
+
+            MediaPerson mp19 = new MediaPerson();
+            mp19.setMedia(movies.get(7)); // Casino
+            mp19.setPerson(people.get(18)); // Martin Scorsese
+            mp19.setRole(Role.DIRECTOR);
+
+            MediaPerson mp20 = new MediaPerson();
+            mp20.setMedia(movies.get(8)); // Titanic
+            mp20.setPerson(people.get(6)); // Leonardo DiCaprio
+            mp20.setRole(Role.MAIN_ACTOR);
+            mp20.setCharacterName("Jack Dawson");
+
+            MediaPerson mp21 = new MediaPerson();
+            mp21.setMedia(movies.get(12)); // Blade Runner 2049
+            mp21.setPerson(people.get(19)); // Denis Villeneuve
+            mp21.setRole(Role.DIRECTOR);
+
+            MediaPerson mp22 = new MediaPerson();
+            mp22.setMedia(movies.get(13)); // Arrival
+            mp22.setPerson(people.get(19)); // Denis Villeneuve
+            mp22.setRole(Role.DIRECTOR);
+
+            MediaPerson mp23 = new MediaPerson();
+            mp23.setMedia(movies.get(16)); // The Dark Knight
+            mp23.setPerson(people.get(0)); // Christopher Nolan
+            mp23.setRole(Role.DIRECTOR);
+
+            MediaPerson mp24 = new MediaPerson();
+            mp24.setMedia(movies.get(16)); // The Dark Knight
+            mp24.setPerson(people.get(12)); // Cillian Murphy
+            mp24.setRole(Role.ACTOR);
+            mp24.setCharacterName("Jonathan Crane");
+
+            MediaPerson mp25 = new MediaPerson();
+            mp25.setMedia(movies.get(18)); // Dune
+            mp25.setPerson(people.get(19)); // Denis Villeneuve
+            mp25.setRole(Role.DIRECTOR);
+
+            MediaPerson mp26 = new MediaPerson();
+            mp26.setMedia(tvSeries.get(0)); // Breaking Bad
+            mp26.setPerson(people.get(9)); // Bryan Cranston
+            mp26.setRole(Role.MAIN_ACTOR);
+            mp26.setCharacterName("Walter White");
+
+            MediaPerson mp27 = new MediaPerson();
+            mp27.setMedia(tvSeries.get(0)); // Breaking Bad
+            mp27.setPerson(people.get(10)); // Aaron Paul
+            mp27.setRole(Role.MAIN_ACTOR);
+            mp27.setCharacterName("Jesse Pinkman");
+
+            MediaPerson mp28 = new MediaPerson();
+            mp28.setMedia(tvSeries.get(1)); // Severance
+            mp28.setPerson(people.get(15)); // Adam Scott
+            mp28.setRole(Role.MAIN_ACTOR);
+            mp28.setCharacterName("Mark Scout");
+
+            MediaPerson mp29 = new MediaPerson();
+            mp29.setMedia(tvSeries.get(3)); // Succession
+            mp29.setPerson(people.get(16)); // Jeremy Strong
+            mp29.setRole(Role.MAIN_ACTOR);
+            mp29.setCharacterName("Kendall Roy");
+
+            MediaPerson mp30 = new MediaPerson();
+            mp30.setMedia(tvSeries.get(4)); // The Last of Us
+            mp30.setPerson(people.get(17)); // Pedro Pascal
+            mp30.setRole(Role.MAIN_ACTOR);
+            mp30.setCharacterName("Joel Miller");
+
+            this.mediaPersonRepository.saveAll(List.of(
+                    mp1, mp2, mp3, mp4, mp5, mp6, mp7, mp8,
+                    mp9, mp10, mp11, mp12, mp13, mp14, mp15, mp16, mp17, mp18, mp19, mp20,
+                    mp21, mp22, mp23, mp24, mp25, mp26, mp27, mp28, mp29, mp30));
             mediaPersons = mediaPersonRepository.findAll();
         } else {
             mediaPersons = mediaPersonRepository.findAll();
@@ -430,60 +731,50 @@ public class DataInitializer {
 
         ratings = new ArrayList<>();
         if (this.ratingRepository.count() == 0) {
-            Rating r1 = new Rating();
-            r1.setUser(users.get(0));
-            r1.setMedia(movies.get(0)); // Inception
-            r1.setRating(10);
+            // Rating matrix. Each row is {userIndex, mediaSelector, score}.
+            // mediaSelector >= 0  -> movies.get(selector)
+            // mediaSelector <  0  -> tvSeries.get(-selector - 1)
+            //   (-1 = Breaking Bad, -2 = Severance, -3 = The Bear, -4 = Succession,
+            //    -5 = The Last of Us, -6 = Stranger Things, -7 = The Office)
+            int[][] ratingData = {
+                    // john_doe (0): Nolan, sci-fi and a crime classic
+                    {0, 0, 10}, {0, 2, 9}, {0, 3, 8}, {0, 4, 9}, {0, 16, 10}, {0, -1, 9}, {0, 14, 10},
+                    // jane_smith (1): crime, drama and prestige TV
+                    {1, 0, 8}, {1, 1, 9}, {1, 5, 9}, {1, 6, 8}, {1, 7, 8}, {1, -1, 10}, {1, -4, 9}, {1, 14, 9},
+                    // moviefan99 (2): mainstream, romance and comedy
+                    {2, 1, 10}, {2, 8, 9}, {2, 19, 10}, {2, 9, 8}, {2, -7, 9}, {2, -3, 8}, {2, 15, 8},
+                    // alice_w (3): science fiction and thrillers
+                    {3, 4, 10}, {3, 12, 9}, {3, 13, 9}, {3, 18, 9}, {3, -2, 9}, {3, -6, 8}, {3, 2, 8}, {3, 0, 9},
+                    // carlos_m (4): crime films and prestige TV
+                    {4, 5, 10}, {4, 7, 9}, {4, 6, 9}, {4, 1, 9}, {4, -1, 10}, {4, -4, 8}, {4, 17, 8}
+            };
 
-            Rating r2 = new Rating();
-            r2.setUser(users.get(1));
-            r2.setMedia(movies.get(0)); // Inception
-            r2.setRating(8);
+            List<Rating> ratingList = new ArrayList<>();
+            for (int[] row : ratingData) {
+                Rating rating = new Rating();
+                rating.setUser(users.get(row[0]));
+                Media media = row[1] >= 0 ? movies.get(row[1]) : tvSeries.get(-row[1] - 1);
+                rating.setMedia(media);
+                rating.setRating(row[2]);
+                ratingList.add(rating);
+            }
 
-            Rating r3 = new Rating();
-            r3.setUser(users.get(2));
-            r3.setMedia(movies.get(1)); // The Godfather
-            r3.setRating(10);
-
-            Rating r4 = new Rating();
-            r4.setUser(users.get(0));
-            r4.setMedia(tvSeries.get(0)); // Breaking Bad
-            r4.setRating(9);
-
-            Rating r5 = new Rating();
-            r5.setUser(users.get(1));
-            r5.setMedia(tvSeries.get(1)); // Severance
-            r5.setRating(8);
-
-            Rating r6 = new Rating();
-            r6.setUser(users.get(0));
-            r6.setMedia(movies.get(14)); // Пред дождот
-            r6.setRating(10);
-
-            Rating r7 = new Rating();
-            r7.setUser(users.get(1));
-            r7.setMedia(movies.get(14)); // Пред дождот
-            r7.setRating(9);
-
-            Rating r8 = new Rating();
-            r8.setUser(users.get(2));
-            r8.setMedia(movies.get(15)); // Црно семе
-            r8.setRating(8);
-
-            this.ratingRepository.saveAll(List.of(r1, r2, r3, r4, r5, r6, r7, r8));
+            this.ratingRepository.saveAll(ratingList);
             ratings = ratingRepository.findAll();
 
-            movies.get(0).setAverageRating(9.0); // Inception
-            movies.get(1).setAverageRating(10.0); // The Godfather
-            movies.get(14).setAverageRating(9.5); // Пред дождот
-            movies.get(15).setAverageRating(8.0); // Црно семе
+            // Compute each title's average directly from the seeded ratings so the
+            // stored averageRating always matches the data (rounded to 1 decimal).
+            // Titles with no ratings keep a null average ("no ratings yet").
+            for (Movie movie : movies) {
+                Double avg = ratingRepository.findAverageRatingByMediaId(movie.getId());
+                movie.setAverageRating(avg == null ? null : Math.round(avg * 10.0) / 10.0);
+            }
             movieRepository.saveAll(movies);
 
-            tvSeries.get(0).setAverageRating(9.0); // Breaking Bad
-            tvSeries.get(1).setAverageRating(8.0); // Severance
-            tvSeries.get(2).setAverageRating(8.6); // The Bear
-            tvSeries.get(3).setAverageRating(8.9); // Succession
-            tvSeries.get(4).setAverageRating(8.8); // The Last of Us
+            for (TVSeries series : tvSeries) {
+                Double avg = ratingRepository.findAverageRatingByMediaId(series.getId());
+                series.setAverageRating(avg == null ? null : Math.round(avg * 10.0) / 10.0);
+            }
             tvSeriesRepository.saveAll(tvSeries);
         } else {
             ratings = ratingRepository.findAll();
@@ -520,7 +811,51 @@ public class DataInitializer {
             rev5.setReviewText(
                     "One of the most important Macedonian films, visually powerful and emotionally deep.");
 
-            this.reviewRepository.saveAll(List.of(rev1, rev2, rev3, rev4, rev5));
+            Review rev6 = new Review();
+            rev6.setUser(users.get(3)); // alice_w
+            rev6.setMedia(movies.get(4)); // The Matrix
+            rev6.setReviewText(
+                    "A genre-defining sci-fi masterpiece. The action still holds up decades later.");
+
+            Review rev7 = new Review();
+            rev7.setUser(users.get(3)); // alice_w
+            rev7.setMedia(movies.get(18)); // Dune
+            rev7.setReviewText(
+                    "Stunning visuals and sound design. Villeneuve really understood the source material.");
+
+            Review rev8 = new Review();
+            rev8.setUser(users.get(4)); // carlos_m
+            rev8.setMedia(movies.get(5)); // Goodfellas
+            rev8.setReviewText(
+                    "Scorsese at his peak. Every scene is quotable and the pacing is relentless.");
+
+            Review rev9 = new Review();
+            rev9.setUser(users.get(4)); // carlos_m
+            rev9.setMedia(tvSeries.get(0)); // Breaking Bad
+            rev9.setReviewText(
+                    "The best paid-off character arc on television. Cranston is unforgettable.");
+
+            Review rev10 = new Review();
+            rev10.setUser(users.get(1)); // jane_smith
+            rev10.setMedia(tvSeries.get(3)); // Succession
+            rev10.setReviewText(
+                    "Sharp writing and brutal family politics. Hard to root for anyone, impossible to look away.");
+
+            Review rev11 = new Review();
+            rev11.setUser(users.get(2)); // moviefan99
+            rev11.setMedia(movies.get(19)); // Forrest Gump
+            rev11.setReviewText(
+                    "Charming and heartfelt. A feel-good classic I can rewatch any time.");
+
+            Review rev12 = new Review();
+            rev12.setUser(users.get(0)); // john_doe
+            rev12.setMedia(movies.get(16)); // The Dark Knight
+            rev12.setReviewText(
+                    "The definitive comic-book film. Ledger's performance elevates the whole movie.");
+
+            this.reviewRepository.saveAll(List.of(
+                    rev1, rev2, rev3, rev4, rev5,
+                    rev6, rev7, rev8, rev9, rev10, rev11, rev12));
             reviews = reviewRepository.findAll();
         } else {
             reviews = reviewRepository.findAll();
