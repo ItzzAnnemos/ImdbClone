@@ -141,7 +141,7 @@ public class SearchServiceImpl implements SearchService {
             double score = SearchMatcherUtil.scoreTextMatch(fullName, query);
 
             if (score > 0.0 || SearchMatcherUtil.fuzzyMatch(fullName, query, 2)) {
-                addOrUpdatePersonResult(results, person, Math.max(score, 90.0));
+                addOrUpdatePersonResult(results, person, Math.max(score, 50.0));
                 found = true;
 
                 List<MediaPerson> relations = mediaPersonRepository.findByPersonId(person.getId());

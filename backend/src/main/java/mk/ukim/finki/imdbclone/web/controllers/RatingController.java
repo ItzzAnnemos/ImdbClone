@@ -16,7 +16,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/ratings")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class RatingController {
 
     private final RatingApplicationService ratingApplicationService;

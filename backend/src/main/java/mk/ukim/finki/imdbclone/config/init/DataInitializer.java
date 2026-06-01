@@ -59,47 +59,12 @@ public class DataInitializer {
     @PostConstruct
     public void init() {
         users = new ArrayList<>();
-        if (this.userRepository.count() == 0) {
-            User user1 = new User();
-            user1.setUsername("john_doe");
-            user1.setPassword(passwordEncoder.encode("password123"));
-            user1.setFirstName("John");
-            user1.setLastName("Doe");
-            user1.setEmail("john@test.com");
-
-            User user2 = new User();
-            user2.setUsername("jane_smith");
-            user2.setPassword(passwordEncoder.encode("password123"));
-            user2.setFirstName("Jane");
-            user2.setLastName("Smith");
-            user2.setEmail("jane@test.com");
-
-            User user3 = new User();
-            user3.setUsername("moviefan99");
-            user3.setPassword(passwordEncoder.encode("password123"));
-            user3.setFirstName("Mike");
-            user3.setLastName("Fan");
-            user3.setEmail("mike@test.com");
-
-            User user4 = new User();
-            user4.setUsername("alice_w");
-            user4.setPassword(passwordEncoder.encode("password123"));
-            user4.setFirstName("Alice");
-            user4.setLastName("Wong");
-            user4.setEmail("alice@test.com");
-
-            User user5 = new User();
-            user5.setUsername("carlos_m");
-            user5.setPassword(passwordEncoder.encode("password123"));
-            user5.setFirstName("Carlos");
-            user5.setLastName("Mendez");
-            user5.setEmail("carlos@test.com");
-
-            this.userRepository.saveAll(List.of(user1, user2, user3, user4, user5));
-            users = this.userRepository.findAll();
-        } else {
-            users = userRepository.findAll();
-        }
+        seedUserIfMissing("john_doe", "John", "Doe", "john@test.com");
+        seedUserIfMissing("jane_smith", "Jane", "Smith", "jane@test.com");
+        seedUserIfMissing("moviefan99", "Mike", "Fan", "mike@test.com");
+        seedUserIfMissing("alice_w", "Alice", "Wong", "alice@test.com");
+        seedUserIfMissing("carlos_m", "Carlos", "Mendez", "carlos@test.com");
+        users = userRepository.findAll();
 
         /*
          * Legacy mock catalogue seed is intentionally disabled by default.
@@ -881,5 +846,19 @@ public class DataInitializer {
         } else {
             reviews = reviewRepository.findAll();
         }
+    }
+
+    private void seedUserIfMissing(String username, String firstName, String lastName, String email) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            return;
+        }
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode("password123"));
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        userRepository.save(user);
     }
 }

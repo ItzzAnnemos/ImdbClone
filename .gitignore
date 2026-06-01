@@ -144,17 +144,3 @@ Thumbs.db
 .idea/
 *.sublime-project
 *.sublime-workspace
-```
-
-## Notes:
-
-**For monorepo structure** (Spring Boot and React in same repo):
-- Place this `.gitignore` in the root directory
-- It covers both backend and frontend
-
-**If you have separate directories:**
-```
-project-root/
-├── backend/          (Spring Boot)
-├── frontend/         (React)
-└── .gitignore

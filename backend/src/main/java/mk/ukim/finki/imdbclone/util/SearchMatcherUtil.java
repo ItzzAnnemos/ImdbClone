@@ -128,8 +128,7 @@ public final class SearchMatcherUtil {
 
         for (String queryToken : queryTokens) {
             boolean tokenMatched = textTokens.stream().anyMatch(textToken ->
-                    textToken.contains(queryToken)
-                            || queryToken.contains(textToken)
+                    tokenContains(textToken, queryToken)
                             || oneSwapAway(textToken, queryToken)
                             || levenshtein(textToken, queryToken) <= 1
             );
@@ -156,6 +155,10 @@ public final class SearchMatcherUtil {
 
         if (normalizedText.equals(normalizedQuery)) {
             return 100.0;
+        }
+
+        if (withoutLeadingArticle(normalizedText).equals(normalizedQuery)) {
+            return 98.0;
         }
 
         if (normalizedText.startsWith(normalizedQuery)) {
@@ -194,8 +197,7 @@ public final class SearchMatcherUtil {
 
         for (String queryToken : queryTokens) {
             boolean tokenMatched = textTokens.stream().anyMatch(textToken ->
-                    textToken.contains(queryToken)
-                            || queryToken.contains(textToken)
+                    tokenContains(textToken, queryToken)
                             || oneSwapAway(textToken, queryToken)
                             || levenshtein(textToken, queryToken) <= 1
             );
@@ -241,5 +243,17 @@ public final class SearchMatcherUtil {
         }
 
         return false;
+    }
+
+    private static boolean tokenContains(String textToken, String queryToken) {
+        if (textToken.length() < 3 || queryToken.length() < 3) {
+            return textToken.equals(queryToken);
+        }
+
+        return textToken.contains(queryToken) || queryToken.contains(textToken);
+    }
+
+    private static String withoutLeadingArticle(String text) {
+        return text.replaceFirst("^(the|a|an)\\s+", "");
     }
 }

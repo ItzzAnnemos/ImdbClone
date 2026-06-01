@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,8 +37,26 @@ public class JwtHelper {
     }
 
     private Key getSignIn() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = resolveSigningKeyBytes();
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private byte[] resolveSigningKeyBytes() {
+        try {
+            byte[] decoded = Decoders.BASE64.decode(secretKey);
+            if (decoded.length >= 32) {
+                return decoded;
+            }
+        } catch (RuntimeException ignored) {
+            // Plain text secrets are allowed for local setup; derive a fixed-size key below.
+        }
+
+        try {
+            return MessageDigest.getInstance("SHA-256")
+                    .digest(secretKey.getBytes(StandardCharsets.UTF_8));
+        } catch (NoSuchAlgorithmException ex) {
+            throw new IllegalStateException("SHA-256 is not available for JWT signing", ex);
+        }
     }
 
     private Claims extractAllClaims(String token) {

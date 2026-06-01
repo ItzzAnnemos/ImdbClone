@@ -368,10 +368,8 @@ collaborative recs).
 To reset to a fresh seeded database:
 
 ```bash
-cd backend
-docker compose down -v
-docker compose up -d
-./mvnw spring-boot:run
+docker compose --env-file backend/.env down -v
+docker compose --env-file backend/.env up --build
 ```
 
 ---
@@ -380,27 +378,22 @@ docker compose up -d
 
 **Prerequisites:** Java 17+, Node.js 16+, Maven (wrapper included), Docker + Docker Compose.
 
-**1) Start PostgreSQL**
+**1) Configure local environment**
 ```bash
-cd backend
-cp .env.example .env
-docker compose up -d
-```
-Local defaults: JDBC `jdbc:postgresql://localhost:2345/imdb_clone_app`,
-DB `imdb_clone_app`, user `imdb`, password `imdb`.
-
-**2) Run the backend** (starts on `http://localhost:8080`)
-```bash
-cd backend
-./mvnw spring-boot:run
+cp backend/.env.example backend/.env
 ```
 
-**3) Run the frontend** (starts on `http://localhost:3000`)
+Set `JWT_SECRET` and `TMDB_API_TOKEN` in `backend/.env`.
+
+**2) Start the full Docker stack**
 ```bash
-cd frontend
-npm install
-npm run dev
+docker compose --env-file backend/.env up --build
 ```
+
+Local services:
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:8080`
+- Postgres: `localhost:2345`
 
 Swagger UI is available at `http://localhost:8080/swagger-ui`.
 

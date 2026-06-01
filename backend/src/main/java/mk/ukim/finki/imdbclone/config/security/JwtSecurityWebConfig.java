@@ -2,6 +2,7 @@ package mk.ukim.finki.imdbclone.config.security;
 
 import mk.ukim.finki.imdbclone.security.CustomUsernamePasswordAuthenticationProvider;
 import mk.ukim.finki.imdbclone.web.filters.JwtFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -24,18 +25,22 @@ public class JwtSecurityWebConfig {
 
     private final CustomUsernamePasswordAuthenticationProvider authenticationProvider;
     private final JwtFilter jwtFilter;
+    private final List<String> allowedOrigins;
 
     public JwtSecurityWebConfig(CustomUsernamePasswordAuthenticationProvider authenticationProvider,
-                                JwtFilter jwtFilter) {
+                                JwtFilter jwtFilter,
+                                @Value("${app.cors.allowed-origins:http://localhost:3000,http://127.0.0.1:3000}")
+                                List<String> allowedOrigins) {
         this.authenticationProvider = authenticationProvider;
         this.jwtFilter = jwtFilter;
+        this.allowedOrigins = allowedOrigins;
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        corsConfiguration.setAllowedOriginPatterns(allowedOrigins);
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);

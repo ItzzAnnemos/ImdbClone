@@ -18,7 +18,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/tv-series")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class TVSeriesController {
 
     private final TVSeriesApplicationService tvSeriesApplicationService;

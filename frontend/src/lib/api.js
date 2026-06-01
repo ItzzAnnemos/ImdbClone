@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+
 // Create an Axios instance
 const api = axios.create({
-    baseURL: "http://localhost:8080", // Replace with your backend URL
+    baseURL: apiBaseUrl.replace(/\/$/, ""),
 });
 
 // Add a request interceptor to add the JWT token to the Authorization header
