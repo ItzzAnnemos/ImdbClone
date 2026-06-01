@@ -17,3 +17,4 @@ export * as GenreModel from "./genre.model";
 export * as RatingModel from "./rating.model";
 export * as ReviewModel from "./review.model";
 export * as DiscoveryModel from "./discovery.model";
+export * as SearchModel from "./search.model";

@@ -79,6 +79,9 @@ public class JwtSecurityWebConfig {
                                 // ----- Global search (media + people + year) -----
                                 "/api/search",
                                 "/api/genres",
+                                "/api/persons",
+                                "/api/persons/{id}",
+                                "/api/persons/search",
                                 "/api/persons/born-today",
                                 "/api/persons/most-popular",
                                 "/api/ratings/media/**",

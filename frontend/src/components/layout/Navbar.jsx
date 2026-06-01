@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Search, Menu, User, LogOut, ChevronDown, Bookmark } from "lucide-react";
+import { Menu, User, LogOut, ChevronDown, Bookmark } from "lucide-react";
 import { Button } from "../ui/Button";
 import { ModeToggle } from "../ui/ModeToggle";
 import { useAuth } from "../../context/AuthContext";
+import { NavbarSearch } from "./NavbarSearch";
 
 const navMenus = [
     {
@@ -104,14 +105,7 @@ export function Navbar() {
                 </div>
 
                 <div className="flex flex-1 items-center justify-center max-w-md mx-4 hidden sm:flex">
-                    <div className="relative w-full">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <input
-                            type="search"
-                            placeholder="Search IMDb..."
-                            className="w-full rounded-md border border-input bg-secondary px-9 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        />
-                    </div>
+                    <NavbarSearch />
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -194,6 +188,9 @@ export function Navbar() {
             {isMobileMenuOpen && (
                 <div className="border-t border-border bg-background px-4 py-4 md:hidden">
                     <div className="flex flex-col gap-4">
+                        <div className="sm:hidden">
+                            <NavbarSearch onSearch={() => setIsMobileMenuOpen(false)} />
+                        </div>
                         {navMenus.map((menu) => (
                             <div key={menu.label}>
                                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

@@ -8,6 +8,8 @@ import { MediaReviews } from "./pages/MediaReviews";
 import { MediaChartPage } from "./pages/MediaChartPage";
 import { MediaGenrePage } from "./pages/MediaGenrePage";
 import { CelebChartPage } from "./pages/CelebChartPage";
+import { PersonDetails } from "./pages/PersonDetails";
+import { SearchResults } from "./pages/SearchResults";
 import { AuthProvider } from "./context/AuthContext";
 import { WatchlistProvider } from "./context/WatchlistContext";
 
@@ -18,7 +20,9 @@ function App() {
                 <Router>
                     <Routes>
                         <Route path="/" element={<Home />} />
+                        <Route path="/search" element={<SearchResults />} />
                         <Route path="/media/:id" element={<MediaDetails />} />
+                        <Route path="/person/:id" element={<PersonDetails />} />
                         <Route path="/media/:id/reviews" element={<MediaReviews />} />
                         <Route
                             path="/movies/top-250"
