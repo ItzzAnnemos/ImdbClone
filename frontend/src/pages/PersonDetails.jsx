@@ -4,6 +4,7 @@ import { ArrowLeft, Calendar, UserRound } from "lucide-react";
 import { Layout } from "../components/layout/Layout";
 import { Button } from "../components/ui/Button";
 import { getPersonById } from "../lib/personService";
+import { formatRole } from "../lib/utils";
 
 function formatDate(date) {
     if (!date) {
@@ -116,9 +117,7 @@ export function PersonDetails() {
                                                 {credit.mediaTitle}
                                             </span>
                                             <span>·</span>
-                                            <span className="capitalize lowercase">
-                                                {credit.role}
-                                            </span>
+                                            <span>{formatRole(credit.role)}</span>
                                             {credit.characterName && (
                                                 <span>
                                                     as <em>{credit.characterName}</em>
