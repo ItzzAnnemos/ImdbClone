@@ -103,6 +103,32 @@ export function PersonDetails() {
                                 {person.biography || "No biography is available yet."}
                             </p>
                         </div>
+                        {person.mediaCredits && person.mediaCredits.length > 0 && (
+                            <div className="mt-8 max-w-3xl">
+                                <h2 className="mb-3 text-lg font-semibold">Known For</h2>
+                                <ul className="space-y-2">
+                                    {person.mediaCredits.map((credit, i) => (
+                                        <li
+                                            key={i}
+                                            className="flex items-center gap-2 text-sm text-muted-foreground"
+                                        >
+                                            <span className="font-medium text-foreground">
+                                                {credit.mediaTitle}
+                                            </span>
+                                            <span>·</span>
+                                            <span className="capitalize lowercase">
+                                                {credit.role}
+                                            </span>
+                                            {credit.characterName && (
+                                                <span>
+                                                    as <em>{credit.characterName}</em>
+                                                </span>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                     </div>
                 </section>
             )}

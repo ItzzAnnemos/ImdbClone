@@ -11,7 +11,8 @@ public record DisplayPersonDto(
         String lastName,
         String biography,
         LocalDate birthDate,
-        String profilePictureUrl) {
+        String profilePictureUrl,
+        List<DisplayMediaCreditDto> mediaCredits) {
 
     public static DisplayPersonDto from(Person person) {
         return new DisplayPersonDto(
@@ -19,7 +20,8 @@ public record DisplayPersonDto(
                 person.getLastName(),
                 person.getBiography(),
                 person.getBirthDate(),
-                person.getProfilePictureUrl());
+                person.getProfilePictureUrl(),
+                DisplayMediaCreditDto.from(person.getMediaCredits()));
     }
 
     public static List<DisplayPersonDto> from(List<Person> persons) {

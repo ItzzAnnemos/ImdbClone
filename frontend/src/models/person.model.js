@@ -52,6 +52,7 @@ export function fromApi(raw) {
         biography: raw.biography ?? null,
         birthDate: raw.birthDate ?? null,
         profilePictureUrl: raw.profilePictureUrl ?? null,
+        mediaCredits: (raw.mediaCredits ?? []).map(mediaPersonFromApi),
     };
 }
 

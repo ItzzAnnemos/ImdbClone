@@ -3,6 +3,7 @@ package mk.ukim.finki.imdbclone.model.dto;
 import mk.ukim.finki.imdbclone.model.domain.MediaPerson;
 import mk.ukim.finki.imdbclone.model.enumerations.Role;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,8 @@ public record DisplayMediaPersonDto(
         String personLastName,
         String personProfilePictureUrl,
         Role role,
-        String characterName
+        String characterName,
+        List<DisplayMediaCreditDto> mediaCredits
 ) {
 
     public static DisplayMediaPersonDto from(MediaPerson mediaPerson) {
@@ -22,7 +24,8 @@ public record DisplayMediaPersonDto(
                 mediaPerson.getPerson().getLastName(),
                 mediaPerson.getPerson().getProfilePictureUrl(),
                 mediaPerson.getRole(),
-                mediaPerson.getCharacterName()
+                mediaPerson.getCharacterName(),
+                DisplayMediaCreditDto.from(mediaPerson.getPerson().getMediaCredits())
         );
     }
 
