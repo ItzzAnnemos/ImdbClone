@@ -144,6 +144,28 @@ class UserServiceTest {
     }
 
     @Test
+    void shouldChangePasswordWhenCurrentPasswordIsCorrect() {
+        User user = userService.register("profileuser", "oldPass", "oldPass", "Profile", "User", "profile@example.com");
+
+        when(passwordEncoder.matches("oldPass", "oldPass")).thenReturn(true);
+        when(passwordEncoder.encode("newPass")).thenReturn("encodedNewPass");
+
+        User updated = userService.changePassword(user.getId(), "oldPass", "newPass", "newPass");
+
+        assertThat(updated.getPassword()).isEqualTo("encodedNewPass");
+    }
+
+    @Test
+    void shouldRejectPasswordChangeWhenCurrentPasswordIsWrong() {
+        User user = userService.register("profileuser", "oldPass", "oldPass", "Profile", "User", "profile@example.com");
+
+        when(passwordEncoder.matches("wrongPass", "oldPass")).thenReturn(false);
+
+        assertThatThrownBy(() -> userService.changePassword(user.getId(), "wrongPass", "newPass", "newPass"))
+                .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
     void shouldThrowWhenPasswordsDoNotMatchDuringRegistration() {
         assertThatThrownBy(
                 () -> userService.register("baduser", "pass123", "pass456", "Bad", "User", "bad@example.com"))

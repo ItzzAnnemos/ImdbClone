@@ -48,6 +48,17 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
+    public Optional<DisplayUserDto> changePassword(Long userId, ChangePasswordDto changePasswordDto) {
+        User user = userService.changePassword(
+                userId,
+                changePasswordDto.currentPassword(),
+                changePasswordDto.newPassword(),
+                changePasswordDto.repeatNewPassword()
+        );
+        return Optional.of(DisplayUserDto.from(user));
+    }
+
+    @Override
     public Optional<DisplayUserDto> findByUsername(String username) {
         return userService.getUserByUsername(username)
                 .map(DisplayUserDto::from);

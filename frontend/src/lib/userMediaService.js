@@ -10,3 +10,8 @@ export async function getWatchlist(username) {
     const response = await api.get(`/api/user/${encodeURIComponent(username)}/watchlist`);
     return MediaModel.fromApiList(response.data);
 }
+
+export async function changePassword(userId, passwordData) {
+    const response = await api.put(`/api/user/${userId}/password`, passwordData);
+    return response.data;
+}

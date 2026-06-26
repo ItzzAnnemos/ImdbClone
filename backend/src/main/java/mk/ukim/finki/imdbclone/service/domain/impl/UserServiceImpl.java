@@ -136,6 +136,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User changePassword(Long userId, String currentPassword, String newPassword, String repeatNewPassword) {
+        if (currentPassword == null || currentPassword.isEmpty() ||
+                newPassword == null || newPassword.isEmpty()) {
+            throw new InvalidArgumentsException();
+        }
+        if (!newPassword.equals(repeatNewPassword)) {
+            throw new PasswordsDoNotMatchException();
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new InvalidUserCredentialsException();
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return userRepository.save(user);
+    }
+
+    @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));

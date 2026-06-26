@@ -11,6 +11,8 @@ public interface UserApplicationService {
 
     Optional<LoginResponseDto> login(LoginUserDto loginUserDto);
 
+    Optional<DisplayUserDto> changePassword(Long userId, ChangePasswordDto changePasswordDto);
+
     Optional<DisplayUserDto> findByUsername(String username);
 
     Optional<DisplayUserDto> addMediaToWatchlist(String username, Long mediaId);

@@ -43,6 +43,17 @@ export async function getUserReview(userId, mediaId) {
         throw err;
     }
 }
+
+/**
+ * Fetches all reviews created by a user.
+ * @param {number} userId
+ * @returns {Promise<Review.Review[]>}
+ */
+export async function getReviewsByUser(userId) {
+    const response = await api.get(`/api/reviews/user/${userId}`);
+    return Review.fromApiList(response.data);
+}
+
 /**
  * Updates an existing review.
  * @param {number} reviewId

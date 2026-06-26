@@ -81,6 +81,8 @@ public interface UserService extends UserDetailsService {
 
     User login(String username, String password);
 
+    User changePassword(Long userId, String currentPassword, String newPassword, String repeatNewPassword);
+
     User findByUsername(String username);
 
     /**

@@ -2,6 +2,7 @@ package mk.ukim.finki.imdbclone.web.controllers;
 
 import mk.ukim.finki.imdbclone.model.dto.CreateRatingDto;
 import mk.ukim.finki.imdbclone.model.dto.CreateUserDto;
+import mk.ukim.finki.imdbclone.model.dto.ChangePasswordDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayCardMediaDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayRatingDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayUserDto;
@@ -103,6 +104,11 @@ class RatingControllerTest {
 
         @Override
         public Optional<LoginResponseDto> login(LoginUserDto loginUserDto) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<DisplayUserDto> changePassword(Long userId, ChangePasswordDto changePasswordDto) {
             return Optional.empty();
         }
 

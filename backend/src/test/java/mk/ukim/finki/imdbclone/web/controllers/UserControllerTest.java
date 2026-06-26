@@ -5,6 +5,7 @@ import mk.ukim.finki.imdbclone.model.dto.DisplayCardMediaDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayUserDto;
 import mk.ukim.finki.imdbclone.model.dto.LoginResponseDto;
 import mk.ukim.finki.imdbclone.model.dto.LoginUserDto;
+import mk.ukim.finki.imdbclone.model.dto.ChangePasswordDto;
 import mk.ukim.finki.imdbclone.service.application.RecommendationApplicationService;
 import mk.ukim.finki.imdbclone.service.application.UserApplicationService;
 import mk.ukim.finki.imdbclone.web.helpers.ControllerAuthorizationHelper;
@@ -51,9 +52,25 @@ class UserControllerTest {
         assertThat(recommendationApplicationService.called).isFalse();
     }
 
+    @Test
+    void rejectsPasswordChangeForDifferentAuthenticatedUser() {
+        TestingAuthenticationToken authentication = new TestingAuthenticationToken("alice", null);
+        userApplicationService.currentUser = new DisplayUserDto(1L, "alice", "Alice", "User");
+
+        var response = userController.changePassword(
+                2L,
+                new ChangePasswordDto("oldPass", "newPass", "newPass"),
+                authentication
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        assertThat(userApplicationService.changePasswordCalled).isFalse();
+    }
+
     private static class FakeUserApplicationService implements UserApplicationService {
         private DisplayUserDto currentUser;
         private boolean addWatchlistCalled;
+        private boolean changePasswordCalled;
 
         @Override
         public Optional<DisplayUserDto> register(CreateUserDto createUserDto) {
@@ -89,6 +106,12 @@ class UserControllerTest {
         @Override
         public boolean isMediaInWatchlist(String username, Long mediaId) {
             return false;
+        }
+
+        @Override
+        public Optional<DisplayUserDto> changePassword(Long userId, ChangePasswordDto changePasswordDto) {
+            changePasswordCalled = true;
+            return Optional.empty();
         }
     }
 

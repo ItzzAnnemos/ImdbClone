@@ -2,6 +2,7 @@ package mk.ukim.finki.imdbclone.web.controllers;
 
 import mk.ukim.finki.imdbclone.model.dto.CreateReviewDto;
 import mk.ukim.finki.imdbclone.model.dto.CreateUserDto;
+import mk.ukim.finki.imdbclone.model.dto.ChangePasswordDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayCardMediaDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayReviewDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayUserDto;
@@ -45,7 +46,7 @@ class ReviewControllerTest {
     void rejectsReviewEditForDifferentAuthenticatedUser() {
         TestingAuthenticationToken authentication = new TestingAuthenticationToken("alice", null);
         reviewApplicationService.review =
-                new DisplayReviewDto(100L, "bob", "Movie", "Old", null, null);
+                new DisplayReviewDto(100L, "bob", 20L, "Movie", "poster.jpg", "Old", null, null);
 
         var response = reviewController.updateReview(
                 100L,
@@ -109,6 +110,11 @@ class ReviewControllerTest {
 
         @Override
         public Optional<LoginResponseDto> login(LoginUserDto loginUserDto) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<DisplayUserDto> changePassword(Long userId, ChangePasswordDto changePasswordDto) {
             return Optional.empty();
         }
 

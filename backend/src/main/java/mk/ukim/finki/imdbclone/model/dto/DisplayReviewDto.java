@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 public record DisplayReviewDto(
         Long id,
         String username,
+        Long mediaId,
         String mediaTitle,
+        String posterUrl,
         String reviewText,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -26,7 +28,9 @@ public record DisplayReviewDto(
         return new DisplayReviewDto(
                 review.getId(),
                 review.getUser().getUsername(),
+                review.getMedia().getId(),
                 review.getMedia().getTitle(),
+                review.getMedia().getPosterUrl(),
                 review.getReviewText(),
                 review.getCreatedAt(),
                 updated

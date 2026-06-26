@@ -57,6 +57,23 @@ public class UserController {
         }
     }
 
+    @PutMapping("/{userId}/password")
+    public ResponseEntity<DisplayUserDto> changePassword(@PathVariable Long userId,
+                                                         @RequestBody ChangePasswordDto changePasswordDto,
+                                                         Authentication authentication) {
+        if (!authorizationHelper.isAuthenticatedUserId(userId, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        try {
+            return userApplicationService.changePassword(userId, changePasswordDto)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (InvalidArgumentsException | PasswordsDoNotMatchException | InvalidUserCredentialsException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @Operation(summary = "User logout", description = "Ends the user's session")
     @GetMapping("/logout")
     public void logout(HttpServletRequest request) {
