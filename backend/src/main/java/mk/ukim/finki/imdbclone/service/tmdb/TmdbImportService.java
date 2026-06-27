@@ -457,7 +457,7 @@ public class TmdbImportService {
         mp.setPerson(person);
         mp.setRole(role);
         if (character != null && !character.isBlank()) {
-            mp.setCharacterName(character);
+            mp.setCharacterName(truncate(character, 255));
         }
         mediaPersonRepository.save(mp);
         linked.add(pairKey);
