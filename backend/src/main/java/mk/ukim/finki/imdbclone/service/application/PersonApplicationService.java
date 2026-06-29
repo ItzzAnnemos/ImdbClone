@@ -3,6 +3,7 @@ package mk.ukim.finki.imdbclone.service.application;
 import mk.ukim.finki.imdbclone.model.dto.CreatePersonDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayPersonDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayRankedPersonDto;
+import mk.ukim.finki.imdbclone.model.dto.PagedResponseDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,4 +35,13 @@ public interface PersonApplicationService {
      * @return List of up to 250 popular person DTOs
      */
     List<DisplayRankedPersonDto> findMostPopular();
+
+    /**
+     * Find a page of the most popular people and map them to ranked display DTOs.
+     *
+     * @param page zero-based page index
+     * @param size requested page size
+     * @return paged response containing popular person DTOs
+     */
+    PagedResponseDto<DisplayRankedPersonDto> findMostPopular(int page, int size);
 }

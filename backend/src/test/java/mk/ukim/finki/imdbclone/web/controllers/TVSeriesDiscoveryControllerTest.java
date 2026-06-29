@@ -3,6 +3,7 @@ package mk.ukim.finki.imdbclone.web.controllers;
 import mk.ukim.finki.imdbclone.model.dto.CreateTVSeriesDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayRankedMediaDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayTVSeriesDto;
+import mk.ukim.finki.imdbclone.model.dto.PagedResponseDto;
 import mk.ukim.finki.imdbclone.service.application.TVSeriesApplicationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,18 @@ class TVSeriesDiscoveryControllerTest {
         assertThat(tvSeriesApplicationService.requestedGenre).isEqualTo("Drama");
     }
 
+    @Test
+    void returnsPagedRankedTVSeriesByGenreFromApplicationService() {
+        tvSeriesApplicationService.byGenre = List.of(rankedMedia(3L, 51, "The Bear", 8.6, 0L));
+
+        var response = tvSeriesController.getRankedTVSeriesByGenre("Drama", 1, 50);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().page()).isEqualTo(1);
+        assertThat(response.getBody().items()).hasSize(1);
+        assertThat(tvSeriesApplicationService.requestedGenre).isEqualTo("Drama");
+    }
+
     private static DisplayRankedMediaDto rankedMedia(Long id,
                                                      Integer rank,
                                                      String title,
@@ -77,9 +90,20 @@ class TVSeriesDiscoveryControllerTest {
         }
 
         @Override
+        public PagedResponseDto<DisplayRankedMediaDto> findMostPopular(int page, int size) {
+            return PagedResponseDto.of(mostPopular, page, size, mostPopular.size());
+        }
+
+        @Override
         public List<DisplayRankedMediaDto> findRankedByGenre(String genreName) {
             requestedGenre = genreName;
             return byGenre;
+        }
+
+        @Override
+        public PagedResponseDto<DisplayRankedMediaDto> findRankedByGenre(String genreName, int page, int size) {
+            requestedGenre = genreName;
+            return PagedResponseDto.of(byGenre, page, size, byGenre.size());
         }
 
         @Override

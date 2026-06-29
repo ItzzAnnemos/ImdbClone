@@ -4,8 +4,10 @@ import mk.ukim.finki.imdbclone.model.domain.Person;
 import mk.ukim.finki.imdbclone.model.dto.CreatePersonDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayPersonDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayRankedPersonDto;
+import mk.ukim.finki.imdbclone.model.dto.PagedResponseDto;
 import mk.ukim.finki.imdbclone.service.application.PersonApplicationService;
 import mk.ukim.finki.imdbclone.service.domain.PersonService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -71,10 +73,38 @@ public class PersonApplicationServiceImpl implements PersonApplicationService {
         return toRankedPeople(personService.getMostPopular());
     }
 
+    @Override
+    public PagedResponseDto<DisplayRankedPersonDto> findMostPopular(int page, int size) {
+        int normalizedPage = Math.max(0, page);
+        int normalizedSize = normalizePageSize(size);
+        int offset = normalizedPage * normalizedSize;
+
+        return PagedResponseDto.of(
+                toRankedPeople(
+                        personService.getMostPopular(PageRequest.of(normalizedPage, normalizedSize)),
+                        offset + 1
+                ),
+                normalizedPage,
+                normalizedSize,
+                personService.count()
+        );
+    }
+
     private List<DisplayRankedPersonDto> toRankedPeople(List<Person> people) {
+        return toRankedPeople(people, 1);
+    }
+
+    private List<DisplayRankedPersonDto> toRankedPeople(List<Person> people, int startRank) {
         AtomicInteger rank = new AtomicInteger(1);
         return people.stream()
-                .map(person -> DisplayRankedPersonDto.from(person, rank.getAndIncrement()))
+                .map(person -> DisplayRankedPersonDto.from(person, startRank + rank.getAndIncrement() - 1))
                 .toList();
+    }
+
+    private int normalizePageSize(int size) {
+        if (size < 1) {
+            return 20;
+        }
+        return Math.min(size, 100);
     }
 }

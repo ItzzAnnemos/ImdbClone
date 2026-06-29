@@ -1,6 +1,7 @@
 package mk.ukim.finki.imdbclone.service.domain;
 
 import mk.ukim.finki.imdbclone.model.domain.Movie;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -105,11 +106,19 @@ public interface MovieService extends MediaService<Movie> {
 
     /**
      * Get the highest-rated movies for the Top 250 discovery chart.
-     * Movies are ranked by average rating, then rating count, release year, and title.
+     * Movies are ranked by average rating, release year, and title.
      *
      * @return List of up to 250 ranked movies
      */
     List<Movie> getTop250();
+
+    /**
+     * Get a page of highest-rated movies for the Top 250 discovery chart.
+     *
+     * @param pageable pagination and page size information
+     * @return List of ranked movies for the requested page
+     */
+    List<Movie> getTop250(Pageable pageable);
 
     /**
      * Get the most popular movies for the discovery chart.
@@ -120,10 +129,42 @@ public interface MovieService extends MediaService<Movie> {
     List<Movie> getMostPopular();
 
     /**
+     * Get a page of the most popular movies for the discovery chart.
+     *
+     * @param pageable pagination and page size information
+     * @return List of popular movies for the requested page
+     */
+    List<Movie> getMostPopular(Pageable pageable);
+
+    /**
      * Get movies in a genre ranked with the same ordering used by the Top 250 chart.
      *
      * @param genreName the genre name
      * @return List of ranked movies in that genre
      */
     List<Movie> getRankedByGenre(String genreName);
+
+    /**
+     * Get a page of movies in a genre ranked with the same ordering used by the Top 250 chart.
+     *
+     * @param genreName the genre name
+     * @param pageable  pagination and page size information
+     * @return List of ranked movies in that genre for the requested page
+     */
+    List<Movie> getRankedByGenre(String genreName, Pageable pageable);
+
+    /**
+     * Count movies that belong to a specific genre.
+     *
+     * @param genreName the genre name
+     * @return total number of movies in that genre
+     */
+    long countByGenre(String genreName);
+
+    /**
+     * Count all stored movies.
+     *
+     * @return total number of movies
+     */
+    long count();
 }

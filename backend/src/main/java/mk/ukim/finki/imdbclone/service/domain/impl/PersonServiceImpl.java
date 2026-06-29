@@ -3,6 +3,8 @@ package mk.ukim.finki.imdbclone.service.domain.impl;
 import mk.ukim.finki.imdbclone.model.domain.Person;
 import mk.ukim.finki.imdbclone.repository.PersonRepository;
 import mk.ukim.finki.imdbclone.service.domain.PersonService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,8 @@ import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {
+
+    private static final int MOST_POPULAR_LIMIT = 250;
 
     private final PersonRepository personRepository;
 
@@ -83,11 +87,13 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional(readOnly = true)
     public List<Person> getMostPopular() {
-        return personRepository.findAll()
-                .stream()
-                .sorted(popularComparator())
-                .limit(250)
-                .toList();
+        return getMostPopular(PageRequest.of(0, MOST_POPULAR_LIMIT));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Person> getMostPopular(Pageable pageable) {
+        return personRepository.findMostPopular(pageable);
     }
 
     private Comparator<Person> popularComparator() {
@@ -95,5 +101,11 @@ public class PersonServiceImpl implements PersonService {
                 .comparing((Person person) -> person.getMediaCredits().size(), Comparator.reverseOrder())
                 .thenComparing(Person::getFirstName)
                 .thenComparing(Person::getLastName);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long count() {
+        return personRepository.count();
     }
 }

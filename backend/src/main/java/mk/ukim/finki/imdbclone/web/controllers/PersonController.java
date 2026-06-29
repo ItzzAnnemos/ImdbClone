@@ -3,6 +3,7 @@ package mk.ukim.finki.imdbclone.web.controllers;
 import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.imdbclone.model.dto.CreatePersonDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayPersonDto;
+import mk.ukim.finki.imdbclone.model.dto.PagedResponseDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayRankedPersonDto;
 import mk.ukim.finki.imdbclone.service.application.PersonApplicationService;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,13 @@ public class PersonController {
     @GetMapping("/most-popular")
     public ResponseEntity<List<DisplayRankedPersonDto>> getMostPopularPersons() {
         return ResponseEntity.ok(personApplicationService.findMostPopular());
+    }
+
+    @GetMapping(value = "/most-popular", params = "page")
+    public ResponseEntity<PagedResponseDto<DisplayRankedPersonDto>> getMostPopularPersons(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(personApplicationService.findMostPopular(page, size));
     }
 
     @PostMapping("/add")

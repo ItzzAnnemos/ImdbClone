@@ -3,6 +3,7 @@ package mk.ukim.finki.imdbclone.web.controllers;
 import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.imdbclone.model.dto.CreateTVSeriesDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayCardMediaDto;
+import mk.ukim.finki.imdbclone.model.dto.PagedResponseDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayRankedMediaDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayTVSeriesDto;
 import mk.ukim.finki.imdbclone.model.dto.SearchResultDto;
@@ -77,6 +78,13 @@ public class TVSeriesController {
         return ResponseEntity.ok(tvSeriesApplicationService.findMostPopular());
     }
 
+    @GetMapping(value = "/most-popular", params = "page")
+    public ResponseEntity<PagedResponseDto<DisplayRankedMediaDto>> getMostPopularTVSeries(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(tvSeriesApplicationService.findMostPopular(page, size));
+    }
+
     @GetMapping("/recent")
     public ResponseEntity<List<DisplayTVSeriesDto>> getRecentTVSeries() {
         return ResponseEntity.ok(tvSeriesApplicationService.findRecent());
@@ -90,6 +98,14 @@ public class TVSeriesController {
     @GetMapping("/genre-ranked/{genreName}")
     public ResponseEntity<List<DisplayRankedMediaDto>> getRankedTVSeriesByGenre(@PathVariable String genreName) {
         return ResponseEntity.ok(tvSeriesApplicationService.findRankedByGenre(genreName));
+    }
+
+    @GetMapping(value = "/genre-ranked/{genreName}", params = "page")
+    public ResponseEntity<PagedResponseDto<DisplayRankedMediaDto>> getRankedTVSeriesByGenre(
+            @PathVariable String genreName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(tvSeriesApplicationService.findRankedByGenre(genreName, page, size));
     }
 
     @GetMapping("/{id}/similar")

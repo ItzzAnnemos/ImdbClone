@@ -4,8 +4,10 @@ import mk.ukim.finki.imdbclone.model.domain.Movie;
 import mk.ukim.finki.imdbclone.model.dto.CreateMovieDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayMovieDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayRankedMediaDto;
+import mk.ukim.finki.imdbclone.model.dto.PagedResponseDto;
 import mk.ukim.finki.imdbclone.service.application.MovieApplicationService;
 import mk.ukim.finki.imdbclone.service.domain.MovieService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,14 +68,62 @@ public class MovieApplicationServiceImpl
     }
 
     @Override
+    public PagedResponseDto<DisplayRankedMediaDto> findMostPopular(int page, int size) {
+        int normalizedPage = Math.max(0, page);
+        int normalizedSize = normalizePageSize(size);
+        int offset = normalizedPage * normalizedSize;
+
+        return PagedResponseDto.of(
+                toRankedMedia(
+                        movieService.getMostPopular(PageRequest.of(normalizedPage, normalizedSize)),
+                        offset + 1
+                ),
+                normalizedPage,
+                normalizedSize,
+                movieService.count()
+        );
+    }
+
+    @Override
     public List<DisplayRankedMediaDto> findRankedByGenre(String genreName) {
         return toRankedMedia(movieService.getRankedByGenre(genreName));
     }
 
+    @Override
+    public PagedResponseDto<DisplayRankedMediaDto> findRankedByGenre(String genreName, int page, int size) {
+        int normalizedPage = Math.max(0, page);
+        int normalizedSize = normalizePageSize(size);
+        int offset = normalizedPage * normalizedSize;
+
+        return PagedResponseDto.of(
+                toRankedMedia(
+                        movieService.getRankedByGenre(
+                                genreName,
+                                PageRequest.of(normalizedPage, normalizedSize)
+                        ),
+                        offset + 1
+                ),
+                normalizedPage,
+                normalizedSize,
+                movieService.countByGenre(genreName)
+        );
+    }
+
     private List<DisplayRankedMediaDto> toRankedMedia(List<Movie> movies) {
+        return toRankedMedia(movies, 1);
+    }
+
+    private List<DisplayRankedMediaDto> toRankedMedia(List<Movie> movies, int startRank) {
         AtomicInteger rank = new AtomicInteger(1);
         return movies.stream()
-                .map(movie -> DisplayRankedMediaDto.from(movie, rank.getAndIncrement()))
+                .map(movie -> DisplayRankedMediaDto.from(movie, startRank + rank.getAndIncrement() - 1))
                 .toList();
+    }
+
+    private int normalizePageSize(int size) {
+        if (size < 1) {
+            return 20;
+        }
+        return Math.min(size, 100);
     }
 }

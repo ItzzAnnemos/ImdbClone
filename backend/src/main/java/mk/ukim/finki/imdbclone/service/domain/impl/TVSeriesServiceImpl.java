@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import mk.ukim.finki.imdbclone.model.domain.TVSeries;
 import mk.ukim.finki.imdbclone.repository.TVSeriesRepository;
 import mk.ukim.finki.imdbclone.service.domain.TVSeriesService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mk.ukim.finki.imdbclone.service.domain.helper.MediaSimilarityHelper;
@@ -15,6 +17,8 @@ import java.util.List;
 @Service
 @Transactional
 public class TVSeriesServiceImpl extends MediaServiceImpl<TVSeries> implements TVSeriesService {
+
+    private static final int DEFAULT_CHART_LIMIT = 250;
 
     private final TVSeriesRepository tvSeriesRepository;
 
@@ -65,21 +69,25 @@ public class TVSeriesServiceImpl extends MediaServiceImpl<TVSeries> implements T
     @Override
     @Transactional(readOnly = true)
     public List<TVSeries> getTop250() {
-        return tvSeriesRepository.findAll()
-                .stream()
-                .sorted(topRatedComparator())
-                .limit(250)
-                .toList();
+        return getTop250(PageRequest.of(0, DEFAULT_CHART_LIMIT));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TVSeries> getTop250(Pageable pageable) {
+        return tvSeriesRepository.findAllByOrderByAverageRatingDescReleaseYearDescTitleAsc(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<TVSeries> getMostPopular() {
-        return tvSeriesRepository.findAll()
-                .stream()
-                .sorted(popularComparator())
-                .limit(250)
-                .toList();
+        return getMostPopular(PageRequest.of(0, DEFAULT_CHART_LIMIT));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TVSeries> getMostPopular(Pageable pageable) {
+        return tvSeriesRepository.findMostPopularRanked(pageable);
     }
 
     @Override
@@ -89,6 +97,21 @@ public class TVSeriesServiceImpl extends MediaServiceImpl<TVSeries> implements T
                 .stream()
                 .sorted(topRatedComparator())
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TVSeries> getRankedByGenre(String genreName, Pageable pageable) {
+        return tvSeriesRepository.findByGenres_NameOrderByAverageRatingDescReleaseYearDescTitleAsc(
+                genreName,
+                pageable
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countByGenre(String genreName) {
+        return tvSeriesRepository.countByGenres_Name(genreName);
     }
 
     private Comparator<TVSeries> topRatedComparator() {
@@ -113,5 +136,11 @@ public class TVSeriesServiceImpl extends MediaServiceImpl<TVSeries> implements T
 
     private Integer valueOrZero(Integer value) {
         return value == null ? 0 : value;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long count() {
+        return tvSeriesRepository.count();
     }
 }

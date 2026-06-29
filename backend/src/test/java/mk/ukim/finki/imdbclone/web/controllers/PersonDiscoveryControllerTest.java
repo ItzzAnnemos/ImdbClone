@@ -3,6 +3,7 @@ package mk.ukim.finki.imdbclone.web.controllers;
 import mk.ukim.finki.imdbclone.model.dto.CreatePersonDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayPersonDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayRankedPersonDto;
+import mk.ukim.finki.imdbclone.model.dto.PagedResponseDto;
 import mk.ukim.finki.imdbclone.service.application.PersonApplicationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -75,6 +76,11 @@ class PersonDiscoveryControllerTest {
         @Override
         public List<DisplayRankedPersonDto> findMostPopular() {
             return mostPopular;
+        }
+
+        @Override
+        public PagedResponseDto<DisplayRankedPersonDto> findMostPopular(int page, int size) {
+            return PagedResponseDto.of(mostPopular, page, size, mostPopular.size());
         }
 
         @Override

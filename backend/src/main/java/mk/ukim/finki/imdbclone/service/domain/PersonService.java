@@ -1,6 +1,7 @@
 package mk.ukim.finki.imdbclone.service.domain;
 
 import mk.ukim.finki.imdbclone.model.domain.Person;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -76,4 +77,19 @@ public interface PersonService {
      * @return List of up to 250 popular people
      */
     List<Person> getMostPopular();
+
+    /**
+     * Get a page of the most popular people for celebrity discovery.
+     *
+     * @param pageable pagination and page size information
+     * @return List of popular people for the requested page
+     */
+    List<Person> getMostPopular(Pageable pageable);
+
+    /**
+     * Count all stored people.
+     *
+     * @return total number of people
+     */
+    long count();
 }

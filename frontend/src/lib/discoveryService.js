@@ -1,26 +1,44 @@
 import api from "./api";
-import { rankedMediaListFromApi, rankedPersonListFromApi } from "../models/discovery.model";
+import {
+    rankedMediaListFromApi,
+    rankedMediaPageFromApi,
+    rankedPersonListFromApi,
+    rankedPersonPageFromApi,
+} from "../models/discovery.model";
 
 const mediaBasePath = {
     movie: "/api/movies",
     tv: "/api/tv-series",
 };
 
-export async function getTop250(mediaType) {
-    const response = await api.get(`${mediaBasePath[mediaType]}/top-250`);
-    return rankedMediaListFromApi(response.data);
+export async function getTop250(mediaType, page = null, size = 20) {
+    const response = await api.get(`${mediaBasePath[mediaType]}/top-250`, {
+        params: page === null ? undefined : { page, size },
+    });
+    return page === null
+        ? rankedMediaListFromApi(response.data)
+        : rankedMediaPageFromApi(response.data);
 }
 
-export async function getMostPopularMedia(mediaType) {
-    const response = await api.get(`${mediaBasePath[mediaType]}/most-popular`);
-    return rankedMediaListFromApi(response.data);
+export async function getMostPopularMedia(mediaType, page = null, size = 20) {
+    const response = await api.get(`${mediaBasePath[mediaType]}/most-popular`, {
+        params: page === null ? undefined : { page, size },
+    });
+    return page === null
+        ? rankedMediaListFromApi(response.data)
+        : rankedMediaPageFromApi(response.data);
 }
 
-export async function getMediaByGenre(mediaType, genreName) {
+export async function getMediaByGenre(mediaType, genreName, page = null, size = 20) {
     const response = await api.get(
         `${mediaBasePath[mediaType]}/genre-ranked/${encodeURIComponent(genreName)}`,
+        {
+            params: page === null ? undefined : { page, size },
+        },
     );
-    return rankedMediaListFromApi(response.data);
+    return page === null
+        ? rankedMediaListFromApi(response.data)
+        : rankedMediaPageFromApi(response.data);
 }
 
 export async function getGenres() {
@@ -33,7 +51,11 @@ export async function getBornTodayCelebs() {
     return rankedPersonListFromApi(response.data);
 }
 
-export async function getMostPopularCelebs() {
-    const response = await api.get("/api/persons/most-popular");
-    return rankedPersonListFromApi(response.data);
+export async function getMostPopularCelebs(page = null, size = 20) {
+    const response = await api.get("/api/persons/most-popular", {
+        params: page === null ? undefined : { page, size },
+    });
+    return page === null
+        ? rankedPersonListFromApi(response.data)
+        : rankedPersonPageFromApi(response.data);
 }

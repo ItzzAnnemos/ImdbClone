@@ -17,6 +17,13 @@ export function rankedMediaListFromApi(rawList) {
     return rawList.map(rankedMediaFromApi);
 }
 
+export function rankedMediaPageFromApi(rawPage) {
+    return {
+        ...rawPage,
+        items: rankedMediaListFromApi(rawPage.items ?? []),
+    };
+}
+
 export function rankedPersonFromApi(raw) {
     return {
         id: raw.id,
@@ -33,4 +40,11 @@ export function rankedPersonFromApi(raw) {
 
 export function rankedPersonListFromApi(rawList) {
     return rawList.map(rankedPersonFromApi);
+}
+
+export function rankedPersonPageFromApi(rawPage) {
+    return {
+        ...rawPage,
+        items: rankedPersonListFromApi(rawPage.items ?? []),
+    };
 }

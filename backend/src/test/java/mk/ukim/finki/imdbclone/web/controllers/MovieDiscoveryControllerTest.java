@@ -3,6 +3,7 @@ package mk.ukim.finki.imdbclone.web.controllers;
 import mk.ukim.finki.imdbclone.model.dto.CreateMovieDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayMovieDto;
 import mk.ukim.finki.imdbclone.model.dto.DisplayRankedMediaDto;
+import mk.ukim.finki.imdbclone.model.dto.PagedResponseDto;
 import mk.ukim.finki.imdbclone.service.application.MovieApplicationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,18 @@ class MovieDiscoveryControllerTest {
         assertThat(movieApplicationService.requestedGenre).isEqualTo("Sci-Fi");
     }
 
+    @Test
+    void returnsPagedRankedMoviesByGenreFromApplicationService() {
+        movieApplicationService.byGenre = List.of(rankedMedia(3L, 51, "Arrival", 8.2, 3L));
+
+        var response = movieController.getRankedMoviesByGenre("Sci-Fi", 1, 50);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().page()).isEqualTo(1);
+        assertThat(response.getBody().items()).hasSize(1);
+        assertThat(movieApplicationService.requestedGenre).isEqualTo("Sci-Fi");
+    }
+
     private static DisplayRankedMediaDto rankedMedia(Long id,
                                                      Integer rank,
                                                      String title,
@@ -78,9 +91,20 @@ class MovieDiscoveryControllerTest {
         }
 
         @Override
+        public PagedResponseDto<DisplayRankedMediaDto> findMostPopular(int page, int size) {
+            return PagedResponseDto.of(List.of(), page, size, 0);
+        }
+
+        @Override
         public List<DisplayRankedMediaDto> findRankedByGenre(String genreName) {
             requestedGenre = genreName;
             return byGenre;
+        }
+
+        @Override
+        public PagedResponseDto<DisplayRankedMediaDto> findRankedByGenre(String genreName, int page, int size) {
+            requestedGenre = genreName;
+            return PagedResponseDto.of(byGenre, page, size, byGenre.size());
         }
 
         @Override
