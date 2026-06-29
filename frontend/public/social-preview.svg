@@ -1,0 +1,15 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#111111"/>
+  <rect x="80" y="74" width="1040" height="482" rx="32" fill="#181818"/>
+  <rect x="130" y="124" width="150" height="150" rx="28" fill="#F5C518"/>
+  <path d="M184 163L238 199L184 235V163Z" fill="#111111"/>
+  <path d="M151 145H165V159H151V145Z" fill="#111111"/>
+  <path d="M151 192H165V206H151V192Z" fill="#111111"/>
+  <path d="M151 239H165V253H151V239Z" fill="#111111"/>
+  <path d="M245 145H259V159H245V145Z" fill="#111111"/>
+  <path d="M245 192H259V206H245V192Z" fill="#111111"/>
+  <path d="M245 239H259V253H245V239Z" fill="#111111"/>
+  <text x="130" y="365" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="84" font-weight="700">IMDbClone</text>
+  <text x="130" y="430" fill="#F5C518" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Movies, TV shows, ratings and reviews</text>
+  <text x="130" y="492" fill="#CFCFCF" font-family="Arial, Helvetica, sans-serif" font-size="30">Discover titles, browse charts, manage your watchlist and share reviews.</text>
+</svg>
