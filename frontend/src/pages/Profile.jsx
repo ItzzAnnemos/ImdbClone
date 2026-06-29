@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import {
-    AlertCircle,
-    Bookmark,
-    Cog,
-    Loader2,
-    MessageSquareText,
-    Sparkles,
-    Star,
-    User,
-} from "lucide-react";
+import { AlertCircle, Bookmark, Cog, Loader2, MessageSquareText, Star, User } from "lucide-react";
 import { Layout } from "../components/layout/Layout";
 import { Button } from "../components/ui/Button";
 import { MediaSlider } from "../components/ui/MediaSlider";
@@ -378,13 +369,8 @@ export function Profile() {
                     </section>
 
                     <section>
-                        <SectionHeader
-                            icon={Sparkles}
-                            title="Recommendations"
-                            count={recommendations.length}
-                        />
                         {recommendations.length > 0 ? (
-                            <MediaSlider title="" items={recommendations} />
+                            <MediaSlider title="Recommendations" items={recommendations} />
                         ) : (
                             <EmptyPanel>
                                 Rate or save a few titles to start shaping recommendations.

@@ -3,7 +3,7 @@ import { Layout } from "../components/layout/Layout";
 import { MediaSlider } from "../components/ui/MediaSlider";
 import { Button } from "../components/ui/Button";
 import { Hero } from "../components/ui/Hero";
-import { AlertCircle, Loader2, Sparkles } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import * as mediaService from "../lib/mediaService";
 import * as userMediaService from "../lib/userMediaService";
 import { useAuth } from "../context/AuthContext";
@@ -85,18 +85,6 @@ export function Home() {
 
         return (
             <section className="mb-4 md:mb-12">
-                <div className="mb-6 flex items-center gap-3 px-1">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                        <Sparkles className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                        <h2 className="text-2xl font-bold text-foreground">Recommended for You</h2>
-                        <p className="text-sm text-muted-foreground">
-                            Personalized picks for {user.username}
-                        </p>
-                    </div>
-                </div>
-
                 {recommendationsLoading && (
                     <div className="flex min-h-36 items-center justify-center gap-3 rounded-xl border border-border bg-muted/20 text-sm text-muted-foreground">
                         <Loader2 className="h-5 w-5 animate-spin text-primary" />
@@ -120,7 +108,7 @@ export function Home() {
                     )}
 
                 {!recommendationsLoading && !recommendationsError && recommendations.length > 0 && (
-                    <MediaSlider title="" items={recommendations} />
+                    <MediaSlider title="Recommended for You" items={recommendations} />
                 )}
             </section>
         );

@@ -20,6 +20,15 @@ public interface MediaRepository extends JpaRepository<Media, Long> {
     List<Media> findAllByTitleContainingIgnoreCase(String title);
 
     /**
+     * Find media items whose title contains the search term, limited by pageable.
+     *
+     * @param title    the search term
+     * @param pageable pagination and sorting information
+     * @return List of matching media items
+     */
+    List<Media> findByTitleContainingIgnoreCase(String title, Pageable pageable);
+
+    /**
      * Find the top 10 media items ordered by average rating in descending order
      *
      * @return List of the top 10 highest-rated media items across all types
@@ -34,6 +43,15 @@ public interface MediaRepository extends JpaRepository<Media, Long> {
     List<Media> findTop10ByOrderByCreatedAtDesc();
 
     List<Media> findByReleaseYear(Integer releaseYear);
+
+    /**
+     * Find media items released in a specific year, limited by pageable.
+     *
+     * @param releaseYear the release year
+     * @param pageable    pagination and sorting information
+     * @return List of media items from that year
+     */
+    List<Media> findByReleaseYear(Integer releaseYear, Pageable pageable);
 
     List<Media> findByIdNotInOrderByAverageRatingDescReleaseYearDesc(Collection<Long> excludedIds, Pageable pageable);
 

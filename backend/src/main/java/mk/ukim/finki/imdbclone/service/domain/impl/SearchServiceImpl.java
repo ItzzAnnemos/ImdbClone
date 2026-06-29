@@ -15,15 +15,25 @@ import mk.ukim.finki.imdbclone.util.SearchQueryUtil;
 import org.springframework.stereotype.Service;
 import mk.ukim.finki.imdbclone.repository.MediaPersonRepository;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class SearchServiceImpl implements SearchService {
 
     private static final int MAX_RESULTS = 20;
-    private static final int DEFAULT_PAGE_SIZE = 10;
-    private static final int MAX_PAGE_SIZE = 50;
+    private static final int DEFAULT_PAGE_SIZE = 20;
+    private static final int MAX_PAGE_SIZE = 100;
+    private static final int DIRECT_MEDIA_LIMIT = 200;
+    private static final int DIRECT_PERSON_LIMIT = 100;
+    private static final int FUZZY_MEDIA_SCAN_LIMIT = 300;
+    private static final int FUZZY_PERSON_SCAN_LIMIT = 150;
+    private static final int PERSON_CREDIT_LIMIT = 200;
+    private static final int MIN_QUERY_LENGTH_FOR_FUZZY = 3;
 
     private final MediaRepository mediaRepository;
     private final PersonRepository personRepository;
@@ -111,15 +121,33 @@ public class SearchServiceImpl implements SearchService {
             Map<String, SearchItemDto> results,
             List<String> sources
     ) {
-        List<Media> allMedia = mediaRepository.findAll();
         boolean found = false;
 
-        for (Media media : allMedia) {
-            double score = SearchMatcherUtil.scoreTextMatch(media.getTitle(), query);
+        List<Media> directMatches = mediaRepository.findByTitleContainingIgnoreCase(
+                query,
+                PageRequest.of(0, DIRECT_MEDIA_LIMIT, mediaRelevanceSort())
+        );
 
-            if (score > 0.0 || SearchMatcherUtil.fuzzyMatch(media.getTitle(), query, 2)) {
-                addOrUpdateMediaResult(results, media, Math.max(score, 50.0));
+        for (Media media : directMatches) {
+            double score = SearchMatcherUtil.scoreTextMatch(media.getTitle(), query);
+            if (score > 0.0) {
+                addOrUpdateMediaResult(results, media, score);
                 found = true;
+            }
+        }
+
+        if (query.length() >= MIN_QUERY_LENGTH_FOR_FUZZY) {
+            List<Media> fuzzyCandidates = mediaRepository.findAll(
+                    PageRequest.of(0, FUZZY_MEDIA_SCAN_LIMIT, mediaRelevanceSort())
+            ).getContent();
+
+            for (Media media : fuzzyCandidates) {
+                double score = SearchMatcherUtil.scoreTextMatch(media.getTitle(), query);
+
+                if (score > 0.0 || SearchMatcherUtil.fuzzyMatch(media.getTitle(), query, 2)) {
+                    addOrUpdateMediaResult(results, media, Math.max(score, 50.0));
+                    found = true;
+                }
             }
         }
 
@@ -133,25 +161,44 @@ public class SearchServiceImpl implements SearchService {
             Map<String, SearchItemDto> results,
             List<String> sources
     ) {
-        List<Person> allPeople = personRepository.findAll();
         boolean found = false;
+        Set<Long> matchedPersonIds = new LinkedHashSet<>();
 
-        for (Person person : allPeople) {
+        List<Person> directMatches = personRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
+                query,
+                query,
+                PageRequest.of(0, DIRECT_PERSON_LIMIT, personNameSort())
+        );
+
+        for (Person person : directMatches) {
             String fullName = person.getFirstName() + " " + person.getLastName();
             double score = SearchMatcherUtil.scoreTextMatch(fullName, query);
 
-            if (score > 0.0 || SearchMatcherUtil.fuzzyMatch(fullName, query, 2)) {
-                addOrUpdatePersonResult(results, person, Math.max(score, 50.0));
+            if (score > 0.0) {
+                addOrUpdatePersonResult(results, person, score);
                 found = true;
+                matchedPersonIds.add(person.getId());
+            }
+        }
 
-                List<MediaPerson> relations = mediaPersonRepository.findByPersonId(person.getId());
+        if (query.length() >= MIN_QUERY_LENGTH_FOR_FUZZY) {
+            List<Person> fuzzyCandidates = personRepository.findAll(
+                    PageRequest.of(0, FUZZY_PERSON_SCAN_LIMIT, personNameSort())
+            ).getContent();
 
-                for (MediaPerson relation : relations) {
-                    Media media = relation.getMedia();
-                    addOrUpdateMediaResult(results, media, 70.0);
+            for (Person person : fuzzyCandidates) {
+                String fullName = person.getFirstName() + " " + person.getLastName();
+                double score = SearchMatcherUtil.scoreTextMatch(fullName, query);
+
+                if (score > 0.0 || SearchMatcherUtil.fuzzyMatch(fullName, query, 2)) {
+                    addOrUpdatePersonResult(results, person, Math.max(score, 50.0));
+                    found = true;
+                    matchedPersonIds.add(person.getId());
                 }
             }
         }
+
+        addMediaForPeople(matchedPersonIds, results);
 
         if (found) {
             sources.add("person");
@@ -168,7 +215,10 @@ public class SearchServiceImpl implements SearchService {
         }
 
         Integer year = Integer.parseInt(query);
-        List<Media> mediaByYear = mediaRepository.findByReleaseYear(year);
+        List<Media> mediaByYear = mediaRepository.findByReleaseYear(
+                year,
+                PageRequest.of(0, DIRECT_MEDIA_LIMIT, mediaRelevanceSort())
+        );
 
         if (!mediaByYear.isEmpty()) {
             for (Media media : mediaByYear) {
@@ -204,5 +254,35 @@ public class SearchServiceImpl implements SearchService {
         if (existing == null || score > existing.score()) {
             results.put(key, newItem);
         }
+    }
+
+    private void addMediaForPeople(Set<Long> personIds, Map<String, SearchItemDto> results) {
+        if (personIds.isEmpty()) {
+            return;
+        }
+
+        List<MediaPerson> relations = mediaPersonRepository.findByPerson_IdIn(
+                personIds,
+                PageRequest.of(0, PERSON_CREDIT_LIMIT)
+        );
+
+        for (MediaPerson relation : relations) {
+            addOrUpdateMediaResult(results, relation.getMedia(), 70.0);
+        }
+    }
+
+    private Sort mediaRelevanceSort() {
+        return Sort.by(
+                Sort.Order.desc("averageRating"),
+                Sort.Order.desc("releaseYear"),
+                Sort.Order.asc("title")
+        );
+    }
+
+    private Sort personNameSort() {
+        return Sort.by(
+                Sort.Order.asc("firstName"),
+                Sort.Order.asc("lastName")
+        );
     }
 }

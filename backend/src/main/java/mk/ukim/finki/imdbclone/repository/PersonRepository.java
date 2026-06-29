@@ -32,6 +32,20 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     List<Person> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(String firstName, String lastName);
 
     /**
+     * Search for people by a partial match on either their first or last name,
+     * ignoring case and limited by pageable.
+     *
+     * @param firstName the first name search term
+     * @param lastName  the last name search term
+     * @param pageable  pagination and sorting information
+     * @return List of matching persons
+     */
+    List<Person> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
+            String firstName,
+            String lastName,
+            Pageable pageable);
+
+    /**
      * Find the most popular people using media credit count as the primary ranking signal.
      *
      * @param pageable pagination and limit information

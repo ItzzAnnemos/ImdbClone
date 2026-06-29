@@ -53,7 +53,7 @@ export function Navbar() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
     return (
-        <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 relative">
             <div className="container flex h-16 items-center justify-between px-4 md:px-8">
                 <div className="flex items-center gap-6">
                     <Link
@@ -202,7 +202,7 @@ export function Navbar() {
                 </div>
             </div>
             {isMobileMenuOpen && (
-                <div className="border-t border-border bg-background px-4 py-4 md:hidden">
+                <div className="absolute left-0 right-0 top-full max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-border bg-background px-4 py-4 shadow-lg md:hidden">
                     <div className="flex flex-col gap-4">
                         <div className="sm:hidden">
                             <NavbarSearch onSearch={() => setIsMobileMenuOpen(false)} />

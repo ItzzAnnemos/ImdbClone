@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Film, Search, UserRound } from "lucide-react";
+import { Film, Search, UserRound } from "lucide-react";
 import { Layout } from "../components/layout/Layout";
 import { Button } from "../components/ui/Button";
+import { ChartPagination } from "../components/ui/ChartPagination";
 import { searchCatalog } from "../lib/searchService";
 
-const SEARCH_RESULTS_SIZE = 10;
+const DEFAULT_SEARCH_RESULTS_SIZE = 20;
 
 function getResultHref(result) {
     return result.type === "Person" ? `/person/${result.id}` : `/media/${result.id}`;
@@ -67,6 +68,11 @@ export function SearchResults() {
     const [searchParams, setSearchParams] = useSearchParams();
     const query = searchParams.get("query")?.trim() ?? "";
     const page = Math.max(Number(searchParams.get("page") ?? 0) || 0, 0);
+    const pageSize = Math.max(
+        Number(searchParams.get("size") ?? DEFAULT_SEARCH_RESULTS_SIZE) ||
+            DEFAULT_SEARCH_RESULTS_SIZE,
+        1,
+    );
     const [searchPage, setSearchPage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -81,7 +87,7 @@ export function SearchResults() {
         try {
             setLoading(true);
             setError(null);
-            setSearchPage(await searchCatalog(query, page, SEARCH_RESULTS_SIZE));
+            setSearchPage(await searchCatalog(query, page, pageSize));
         } catch (err) {
             console.error("Failed to load search results:", err);
             setError("Search is unavailable right now. Please try again.");
@@ -89,14 +95,27 @@ export function SearchResults() {
         } finally {
             setLoading(false);
         }
-    }, [page, query]);
+    }, [page, pageSize, query]);
 
     useEffect(() => {
         fetchResults();
     }, [fetchResults]);
 
-    const currentPage = (searchPage?.page ?? page) + 1;
-    const totalPages = Math.max(searchPage?.totalPages ?? 1, 1);
+    const paginationInfo = useMemo(() => {
+        if (!searchPage) {
+            return null;
+        }
+
+        return {
+            page: searchPage.page,
+            size: searchPage.size,
+            totalItems: searchPage.totalResults,
+            totalPages: searchPage.totalPages,
+            hasNext: searchPage.hasNext,
+            hasPrevious: searchPage.hasPrevious,
+        };
+    }, [searchPage]);
+
     const resultCountLabel = useMemo(() => {
         if (!searchPage) {
             return "";
@@ -105,12 +124,27 @@ export function SearchResults() {
         return `${searchPage.totalResults} result${searchPage.totalResults === 1 ? "" : "s"}`;
     }, [searchPage]);
 
-    const setPage = (nextPage) => {
-        setSearchParams({
-            query,
-            page: String(Math.max(nextPage, 0)),
-        });
-    };
+    const setPage = useCallback(
+        (nextPage) => {
+            setSearchParams({
+                query,
+                page: String(Math.max(nextPage, 0)),
+                size: String(pageSize),
+            });
+        },
+        [pageSize, query, setSearchParams],
+    );
+
+    const setPageSize = useCallback(
+        (nextPageSize) => {
+            setSearchParams({
+                query,
+                page: "0",
+                size: String(nextPageSize),
+            });
+        },
+        [query, setSearchParams],
+    );
 
     return (
         <Layout>
@@ -163,29 +197,12 @@ export function SearchResults() {
                             ))}
                         </section>
 
-                        <div className="mt-6 flex items-center justify-center gap-3 sm:gap-4">
-                            <button
-                                type="button"
-                                disabled={!searchPage.hasPrevious}
-                                onClick={() => setPage(page - 1)}
-                                className="rounded-full border bg-background p-2 shadow-sm transition-all hover:bg-muted disabled:cursor-not-allowed disabled:opacity-30"
-                                aria-label="Previous search results page"
-                            >
-                                <ChevronLeft className="h-5 w-5" />
-                            </button>
-                            <span className="min-w-24 text-center text-sm text-muted-foreground">
-                                Page {currentPage} of {totalPages}
-                            </span>
-                            <button
-                                type="button"
-                                disabled={!searchPage.hasNext}
-                                onClick={() => setPage(page + 1)}
-                                className="rounded-full border bg-background p-2 shadow-sm transition-all hover:bg-muted disabled:cursor-not-allowed disabled:opacity-30"
-                                aria-label="Next search results page"
-                            >
-                                <ChevronRight className="h-5 w-5" />
-                            </button>
-                        </div>
+                        <ChartPagination
+                            pageInfo={paginationInfo}
+                            pageSize={searchPage.size}
+                            onPageChange={setPage}
+                            onPageSizeChange={setPageSize}
+                        />
                     </>
                 )}
             </div>
