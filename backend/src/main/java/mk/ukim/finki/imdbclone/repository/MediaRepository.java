@@ -1,12 +1,11 @@
 package mk.ukim.finki.imdbclone.repository;
 
 import mk.ukim.finki.imdbclone.model.domain.Media;
-import mk.ukim.finki.imdbclone.model.enumerations.Role;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -35,4 +34,8 @@ public interface MediaRepository extends JpaRepository<Media, Long> {
     List<Media> findTop10ByOrderByCreatedAtDesc();
 
     List<Media> findByReleaseYear(Integer releaseYear);
+
+    List<Media> findByIdNotInOrderByAverageRatingDescReleaseYearDesc(Collection<Long> excludedIds, Pageable pageable);
+
+    List<Media> findAllByOrderByAverageRatingDescReleaseYearDesc(Pageable pageable);
 }

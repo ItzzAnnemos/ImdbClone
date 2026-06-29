@@ -12,6 +12,7 @@ import mk.ukim.finki.imdbclone.service.domain.UserPreferenceService;
 import mk.ukim.finki.imdbclone.service.domain.UserService;
 import mk.ukim.finki.imdbclone.service.domain.helper.MediaSimilarityHelper;
 import mk.ukim.finki.imdbclone.service.domain.helper.PreferenceMatchingHelper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RecommendationServiceImpl implements RecommendationService {
+
+    private static final int RECOMMENDATION_CANDIDATE_LIMIT = 300;
 
     private final MediaRepository mediaRepository;
     private final RatingRepository ratingRepository;
@@ -54,7 +57,16 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         Map<Media, Double> scores = new HashMap<>();
 
-        for (Media candidate : mediaRepository.findAll()) {
+        List<Media> candidates = excludedIds.isEmpty()
+                ? mediaRepository.findAllByOrderByAverageRatingDescReleaseYearDesc(
+                PageRequest.of(0, RECOMMENDATION_CANDIDATE_LIMIT)
+        )
+                : mediaRepository.findByIdNotInOrderByAverageRatingDescReleaseYearDesc(
+                excludedIds,
+                PageRequest.of(0, RECOMMENDATION_CANDIDATE_LIMIT)
+        );
+
+        for (Media candidate : candidates) {
             if (excludedIds.contains(candidate.getId())) {
                 continue;
             }

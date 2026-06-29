@@ -4,6 +4,8 @@ import mk.ukim.finki.imdbclone.model.domain.Media;
 import mk.ukim.finki.imdbclone.model.enumerations.Role;
 import mk.ukim.finki.imdbclone.service.domain.MediaService;
 import mk.ukim.finki.imdbclone.service.domain.helper.MediaSimilarityHelper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,8 @@ import java.util.Optional;
  */
 @Transactional
 public abstract class MediaServiceImpl<T extends Media> implements MediaService<T> {
+
+    private static final int SIMILAR_CANDIDATE_LIMIT = 300;
 
     protected final JpaRepository<T, Long> repository;
     protected final MediaSimilarityHelper mediaSimilarityHelper;
@@ -75,7 +79,15 @@ public abstract class MediaServiceImpl<T extends Media> implements MediaService<
         T target = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Media not found"));
 
-        return repository.findAll().stream()
+        return repository.findAll(
+                        PageRequest.of(
+                                0,
+                                SIMILAR_CANDIDATE_LIMIT,
+                                Sort.by(Sort.Direction.DESC, "averageRating", "releaseYear")
+                        )
+                )
+                .getContent()
+                .stream()
                 .filter(media -> !media.getId().equals(id))
                 .sorted((m1, m2) ->
                         Double.compare(

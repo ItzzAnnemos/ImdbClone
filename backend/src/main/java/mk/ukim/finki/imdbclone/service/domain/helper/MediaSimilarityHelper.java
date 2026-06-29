@@ -16,6 +16,7 @@ import java.util.List;
 public class MediaSimilarityHelper {
 
     private final GenreRepository genreRepository;
+    private volatile List<String> genreNames;
 
     public double similarityScore(Media a, Media b) {
         double[] vectorA = generateFeatureVector(a);
@@ -37,13 +38,7 @@ public class MediaSimilarityHelper {
     public double[] generateFeatureVector(Media media) {
         List<Double> features = new ArrayList<>();
 
-        List<String> genre = genreRepository.findAll()
-                .stream()
-                .map(Genre::getName)
-                .sorted()
-                .toList();
-
-        for (String genreName : genre) {
+        for (String genreName : getGenreNames()) {
             boolean hasGenre = media.getGenres() != null &&
                     media.getGenres().stream()
                             .map(Genre::getName)
@@ -117,5 +112,23 @@ public class MediaSimilarityHelper {
                                 .filter(person -> person != null && person.getId() != null)
                                 .anyMatch(personB -> personA.getId().equals(personB.getId()))
                 );
+    }
+
+    private List<String> getGenreNames() {
+        List<String> cachedGenreNames = genreNames;
+        if (cachedGenreNames != null) {
+            return cachedGenreNames;
+        }
+
+        synchronized (this) {
+            if (genreNames == null) {
+                genreNames = genreRepository.findAll()
+                        .stream()
+                        .map(Genre::getName)
+                        .sorted()
+                        .toList();
+            }
+            return genreNames;
+        }
     }
 }
