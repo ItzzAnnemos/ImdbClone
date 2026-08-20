@@ -1,12 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { Bookmark, Film, AlertCircle, Loader2 } from "lucide-react";
+import { Bookmark, Film, AlertCircle, Loader2, ArrowUpDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Layout } from "../components/layout/Layout";
 import { WatchlistCard } from "../components/ui/WatchlistCard";
 import { useAuth } from "../context/AuthContext";
 import api from "../lib/api";
 import { MediaModel } from "../models";
+import { cn } from "../lib/utils";
+
+const TYPE_FILTERS = [
+    { value: "all", label: "All" },
+    { value: "movie", label: "Movies" },
+    { value: "tv", label: "TV Shows" },
+];
+
+const SORT_OPTIONS = [
+    { value: "added", label: "Date Added" },
+    { value: "releaseYear", label: "Release Year" },
+    { value: "rating", label: "Rating" },
+];
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -27,6 +40,8 @@ export function Watchlist() {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [typeFilter, setTypeFilter] = useState("all");
+    const [sortBy, setSortBy] = useState("added");
 
     useEffect(() => {
         if (!username) return;
@@ -58,6 +73,26 @@ export function Watchlist() {
         };
     }, [username]);
 
+    const visibleMovies = useMemo(() => {
+        const filtered =
+            typeFilter === "all" ? movies : movies.filter((m) => m.type === typeFilter);
+
+        const sorted = [...filtered];
+        switch (sortBy) {
+            case "releaseYear":
+                sorted.sort((a, b) => (b.releaseYear ?? 0) - (a.releaseYear ?? 0));
+                break;
+            case "rating":
+                sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+                break;
+            case "added":
+            default:
+                sorted.reverse();
+                break;
+        }
+        return sorted;
+    }, [movies, typeFilter, sortBy]);
+
     // Redirect unauthenticated users
     // This must be after ALL hooks to avoid Rule of Hooks errors
     if (!user) {
@@ -80,10 +115,48 @@ export function Watchlist() {
                 </div>
                 {!loading && !error && movies.length > 0 && (
                     <span className="ml-auto rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                        {movies.length} {movies.length === 1 ? "item" : "items"}
+                        {visibleMovies.length} {visibleMovies.length === 1 ? "item" : "items"}
                     </span>
                 )}
             </div>
+
+            {/* Filter + sort controls */}
+            {!loading && !error && movies.length > 0 && (
+                <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-wrap gap-2">
+                        {TYPE_FILTERS.map((option) => (
+                            <button
+                                key={option.value}
+                                onClick={() => setTypeFilter(option.value)}
+                                className={cn(
+                                    "rounded-full border px-3 py-1.5 text-sm font-medium transition",
+                                    typeFilter === option.value
+                                        ? "border-yellow-400 bg-yellow-400 text-black"
+                                        : "border-border bg-secondary text-secondary-foreground hover:border-yellow-400 hover:text-yellow-400",
+                                )}
+                            >
+                                {option.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <ArrowUpDown className="h-4 w-4" />
+                        <span className="sr-only sm:not-sr-only">Sort by</span>
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="rounded-lg border border-border bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground outline-none transition hover:border-yellow-400 focus:border-yellow-400"
+                        >
+                            {SORT_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                </div>
+            )}
 
             {/* Loading state */}
             {loading && (
@@ -128,8 +201,18 @@ export function Watchlist() {
                 </motion.div>
             )}
 
+            {/* No results for the current filter */}
+            {!loading && !error && movies.length > 0 && visibleMovies.length === 0 && (
+                <div className="flex min-h-[30vh] flex-col items-center justify-center gap-2 text-center">
+                    <p className="text-sm text-muted-foreground">
+                        No {TYPE_FILTERS.find((f) => f.value === typeFilter)?.label.toLowerCase()}{" "}
+                        in your watchlist yet.
+                    </p>
+                </div>
+            )}
+
             {/* Movie list */}
-            {!loading && !error && movies.length > 0 && (
+            {!loading && !error && visibleMovies.length > 0 && (
                 <AnimatePresence>
                     <motion.div
                         variants={containerVariants}
@@ -137,7 +220,7 @@ export function Watchlist() {
                         animate="visible"
                         className="flex flex-col gap-4"
                     >
-                        {movies.map((movie) => (
+                        {visibleMovies.map((movie) => (
                             <motion.div key={movie.id} variants={itemVariants}>
                                 <WatchlistCard media={movie} />
                             </motion.div>

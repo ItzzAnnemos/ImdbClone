@@ -11,7 +11,8 @@ public record DisplayCardMediaDto(
         String posterUrl,
         String trailerUrl,
         Double averageRating,
-        String type
+        String type,
+        Integer releaseYear
 ) {
 
     public static DisplayCardMediaDto from(Media media) {
@@ -22,7 +23,8 @@ public record DisplayCardMediaDto(
                 media.getPosterUrl(),
                 media.getTrailerUrl(),
                 media.getAverageRating(),
-                type
+                type,
+                media.getReleaseYear()
         );
     }
 
