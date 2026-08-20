@@ -18,6 +18,8 @@
  * @property {string|null} image         - poster image URL
  * @property {string|null} trailerUrl    - embeddable trailer URL
  * @property {number|null} rating        - average rating (0–10)
+ * @property {string}      type          - "movie" | "tv"
+ * @property {number|null} releaseYear
  */
 
 /**
@@ -33,6 +35,7 @@ export function fromApi(raw) {
         trailerUrl: raw.trailerUrl ?? null,
         rating: raw.averageRating ?? null,
         type: raw.type ?? "movie",
+        releaseYear: raw.releaseYear ?? null
     };
 }
 
